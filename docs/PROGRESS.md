@@ -14,7 +14,7 @@ Nama aplikasi ditetapkan sebagai **CamPah**.
 
 ## Verifikasi yang telah dilakukan
 
-- `python -m pytest api/tests -q`: **8 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, migrasi Alembic naik–turun pada SQLite, dan integrasi model terlatih.
+- `python -m pytest api/tests -q`: **9 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, orientasi foto kamera, migrasi Alembic naik–turun pada SQLite, dan integrasi model terlatih.
 - `npm run build` di `web/`: **berhasil**.
 - `npm run test:e2e`: **3 passed**, memverifikasi pembuatan/perubahan laporan, status Admin, ubah nama pengguna, izin tombol laporan, sesi rusak/kedaluwarsa, dan layout ponsel. Audit dependensi web: **0 vulnerabilities** setelah pembaruan Vite.
 - Pemeriksaan sintaks Python pada API, prediktor, dan training: **berhasil** sebelum perubahan terakhir.

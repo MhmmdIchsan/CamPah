@@ -17,6 +17,8 @@ def load_model():
     import torch
     from torchvision.models import mobilenet_v2
 
+    torch.set_num_threads(int(os.getenv("TORCH_NUM_THREADS", "2")))
+
     model = mobilenet_v2(weights=None)
     model.classifier[1] = torch.nn.Linear(model.last_channel, len(LABELS))
     checkpoint = torch.load(path, map_location="cpu", weights_only=True)

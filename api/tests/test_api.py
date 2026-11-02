@@ -29,6 +29,7 @@ def system(monkeypatch, tmp_path):
     monkeypatch.setattr(main, "engine", engine)
     monkeypatch.setattr(main, "SessionLocal", sessions)
     monkeypatch.setattr(main, "UPLOAD_DIR", tmp_path)
+    monkeypatch.delenv("CLOUDINARY_URL", raising=False)
     monkeypatch.setattr(main, "predict_image", lambda _: main.PredictionOut(category="Plastic Waste", confidence=0.91))
     def database():
         with sessions() as db:
@@ -196,3 +197,19 @@ def test_real_model_prediction_and_report(system, monkeypatch):
     assert report.json()["ai_confidence"] == pytest.approx(result["confidence"])
     assert client.get("/dashboard", headers=auth(account)).json()["by_category"][result["category"]] == 1
     load_model.cache_clear()
+
+
+def test_camera_photo_orientation_is_preserved_and_metadata_removed(system):
+    client, _ = system
+    account = signup(client)
+    buffer = io.BytesIO()
+    image = Image.new("RGB", (30, 20), "green")
+    exif = Image.Exif()
+    exif[274] = 6  # Rotate 90 degrees clockwise for display.
+    image.save(buffer, "JPEG", exif=exif)
+    response = client.post("/reports", headers=auth(account), data={"description": "Camera photo with orientation metadata", "latitude": 0, "longitude": 0}, files={"image": ("camera.jpg", buffer.getvalue(), "image/jpeg")})
+    assert response.status_code == 201, response.text
+    path = main.UPLOAD_DIR / Path(response.json()["image_url"]).name
+    with Image.open(path) as stored:
+        assert stored.size == (20, 30)
+        assert not stored.getexif()

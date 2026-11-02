@@ -16,7 +16,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError
@@ -180,11 +180,13 @@ def read_image(data: bytes) -> None:
         raise HTTPException(status_code=422, detail="Image must be 1 byte to 8 MB")
     try:
         with Image.open(io.BytesIO(data)) as image:
+            if image.width * image.height > 20_000_000:
+                raise ValueError("Image dimensions exceed the supported limit")
             image.verify()
         with Image.open(io.BytesIO(data)) as image:
             if image.format not in {"JPEG", "PNG", "WEBP"}:
                 raise ValueError("Unsupported image format")
-    except (UnidentifiedImageError, OSError, ValueError):
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
         raise HTTPException(status_code=422, detail="Use a valid JPEG, PNG, or WEBP image") from None
 
 
@@ -195,16 +197,19 @@ async def image_bytes(file: UploadFile) -> bytes:
 
 
 def store_image(data: bytes) -> tuple[str, str | None]:
+    normalized = io.BytesIO()
+    with Image.open(io.BytesIO(data)) as image:
+        ImageOps.exif_transpose(image).convert("RGB").save(normalized, format="JPEG", quality=85)
+    encoded = normalized.getvalue()
     if os.getenv("CLOUDINARY_URL"):
         cloudinary.config(secure=True)
         try:
-            uploaded = cloudinary.uploader.upload(data, folder="smart-waste")
+            uploaded = cloudinary.uploader.upload(encoded, folder="campah")
             return uploaded["secure_url"], uploaded["public_id"]
         except Exception as exc:
             raise HTTPException(status_code=502, detail="Image storage unavailable") from exc
     filename = f"{uuid.uuid4().hex}.jpg"
-    with Image.open(io.BytesIO(data)) as image:
-        image.convert("RGB").save(UPLOAD_DIR / filename, format="JPEG", quality=85)
+    (UPLOAD_DIR / filename).write_bytes(encoded)
     return f"/uploads/{filename}", None
 
 
