@@ -14,7 +14,7 @@ Nama aplikasi ditetapkan sebagai **CamPah**.
 
 ## Verifikasi yang telah dilakukan
 
-- `python -m pytest api/tests -q`: **4 passed** pada pengujian sebelum perubahan migrasi dan penguatan konfigurasi produksi terakhir. Pengujian perlu dijalankan lagi setelah perubahan tersebut.
+- `python -m pytest api/tests -q`: **7 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, dan migrasi Alembic naik–turun pada SQLite.
 - `npm run build` di `web/`: **berhasil**.
 - Pemeriksaan sintaks Python pada API, prediktor, dan training: **berhasil** sebelum perubahan terakhir.
 - Dependensi dasar API, Alembic, PyTorch CPU, dan torchvision sudah dipasang pada lingkungan pengerjaan.
@@ -23,7 +23,7 @@ Pengujian API menggunakan SQLite sementara dan prediksi pengganti. Hasil tersebu
 
 ## Masih dikerjakan / belum diverifikasi
 
-- Unduhan dataset dan penyiapan Flutter SDK telah dimulai; kelengkapannya belum diperiksa setelah interupsi.
+- Unduhan dataset terputus karena timeout dari server berkas sumber; mekanisme melanjutkan unduhan sedang diperbaiki. Flutter SDK sudah di-clone dan sedang mengunduh Dart SDK.
 - Training model, evaluasi test set, bobot model, confusion matrix, dan classification report belum tersedia.
 - Migrasi database, PostgreSQL, Cloudinary, dan konfigurasi produksi belum diuji end to end.
 - Android belum dianalisis/dibuild; APK dan pengujian perangkat belum tersedia.

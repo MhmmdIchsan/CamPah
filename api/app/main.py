@@ -11,13 +11,15 @@ import bcrypt
 import cloudinary
 import cloudinary.uploader
 import jwt
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, UploadFile, status
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from sqlalchemy import func, or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .database import Base, Report, ReportStatusHistory, SessionLocal, User, engine, get_db, utc_now
@@ -38,6 +40,8 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(password: str, password_hash: str) -> bool:
+    if len(password.encode("utf-8")) > 72:
+        return False
     return bcrypt.checkpw(password.encode(), password_hash.encode())
 
 
@@ -119,6 +123,11 @@ class UserUpdate(BaseModel):
     role: Literal["user", "admin"] | None = None
     is_active: bool | None = None
 
+    @field_validator("name")
+    @classmethod
+    def nonblank_name(cls, value: str | None) -> str | None:
+        return RegisterIn.nonblank_name(value) if value is not None else None
+
 
 class ReportOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -146,6 +155,15 @@ class ReportUpdate(BaseModel):
     description: str | None = Field(default=None, min_length=10, max_length=2000)
     latitude: float | None = Field(default=None, ge=-90, le=90)
     longitude: float | None = Field(default=None, ge=-180, le=180)
+
+    @field_validator("description")
+    @classmethod
+    def nonblank_description(cls, value: str | None) -> str | None:
+        if value is not None:
+            value = value.strip()
+            if len(value) < 10:
+                raise ValueError("Description must contain at least 10 characters")
+        return value
 
 
 class StatusUpdate(BaseModel):
@@ -206,6 +224,17 @@ def visible_report(db: Session, report_id: int, user: User) -> Report:
     return report
 
 
+def save_user(db: Session, user: User) -> User:
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Email already registered") from None
+    db.refresh(user)
+    return user
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if os.getenv("APP_ENV") == "production":
@@ -246,9 +275,7 @@ def register(payload: RegisterIn, db: Annotated[Session, Depends(get_db)]):
     if db.scalar(select(User).where(User.email == email)):
         raise HTTPException(status_code=409, detail="Email already registered")
     user = User(name=payload.name.strip(), email=email, password_hash=hash_password(payload.password), role="user")
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+    save_user(db, user)
     return AuthOut(access_token=token_for(user), user=UserOut.model_validate(user))
 
 
@@ -299,15 +326,18 @@ async def create_report(
     longitude: float = Form(ge=-180, le=180),
     image: UploadFile = File(),
 ):
+    description = description.strip()
+    if len(description) < 10:
+        raise HTTPException(status_code=422, detail="Description must contain at least 10 characters")
     data = await image_bytes(image)
-    image_url, public_id = store_image(data)
-    report = Report(user_id=user.id, description=description.strip(), latitude=latitude, longitude=longitude,
+    image_url, public_id = await run_in_threadpool(store_image, data)
+    report = Report(user_id=user.id, description=description, latitude=latitude, longitude=longitude,
                     image_url=image_url, image_public_id=public_id, status="Pending")
     db.add(report)
     db.commit()
     db.refresh(report)
     try:
-        prediction = predict_image(data)
+        prediction = await run_in_threadpool(predict_image, data)
         report.ai_category = prediction.category
         report.ai_confidence = prediction.confidence
         db.commit()
@@ -385,10 +415,7 @@ def create_user(payload: UserCreate, db: Annotated[Session, Depends(get_db)], ad
     if db.scalar(select(User).where(User.email == email)):
         raise HTTPException(status_code=409, detail="Email already registered")
     user = User(name=payload.name.strip(), email=email, password_hash=hash_password(payload.password), role=payload.role)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+    return save_user(db, user)
 
 
 @app.patch("/users/{user_id}", response_model=UserOut)
@@ -409,4 +436,4 @@ def update_user(user_id: int, payload: UserUpdate, db: Annotated[Session, Depend
 
 @app.post("/predict", response_model=PredictionOut)
 async def predict_endpoint(image: Annotated[UploadFile, File()], user: Annotated[User, Depends(current_user)]):
-    return predict_image(await image_bytes(image))
+    return await run_in_threadpool(predict_image, await image_bytes(image))

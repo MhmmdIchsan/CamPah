@@ -25,6 +25,7 @@ def system(monkeypatch, tmp_path):
     sessions = sessionmaker(bind=engine, expire_on_commit=False)
     Base.metadata.create_all(engine)
     monkeypatch.setattr(main, "engine", engine)
+    monkeypatch.setattr(main, "SessionLocal", sessions)
     monkeypatch.setattr(main, "UPLOAD_DIR", tmp_path)
     monkeypatch.setattr(main, "predict_image", lambda _: main.PredictionOut(category="Plastic Waste", confidence=0.91))
     def database():
@@ -136,3 +137,34 @@ def test_admin_user_management_and_disabled_tokens(system):
     assert client.patch(f"/users/{admin['user']['id']}", headers=auth(admin), json={"is_active": False}).status_code == 422
     assert client.patch(f"/users/{user['user']['id']}", headers=auth(admin), json={"is_active": False}).status_code == 200
     assert client.get("/dashboard", headers=auth(user)).status_code == 401
+
+
+def test_whitespace_and_unicode_password_validation(system):
+    client, sessions = system
+    invalid = client.post("/auth/register", json={"name": "   ", "email": "empty@example.com", "password": "StrongPassword123"})
+    assert invalid.status_code == 422
+    invalid = client.post("/auth/register", json={"name": "Unicode", "email": "unicode@example.com", "password": "界" * 25})
+    assert invalid.status_code == 422
+    account = signup(client)
+    assert client.post("/auth/login", json={"email": "alice@example.com", "password": "界" * 25}).status_code == 401
+    invalid = client.post("/reports", headers=auth(account), data={"description": " " * 20, "latitude": 0, "longitude": 0}, files={"image": photo()})
+    assert invalid.status_code == 422
+    report_id = create_report(client, account).json()["id"]
+    assert client.patch(f"/reports/{report_id}", headers=auth(account), json={"description": " " * 20}).status_code == 422
+    admin = admin_account(client, sessions)
+    assert client.patch(f"/users/{account['user']['id']}", headers=auth(admin), json={"name": "   "}).status_code == 422
+
+
+def test_pagination_invalid_status_and_prediction(system):
+    client, _ = system
+    account = signup(client)
+    for _ in range(2):
+        assert create_report(client, account).status_code == 201
+    page = client.get("/reports?page=2&page_size=1", headers=auth(account)).json()
+    assert page["total"] == 2
+    assert len(page["items"]) == 1
+    assert client.get("/reports?status=Unknown", headers=auth(account)).status_code == 422
+    assert client.get("/reports?page=0", headers=auth(account)).status_code == 422
+    prediction = client.post("/predict", headers=auth(account), files={"image": photo()})
+    assert prediction.status_code == 200
+    assert prediction.json() == {"category": "Plastic Waste", "confidence": 0.91}
