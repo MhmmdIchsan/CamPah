@@ -8,7 +8,7 @@ Nama aplikasi ditetapkan sebagai **CamPah**.
 
 - Source API untuk registrasi/login JWT, akses Admin/User, CRUD laporan dengan soft delete, pencarian/filter/pagination, status laporan, dashboard, manajemen pengguna, dan endpoint prediksi.
 - Source web untuk autentikasi, dashboard, formulir dan pengelolaan laporan, serta manajemen pengguna.
-- Source Flutter untuk autentikasi, dashboard, kamera/galeri, GPS, pembuatan laporan, dan riwayat.
+- Source Flutter dan platform Android untuk autentikasi, dashboard, kamera/galeri, GPS, pembuatan laporan, hasil AI, serta riwayat dengan pagination.
 - Pengunduh dataset Mendeley dan pipeline training/evaluasi MobileNetV2.
 - Migrasi awal Alembic, konfigurasi PostgreSQL lokal, dan blueprint Render.
 
@@ -19,6 +19,8 @@ Nama aplikasi ditetapkan sebagai **CamPah**.
 - `npm run test:e2e`: **3 passed**, memverifikasi pembuatan/perubahan laporan, status Admin, ubah nama pengguna, izin tombol laporan, sesi rusak/kedaluwarsa, dan layout ponsel. Audit dependensi web: **0 vulnerabilities** setelah pembaruan Vite.
 - Pemeriksaan sintaks Python pada API, prediktor, dan training: **berhasil** sebelum perubahan terakhir.
 - Dependensi dasar API, Alembic, PyTorch CPU, dan torchvision sudah dipasang pada lingkungan pengerjaan.
+- `flutter analyze`: **No issues found**. `flutter test`: **2 passed**, mencakup formulir registrasi dan sesi API yang kedaluwarsa.
+- Workflow Checks untuk commit model `fcd5f44`: **success** di GitHub Actions, termasuk pemeriksaan migrasi PostgreSQL dan model.
 
 Sebagian pengujian API memakai SQLite sementara dan prediksi pengganti; satu pengujian integrasi memuat checkpoint asli dan memverifikasi `/predict`, hasil laporan, serta hitungan kategori dashboard. Koneksi PostgreSQL dan Cloudinary masih perlu diperiksa terpisah.
 
@@ -27,7 +29,7 @@ Sebagian pengujian API memakai SQLite sementara dan prediksi pengganti; satu pen
 - Dataset awal tidak menyediakan cukup gambar Plastic; sumber diganti ke RealWaste. Sebanyak 600 gambar telah diunduh. Detail sumber dan lisensi ada di `ml/DATASET.md`.
 - Training selesai: akurasi test **96,67% (87/90)**; checkpoint terbaik dipilih dari validation set. Bobot model, metrik, confusion matrix, classification report, dan manifest split tersedia di `ml/artifacts/`.
 - Migrasi database, PostgreSQL, Cloudinary, dan konfigurasi produksi belum diuji end to end.
-- Android belum dianalisis/dibuild; APK dan pengujian perangkat belum tersedia.
+- Android telah dianalisis dan diuji sebagai widget; build APK melalui CI dan pengujian perangkat masih perlu diverifikasi. Android SDK belum tersedia secara lokal.
 - Pemeriksaan UI di browser, dokumentasi instalasi/API/ERD lengkap, dan video demo belum selesai.
 - Repository GitHub: https://github.com/MhmmdIchsan/CamPah. Remote `origin` disiapkan untuk sinkronisasi progres; layanan Render belum dibuat.
 
