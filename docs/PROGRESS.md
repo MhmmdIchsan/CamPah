@@ -1,43 +1,43 @@
-# Progres implementasi
+# Progres CamPah
 
-Tanggal pencatatan awal: **2 November 2026 (Asia/Jakarta)**.
+Pembaruan: **2 November 2026 (Asia/Jakarta)**. Repository: https://github.com/MhmmdIchsan/CamPah. Perubahan fitur/perbaikan dicatat dengan Conventional Commits dan file terkait.
 
-Nama aplikasi ditetapkan sebagai **CamPah**.
+## Implementasi tersedia
 
-## Sudah dibuat
+- API: registrasi/login JWT, akses Admin/User, CRUD laporan dengan soft delete, pencarian/filter/pagination, status history, dashboard, manajemen pengguna, prediksi, serta migrasi Alembic.
+- Web: dashboard responsif, autentikasi dan penanganan sesi, laporan dengan foto/GPS, ubah/hapus sesuai izin, filter, pagination, serta manajemen nama/role/status pengguna.
+- Android: source Flutter dan platform Android dengan nama/ikon CamPah, kamera/galeri, GPS, hasil AI beserta confidence, dashboard, riwayat dengan pagination, dan penanganan sesi kedaluwarsa.
+- ML: pengunduh RealWaste yang dapat dilanjutkan dengan revisi sumber tetap, training MobileNetV2, checkpoint, evaluasi, contoh foto, dan atribusi.
+- Dokumentasi: PRD, instalasi, API/OpenAPI, arsitektur/ERD, deployment Render, model card, dan skenario video demo.
 
-- Source API untuk registrasi/login JWT, akses Admin/User, CRUD laporan dengan soft delete, pencarian/filter/pagination, status laporan, dashboard, manajemen pengguna, dan endpoint prediksi.
-- Source web untuk autentikasi, dashboard, formulir dan pengelolaan laporan, serta manajemen pengguna.
-- Source Flutter dan platform Android untuk autentikasi, dashboard, kamera/galeri, GPS, pembuatan laporan, hasil AI, serta riwayat dengan pagination.
-- Pengunduh dataset Mendeley dan pipeline training/evaluasi MobileNetV2.
-- Migrasi awal Alembic, konfigurasi PostgreSQL lokal, dan blueprint Render.
+## Hasil verifikasi
 
-## Verifikasi yang telah dilakukan
+| Pemeriksaan | Hasil |
+| --- | --- |
+| API dan migrasi SQLite | **9 passed**, termasuk akses lintas pengguna, status, soft delete, input, foto kamera, dan model asli |
+| Browser Playwright | **3 passed**: alur User/Admin, sesi rusak/kedaluwarsa, dan layout ponsel |
+| Build web | Berhasil dengan Vite 8; audit dependensi **0 vulnerabilities** |
+| Flutter analyze | **No issues found** |
+| Flutter test | **2 passed**: formulir registrasi dan sesi API kedaluwarsa |
+| GitHub Checks | **Success** untuk commit `26c3cb0`; mencakup PostgreSQL 16, model, API, dan web |
+| Android APK | Build debug berhasil pada [run 41415610323](https://github.com/MhmmdIchsan/CamPah/actions/runs/41415610323); artifact `campah-apk` |
+| Paket pengumpulan lokal | Arsip dataset berisi 600 foto terverifikasi; arsip model berisi checkpoint, source training, evaluasi, dan atribusi; integritas ZIP diperiksa |
 
-- `python -m pytest api/tests -q`: **9 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, orientasi foto kamera, migrasi Alembic naik–turun pada SQLite, dan integrasi model terlatih.
-- `npm run build` di `web/`: **berhasil**.
-- `npm run test:e2e`: **3 passed**, memverifikasi pembuatan/perubahan laporan, status Admin, ubah nama pengguna, izin tombol laporan, sesi rusak/kedaluwarsa, dan layout ponsel. Audit dependensi web: **0 vulnerabilities** setelah pembaruan Vite.
-- Pemeriksaan sintaks Python pada API, prediktor, dan training: **berhasil** sebelum perubahan terakhir.
-- Dependensi dasar API, Alembic, PyTorch CPU, dan torchvision sudah dipasang pada lingkungan pengerjaan.
-- `flutter analyze`: **No issues found**. `flutter test`: **2 passed**, mencakup formulir registrasi dan sesi API yang kedaluwarsa.
-- Workflow Checks untuk commit model `fcd5f44`: **success** di GitHub Actions, termasuk pemeriksaan migrasi PostgreSQL dan model.
+Model dilatih pada 600 foto, masing-masing 200 per kategori, dengan split 420 train / 90 validation / 90 test. Checkpoint terbaik dipilih berdasarkan validation set; akurasi test **96,67% (87/90)**. Hasil lengkap ada di `ml/artifacts/`. Dataset awal Mendeley diganti karena kelas Plastic hanya menyediakan dua file; lihat `ml/DATASET.md`.
 
-Sebagian pengujian API memakai SQLite sementara dan prediksi pengganti; satu pengujian integrasi memuat checkpoint asli dan memverifikasi `/predict`, hasil laporan, serta hitungan kategori dashboard. Koneksi PostgreSQL dan Cloudinary masih perlu diperiksa terpisah.
+Sebagian pengujian API memakai SQLite dan prediksi pengganti untuk menguji aturan bisnis. Satu pengujian integrasi memuat checkpoint asli dan memeriksa `/predict`, laporan, serta dashboard. Migrasi PostgreSQL diperiksa terpisah di GitHub Actions.
 
-## Masih dikerjakan / belum diverifikasi
+## Artefak dan pengumpulan
 
-- Dataset awal tidak menyediakan cukup gambar Plastic; sumber diganti ke RealWaste. Sebanyak 600 gambar telah diunduh. Detail sumber dan lisensi ada di `ml/DATASET.md`.
-- Training selesai: akurasi test **96,67% (87/90)**; checkpoint terbaik dipilih dari validation set. Bobot model, metrik, confusion matrix, classification report, dan manifest split tersedia di `ml/artifacts/`.
-- Migrasi database, PostgreSQL, Cloudinary, dan konfigurasi produksi belum diuji end to end.
-- Android telah dianalisis dan diuji sebagai widget; build APK melalui CI dan pengujian perangkat masih perlu diverifikasi. Android SDK belum tersedia secara lokal.
-- Pemeriksaan UI di browser, dokumentasi instalasi/API/ERD lengkap, dan video demo belum selesai.
-- Repository GitHub: https://github.com/MhmmdIchsan/CamPah. Remote `origin` disiapkan untuk sinkronisasi progres; layanan Render belum dibuat.
+`python scripts/package_submission.py` membuat `artifacts/campah-dataset.zip`, `artifacts/campah-ml.zip`, dan `SHA256SUMS.txt`. APK dari GitHub Actions dapat diunduh melalui artifact `campah-apk`. Folder `artifacts/` diabaikan Git; bobot model dan evaluasi tetap disimpan di repository.
 
-## Tahap berikutnya
+APK debug menggunakan `http://10.0.2.2:8000` untuk API pada host emulator. APK yang menunjuk layanan publik perlu dibuild ulang setelah URL HTTPS API tersedia. Build release assessment masih memakai signing debug.
 
-1. Jalankan ulang pengujian API dan uji migrasi; perbaiki temuan integrasi.
-2. Selesaikan unduhan dan training dataset, kemudian verifikasi inferensi model.
-3. Periksa web dan aplikasi Flutter; hasilkan APK jika toolchain tersedia.
-4. Lengkapi dokumentasi dan paket pengumpulan, lalu deploy setelah repository serta akun layanan tersedia.
+## Belum selesai / membutuhkan layanan atau perangkat
 
-Catatan ini menjelaskan kondisi implementasi sebenarnya, bukan klaim bahwa seluruh persyaratan assessment telah selesai.
+1. Akun Cloudinary dan Render belum disiapkan, sehingga demo web/API publik serta persistensi foto pada layanan nyata belum diverifikasi. Konfigurasi dan panduan deployment sudah tersedia.
+2. Kamera, galeri, GPS, dan API pada perangkat Android nyata belum diuji. Build dan widget test tidak menggantikan pengujian ini.
+3. Video dengan penjelasan kandidat maksimal 10 menit belum direkam; skenario tersedia di `docs/DEMO_SCRIPT.md`.
+4. URL demo, URL API, tautan distribusi APK publik, serta video perlu dilengkapi sebelum pengumpulan akhir.
+
+Tanggal/jam deadline resmi tetap perlu dicocokkan dengan email asli. Target internal perencanaan adalah 5 November 2026 pukul 23.59 WIB.
