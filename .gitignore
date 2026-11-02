@@ -20,6 +20,7 @@ mobile/android/key.properties
 mobile/android/local.properties
 ml/data/
 ml/artifacts/*.pt
+!ml/artifacts/best_model.pt
 *.apk
 *.db
 .tools/

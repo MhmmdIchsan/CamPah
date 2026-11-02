@@ -1,7 +1,21 @@
-# Dataset
+# RealWaste dataset for CamPah
 
-Source: [Automatic waste management dataset](https://data.mendeley.com/datasets/d4vsy9c9wk/1), Mendeley Data, DOI `10.17632/d4vsy9c9wk.1`, licensed CC BY 4.0. Credit: Abdun Nafi Annafi, Tasnuva Muhtasim, Sheikh Kaif, Tahmeed Mohammad Farhan, Aynun Naher Mou, and Mayen Uddin Mojumdar (2025).
+Source: [RealWaste, UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/908/realwaste). Authors: Sam Single, Saeid Iranmanesh, and Raad Raad (2023). Paper: *RealWaste: A Novel Real-Life Data Set for Landfill Waste Classification Using Deep Learning*, Information 14(12), 633, https://doi.org/10.3390/info14120633.
 
-Run `python ml/download_dataset.py --per-class 100` from the repository root. It selects a deterministic subset of each class, verifies original SHA-256 checksums, resizes images to a maximum edge of 512 pixels, and records original filenames, URLs, checksums, and modifications in `ml/data/source_manifest.json`. Files are placed in `ml/data/Organic Waste`, `ml/data/Plastic Waste`, and `ml/data/Paper Waste`. Keep at least 50 unique images per class. The training script records exact counts and train/validation/test file paths in `ml/artifacts/split_manifest.json`. The downloaded dataset is excluded from Git due to size; include the downloadable archive and this source link in the submission.
+Files come from the [authors' repository](https://github.com/sam-single/realwaste). UCI lists CC BY 4.0; the authors' repository lists **CC BY-NC-SA 4.0**. This assessment uses the files for noncommercial purposes and retains attribution and the authors' more restrictive license notice. Resized dataset derivatives retain the same notice. The discrepancy is documented rather than assuming unrestricted commercial use.
 
-Run from repository root: `python ml/train.py --data ml/data --out ml/artifacts`. The script checks image validity and exact duplicates before a stratified 70/15/15 split. Only the training split receives augmentation. Report the real test accuracy; the 80% target is not a guaranteed result.
+## Class mapping
+
+| Source folders | CamPah label |
+| --- | --- |
+| Food Organics, Vegetation | Organic Waste |
+| Plastic | Plastic Waste |
+| Paper | Paper Waste |
+
+Run `python ml/download_dataset.py` from the repository root. It selects 200 images per target class (600 total), with seed 42 and a pinned source Git commit. The script verifies source Git blob checksums, corrects EXIF orientation, converts images to RGB, and resizes the longest edge to at most 512 pixels. Source URLs, filenames, checksums, modifications, and the exact selection are preserved in `ml/data/realwaste/source_manifest.json` and `selection.json`. Rerun the same command to resume an interrupted download.
+
+Train with `python ml/train.py --data ml/data/realwaste --out ml/artifacts`. Splits are stratified 70/15/15 after removing exact duplicates; augmentation is applied only to training data. Checkpoint selection uses validation accuracy. The held out test split is used only for final evaluation. Report the measured accuracy even if below the 80% target. Mixed or unsupported materials and different camera environments remain limitations of a three-class model.
+
+## Change from the initial PRD
+
+The initially selected Mendeley dataset (`10.17632/d4vsy9c9wk.1`) exposed only two files in its Plastic folder, both HEIC, when checked on 2 November 2026. That does not meet the minimum 50 images per class required by the training pipeline. RealWaste replaces that source for all three classes to avoid combining class labels with different source domains. Partial Mendeley downloads are excluded from the RealWaste training input.

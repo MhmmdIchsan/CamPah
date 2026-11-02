@@ -1,0 +1,42 @@
+{
+  "license": "CC BY-NC-SA 4.0 (authors repository); UCI lists CC BY 4.0",
+  "source": "https://archive.ics.uci.edu/dataset/908/realwaste",
+  "images": [
+    {
+      "example": "organic.jpg",
+      "expected_class": "Organic Waste",
+      "source": {
+        "label": "Organic Waste",
+        "original_path": "RealWaste/Food Organics/Food Organics_80.jpg",
+        "original_git_sha1": "2762d6eb43eeb51ef258c38157e13881d2e18e92",
+        "processed_sha256": "8a31b77a3a12ecdcc39547810aba3cc36f8b8c225a380216f298d84f53f581d2",
+        "path": "Organic Waste/Food Organics_80.jpg",
+        "download_url": "https://raw.githubusercontent.com/sam-single/realwaste/156e8e9154eeb163df30fcfd767f55b19633bb06/RealWaste/Food%20Organics/Food%20Organics_80.jpg"
+      }
+    },
+    {
+      "example": "plastic.jpg",
+      "expected_class": "Plastic Waste",
+      "source": {
+        "label": "Plastic Waste",
+        "original_path": "RealWaste/Plastic/Plastic_594.jpg",
+        "original_git_sha1": "bbacb8780682f129efa7aaff1ae59fe6e0f10914",
+        "processed_sha256": "a1a0811d42476267f9a9908fca92fa396672adf229343cc83c60d4a28bd0bdb1",
+        "path": "Plastic Waste/Plastic_594.jpg",
+        "download_url": "https://raw.githubusercontent.com/sam-single/realwaste/156e8e9154eeb163df30fcfd767f55b19633bb06/RealWaste/Plastic/Plastic_594.jpg"
+      }
+    },
+    {
+      "example": "paper.jpg",
+      "expected_class": "Paper Waste",
+      "source": {
+        "label": "Paper Waste",
+        "original_path": "RealWaste/Paper/Paper_176.jpg",
+        "original_git_sha1": "39b7fb8d4f716323e3453f9bf6bfbe8f0af38173",
+        "processed_sha256": "2ae7c0f72349e8861d9b5d4147c3572756509f138f96b2b4ae18ab2ddd275d44",
+        "path": "Paper Waste/Paper_176.jpg",
+        "download_url": "https://raw.githubusercontent.com/sam-single/realwaste/156e8e9154eeb163df30fcfd767f55b19633bb06/RealWaste/Paper/Paper_176.jpg"
+      }
+    }
+  ]
+}

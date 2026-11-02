@@ -14,18 +14,18 @@ Nama aplikasi ditetapkan sebagai **CamPah**.
 
 ## Verifikasi yang telah dilakukan
 
-- `python -m pytest api/tests -q`: **7 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, dan migrasi Alembic naik–turun pada SQLite.
+- `python -m pytest api/tests -q`: **8 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, migrasi Alembic naik–turun pada SQLite, dan integrasi model terlatih.
 - `npm run build` di `web/`: **berhasil**.
 - `npm run test:e2e`: **3 passed**, memverifikasi pembuatan/perubahan laporan, status Admin, ubah nama pengguna, izin tombol laporan, sesi rusak/kedaluwarsa, dan layout ponsel. Audit dependensi web: **0 vulnerabilities** setelah pembaruan Vite.
 - Pemeriksaan sintaks Python pada API, prediktor, dan training: **berhasil** sebelum perubahan terakhir.
 - Dependensi dasar API, Alembic, PyTorch CPU, dan torchvision sudah dipasang pada lingkungan pengerjaan.
 
-Pengujian API menggunakan SQLite sementara dan prediksi pengganti. Hasil tersebut belum membuktikan koneksi PostgreSQL, Cloudinary, atau inferensi model terlatih.
+Sebagian pengujian API memakai SQLite sementara dan prediksi pengganti; satu pengujian integrasi memuat checkpoint asli dan memverifikasi `/predict`, hasil laporan, serta hitungan kategori dashboard. Koneksi PostgreSQL dan Cloudinary masih perlu diperiksa terpisah.
 
 ## Masih dikerjakan / belum diverifikasi
 
-- Dataset awal tidak menyediakan cukup gambar Plastic; sumber diganti ke RealWaste. Sebanyak 600 gambar telah diunduh, dan training sedang berjalan. Detail sumber dan lisensi ada di `ml/DATASET.md`.
-- Training model, evaluasi test set, bobot model, confusion matrix, dan classification report belum tersedia.
+- Dataset awal tidak menyediakan cukup gambar Plastic; sumber diganti ke RealWaste. Sebanyak 600 gambar telah diunduh. Detail sumber dan lisensi ada di `ml/DATASET.md`.
+- Training selesai: akurasi test **96,67% (87/90)**; checkpoint terbaik dipilih dari validation set. Bobot model, metrik, confusion matrix, classification report, dan manifest split tersedia di `ml/artifacts/`.
 - Migrasi database, PostgreSQL, Cloudinary, dan konfigurasi produksi belum diuji end to end.
 - Android belum dianalisis/dibuild; APK dan pengujian perangkat belum tersedia.
 - Pemeriksaan UI di browser, dokumentasi instalasi/API/ERD lengkap, dan video demo belum selesai.

@@ -18,6 +18,8 @@ from sqlalchemy.pool import StaticPool
 from app import main
 from app.database import Base, ReportStatusHistory, User, get_db
 
+REAL_PREDICT_IMAGE = main.predict_image
+
 
 @pytest.fixture
 def system(monkeypatch, tmp_path):
@@ -168,3 +170,30 @@ def test_pagination_invalid_status_and_prediction(system):
     prediction = client.post("/predict", headers=auth(account), files={"image": photo()})
     assert prediction.status_code == 200
     assert prediction.json() == {"category": "Plastic Waste", "confidence": 0.91}
+
+
+def test_real_model_prediction_and_report(system, monkeypatch):
+    torch = pytest.importorskip("torch")
+    model_path = Path(__file__).resolve().parents[2] / "ml" / "artifacts" / "best_model.pt"
+    if not model_path.exists():
+        pytest.skip("Trained model is not available")
+    from app.predictor import load_model
+    torch.set_num_threads(2)
+    monkeypatch.setenv("MODEL_PATH", str(model_path))
+    load_model.cache_clear()
+    monkeypatch.setattr(main, "predict_image", REAL_PREDICT_IMAGE)
+    client, _ = system
+    account = signup(client)
+    example = model_path.parent.parent / "examples" / "organic.jpg"
+    image = ("organic.jpg", example.read_bytes(), "image/jpeg")
+    prediction = client.post("/predict", headers=auth(account), files={"image": image})
+    assert prediction.status_code == 200, prediction.text
+    result = prediction.json()
+    assert result["category"] in main.CATEGORIES
+    assert 0 <= result["confidence"] <= 1
+    report = client.post("/reports", headers=auth(account), data={"description": "Organic waste model integration", "latitude": 0, "longitude": 0}, files={"image": image})
+    assert report.status_code == 201, report.text
+    assert report.json()["ai_category"] == result["category"]
+    assert report.json()["ai_confidence"] == pytest.approx(result["confidence"])
+    assert client.get("/dashboard", headers=auth(account)).json()["by_category"][result["category"]] == 1
+    load_model.cache_clear()
