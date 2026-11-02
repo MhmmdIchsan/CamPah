@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--out", type=Path, default=Path("ml/data/realwaste"))
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--workers", type=int, default=6)
+    parser.add_argument("--revision", help="Override the source revision pinned by the submitted manifest")
     args = parser.parse_args()
     if args.per_class < 50 or args.workers < 1:
         parser.error("Use at least 50 images per class and at least 1 worker")
@@ -42,8 +43,13 @@ def main():
             if selection["seed"] != args.seed or selection["per_class"] != args.per_class:
                 raise SystemExit("Existing selection differs. Use a new --out directory to keep dataset versions separate.")
             commit, selected = selection["commit"], selection["files"]
+            if args.revision and args.revision != commit:
+                raise SystemExit("Existing selection uses a different revision. Use a new --out directory.")
         else:
-            response = client.get(f"https://api.github.com/repos/{REPOSITORY}/commits/main", timeout=45)
+            submitted_manifest = Path(__file__).resolve().parent / "artifacts" / "source_manifest.json"
+            submitted = json.loads(submitted_manifest.read_text(encoding="utf-8")) if submitted_manifest.exists() else {}
+            revision = args.revision or submitted.get("commit", "main")
+            response = client.get(f"https://api.github.com/repos/{REPOSITORY}/commits/{revision}", timeout=45)
             response.raise_for_status()
             commit = response.json()["sha"]
             response = client.get(f"https://api.github.com/repos/{REPOSITORY}/git/trees/{commit}", params={"recursive": 1}, timeout=45)

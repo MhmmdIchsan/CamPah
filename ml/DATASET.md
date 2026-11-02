@@ -14,6 +14,8 @@ Files come from the [authors' repository](https://github.com/sam-single/realwast
 
 Run `python ml/download_dataset.py` from the repository root. It selects 200 images per target class (600 total), with seed 42 and a pinned source Git commit. The script verifies source Git blob checksums, corrects EXIF orientation, converts images to RGB, and resizes the longest edge to at most 512 pixels. Source URLs, filenames, checksums, modifications, and the exact selection are preserved in `ml/data/realwaste/source_manifest.json` and `selection.json`. Rerun the same command to resume an interrupted download.
 
+Fresh downloads default to the revision recorded in the committed `ml/artifacts/source_manifest.json`, so later changes in the upstream repository do not silently change the submitted dataset. To deliberately select another upstream revision, pass `--revision COMMIT_SHA` and use a separate output directory.
+
 Train with `python ml/train.py --data ml/data/realwaste --out ml/artifacts`. Splits are stratified 70/15/15 after removing exact duplicates; augmentation is applied only to training data. Checkpoint selection uses validation accuracy. The held out test split is used only for final evaluation. Report the measured accuracy even if below the 80% target. Mixed or unsupported materials and different camera environments remain limitations of a three-class model.
 
 ## Change from the initial PRD
