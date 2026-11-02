@@ -1,0 +1,103 @@
+Halo,
+
+Terima kasih telah mengikuti proses rekrutmen di Bilcode Technology.
+
+Sebagai tahap selanjutnya, kami ingin mengundang Anda untuk mengikuti Technical Coding Test – Fullstack Developer yang mencakup Website Development, Mobile Development, dan Machine Learning.
+
+Berikut detail pengerjaan tes:
+
+1. Informasi Tes
+
+Posisi: Fullstack Developer
+Jenis Tes: Technical Assessment / Take Home Project
+Deadline: 5 hari kalender sejak email ini diterima
+Sistem Pengerjaan: Individual
+2. Studi Kasus: Smart Waste Management System
+
+Anda diminta membuat sebuah sistem pengelolaan sampah berbasis teknologi yang terdiri dari tiga komponen utama:
+
+A. Website Development
+
+Login dan autentikasi berdasarkan role (Admin dan User).
+Dashboard statistik laporan sampah.
+Manajemen laporan (CRUD).
+Filter dan pencarian laporan.
+Manajemen pengguna.
+Update status laporan (Pending, In Progress, Completed, Rejected).
+Responsive design.
+B. Mobile Application
+
+Register dan login.
+Dashboard pengguna.
+Membuat laporan sampah dengan foto, lokasi GPS, dan deskripsi.
+Melihat riwayat dan status laporan.
+Integrasi API untuk mengirim dan mengambil data.
+Integrasi fitur AI Image Detection.
+C. Machine Learning
+
+Membuat model klasifikasi gambar sampah.
+Minimal 3 kategori (Organic Waste, Plastic Waste, dan Paper Waste).
+Dataset minimal 150 gambar.
+Menggunakan Python, TensorFlow/Keras atau PyTorch.
+Melakukan training dan testing model.
+Menampilkan accuracy, confusion matrix, dan classification report.
+Target akurasi minimal 80% pada data testing.
+Membuat REST API untuk melakukan prediksi gambar menggunakan FastAPI atau framework sejenis.
+3. Teknologi yang Direkomendasikan
+
+Website: Laravel / React / Next.js
+Mobile: Flutter / React Native
+Backend: Laravel / Node.js / FastAPI
+Database: MySQL / PostgreSQL
+Machine Learning: Python, TensorFlow / PyTorch
+Version Control: Git & GitHub
+Anda diperbolehkan menggunakan teknologi lain sesuai keahlian masing-masing.
+
+4. Ketentuan Pengumpulan
+
+Mohon kumpulkan hasil pengerjaan berupa:
+
+GitHub Repository (source code).
+Link demo website.
+APK atau link demo aplikasi mobile.
+Dokumentasi API.
+Database schema atau ERD.
+Source code dan model Machine Learning.
+Dataset beserta sumbernya.
+Hasil evaluasi model.
+README berisi panduan instalasi dan penggunaan.
+Video demo maksimal 10 menit yang menjelaskan hasil pengerjaan.
+5. Sistem Penilaian
+
+Penilaian akan dilakukan berdasarkan beberapa aspek:
+
+Website Development: 25%
+Mobile Development: 20%
+Machine Learning: 20%
+Backend & API Integration: 15%
+Database Design: 5%
+UI/UX: 5%
+Code Quality & Documentation: 10%
+Nilai minimum kelulusan adalah 75/100.
+
+6. Ketentuan Tambahan
+
+Pengerjaan dilakukan secara mandiri.
+Diperbolehkan menggunakan dokumentasi resmi, library, dan AI coding assistant.
+Kandidat wajib memahami seluruh kode yang dikumpulkan.
+Kandidat harus dapat menjelaskan arsitektur dan alur kerja aplikasi saat technical interview.
+Apabila terdapat kendala selama pengerjaan, silakan komunikasikan kepada tim recruitment kami.
+Deadline Pengumpulan: 5 hari kalender sejak email ini diterima.
+
+Hasil pengerjaan dapat dikirimkan dengan membalas email ini dan menyertakan seluruh link serta dokumen yang diperlukan.
+
+Terima kasih atas waktu dan partisipasi Anda.
+
+Selamat mengerjakan dan semoga sukses!
+
+Best Regards,
+Recruitment Team
+Bilcode Technology
+Website: https://bilcode.id
+Email: hiring@bilcode.id
+

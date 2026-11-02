@@ -1,0 +1,412 @@
+import io
+import logging
+import os
+import uuid
+from contextlib import asynccontextmanager
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Annotated, Literal
+
+import bcrypt
+import cloudinary
+import cloudinary.uploader
+import jwt
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, UploadFile, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.staticfiles import StaticFiles
+from PIL import Image, UnidentifiedImageError
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from sqlalchemy import func, or_, select
+from sqlalchemy.orm import Session
+
+from .database import Base, Report, ReportStatusHistory, SessionLocal, User, engine, get_db, utc_now
+
+STATUSES = ("Pending", "In Progress", "Completed", "Rejected")
+CATEGORIES = ("Organic Waste", "Plastic Waste", "Paper Waste")
+JWT_SECRET = os.getenv("JWT_SECRET", "development-only-change-this-secret")
+JWT_ALGORITHM = "HS256"
+MAX_IMAGE_BYTES = 8 * 1024 * 1024
+UPLOAD_DIR = Path(__file__).resolve().parent.parent / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+bearer = HTTPBearer(auto_error=False)
+logger = logging.getLogger(__name__)
+
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+def verify_password(password: str, password_hash: str) -> bool:
+    return bcrypt.checkpw(password.encode(), password_hash.encode())
+
+
+def token_for(user: User) -> str:
+    payload = {"sub": str(user.id), "exp": datetime.now(timezone.utc) + timedelta(hours=24)}
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def current_user(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
+    db: Annotated[Session, Depends(get_db)],
+) -> User:
+    if credentials is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user_id = int(payload["sub"])
+    except (jwt.PyJWTError, KeyError, ValueError):
+        raise HTTPException(status_code=401, detail="Invalid or expired token") from None
+    user = db.get(User, user_id)
+    if not user or not user.is_active:
+        raise HTTPException(status_code=401, detail="Account unavailable")
+    return user
+
+
+def admin_user(user: Annotated[User, Depends(current_user)]) -> User:
+    if user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
+
+class RegisterIn(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=72)
+
+    @field_validator("password")
+    @classmethod
+    def password_bytes(cls, value: str) -> str:
+        if len(value.encode("utf-8")) > 72:
+            raise ValueError("Password must be at most 72 UTF-8 bytes")
+        return value
+
+    @field_validator("name")
+    @classmethod
+    def nonblank_name(cls, value: str) -> str:
+        value = value.strip()
+        if len(value) < 2:
+            raise ValueError("Name must contain at least 2 characters")
+        return value
+
+
+class LoginIn(BaseModel):
+    email: EmailStr
+    password: str = Field(max_length=72)
+
+
+class UserOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    email: EmailStr
+    role: str
+    is_active: bool
+
+
+class AuthOut(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserOut
+
+
+class UserCreate(RegisterIn):
+    role: Literal["user", "admin"] = "user"
+
+
+class UserUpdate(BaseModel):
+    name: str | None = Field(default=None, min_length=2, max_length=120)
+    role: Literal["user", "admin"] | None = None
+    is_active: bool | None = None
+
+
+class ReportOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    user_id: int
+    description: str
+    latitude: float
+    longitude: float
+    image_url: str
+    status: str
+    ai_category: str | None
+    ai_confidence: float | None
+    created_at: datetime
+    updated_at: datetime
+
+
+class ReportList(BaseModel):
+    items: list[ReportOut]
+    total: int
+    page: int
+    page_size: int
+
+
+class ReportUpdate(BaseModel):
+    description: str | None = Field(default=None, min_length=10, max_length=2000)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+
+
+class StatusUpdate(BaseModel):
+    status: Literal["Pending", "In Progress", "Completed", "Rejected"]
+
+
+class PredictionOut(BaseModel):
+    category: str
+    confidence: float
+
+
+def read_image(data: bytes) -> None:
+    if not data or len(data) > MAX_IMAGE_BYTES:
+        raise HTTPException(status_code=422, detail="Image must be 1 byte to 8 MB")
+    try:
+        with Image.open(io.BytesIO(data)) as image:
+            image.verify()
+        with Image.open(io.BytesIO(data)) as image:
+            if image.format not in {"JPEG", "PNG", "WEBP"}:
+                raise ValueError("Unsupported image format")
+    except (UnidentifiedImageError, OSError, ValueError):
+        raise HTTPException(status_code=422, detail="Use a valid JPEG, PNG, or WEBP image") from None
+
+
+async def image_bytes(file: UploadFile) -> bytes:
+    data = await file.read(MAX_IMAGE_BYTES + 1)
+    read_image(data)
+    return data
+
+
+def store_image(data: bytes) -> tuple[str, str | None]:
+    if os.getenv("CLOUDINARY_URL"):
+        cloudinary.config(secure=True)
+        try:
+            uploaded = cloudinary.uploader.upload(data, folder="smart-waste")
+            return uploaded["secure_url"], uploaded["public_id"]
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail="Image storage unavailable") from exc
+    filename = f"{uuid.uuid4().hex}.jpg"
+    with Image.open(io.BytesIO(data)) as image:
+        image.convert("RGB").save(UPLOAD_DIR / filename, format="JPEG", quality=85)
+    return f"/uploads/{filename}", None
+
+
+def predict_image(data: bytes) -> PredictionOut:
+    from .predictor import predict
+
+    result = predict(data)
+    if result is None:
+        raise HTTPException(status_code=503, detail="ML model is not available")
+    return PredictionOut(category=result[0], confidence=result[1])
+
+
+def visible_report(db: Session, report_id: int, user: User) -> Report:
+    report = db.get(Report, report_id)
+    if not report or report.deleted_at or (user.role != "admin" and report.user_id != user.id):
+        raise HTTPException(status_code=404, detail="Report not found")
+    return report
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if os.getenv("APP_ENV") == "production":
+        if len(JWT_SECRET) < 32 or JWT_SECRET == "development-only-change-this-secret":
+            raise RuntimeError("Set a strong JWT_SECRET for production")
+        if not os.getenv("CLOUDINARY_URL") or not os.getenv("DATABASE_URL"):
+            raise RuntimeError("Production requires DATABASE_URL and CLOUDINARY_URL")
+    else:
+        Base.metadata.create_all(bind=engine)
+    email = os.getenv("ADMIN_EMAIL", "").strip().lower()
+    password = os.getenv("ADMIN_PASSWORD", "")
+    if email and password:
+        with SessionLocal() as db:
+            if not db.scalar(select(User).where(User.email == email)):
+                db.add(User(name="Administrator", email=email, password_hash=hash_password(password), role="admin"))
+                db.commit()
+    yield
+
+
+app = FastAPI(title="Smart Waste Management API", version="1.0.0", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")],
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_headers=["Authorization", "Content-Type"],
+)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.post("/auth/register", response_model=AuthOut, status_code=201)
+def register(payload: RegisterIn, db: Annotated[Session, Depends(get_db)]):
+    email = payload.email.lower()
+    if db.scalar(select(User).where(User.email == email)):
+        raise HTTPException(status_code=409, detail="Email already registered")
+    user = User(name=payload.name.strip(), email=email, password_hash=hash_password(payload.password), role="user")
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return AuthOut(access_token=token_for(user), user=UserOut.model_validate(user))
+
+
+@app.post("/auth/login", response_model=AuthOut)
+def login(payload: LoginIn, db: Annotated[Session, Depends(get_db)]):
+    user = db.scalar(select(User).where(User.email == payload.email.lower()))
+    if not user or not user.is_active or not verify_password(payload.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return AuthOut(access_token=token_for(user), user=UserOut.model_validate(user))
+
+
+@app.get("/auth/me", response_model=UserOut)
+def me(user: Annotated[User, Depends(current_user)]):
+    return user
+
+
+@app.get("/reports", response_model=ReportList)
+def list_reports(
+    db: Annotated[Session, Depends(get_db)],
+    user: Annotated[User, Depends(current_user)],
+    q: str = "",
+    report_status: str | None = Query(default=None, alias="status"),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
+):
+    if report_status and report_status not in STATUSES:
+        raise HTTPException(status_code=422, detail="Invalid report status")
+    conditions = [Report.deleted_at.is_(None)]
+    if user.role != "admin":
+        conditions.append(Report.user_id == user.id)
+    if report_status:
+        conditions.append(Report.status == report_status)
+    if q.strip():
+        conditions.append(or_(Report.description.ilike(f"%{q.strip()}%"), Report.ai_category.ilike(f"%{q.strip()}%")))
+    total = db.scalar(select(func.count(Report.id)).where(*conditions)) or 0
+    items = db.scalars(
+        select(Report).where(*conditions).order_by(Report.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
+    ).all()
+    return ReportList(items=items, total=total, page=page, page_size=page_size)
+
+
+@app.post("/reports", response_model=ReportOut, status_code=201)
+async def create_report(
+    db: Annotated[Session, Depends(get_db)],
+    user: Annotated[User, Depends(current_user)],
+    description: str = Form(min_length=10, max_length=2000),
+    latitude: float = Form(ge=-90, le=90),
+    longitude: float = Form(ge=-180, le=180),
+    image: UploadFile = File(),
+):
+    data = await image_bytes(image)
+    image_url, public_id = store_image(data)
+    report = Report(user_id=user.id, description=description.strip(), latitude=latitude, longitude=longitude,
+                    image_url=image_url, image_public_id=public_id, status="Pending")
+    db.add(report)
+    db.commit()
+    db.refresh(report)
+    try:
+        prediction = predict_image(data)
+        report.ai_category = prediction.category
+        report.ai_confidence = prediction.confidence
+        db.commit()
+        db.refresh(report)
+    except Exception:
+        # Inference is optional for report creation. The report remains available.
+        db.rollback()
+        logger.warning("Prediction unavailable for report %s", report.id, exc_info=True)
+    return report
+
+
+@app.get("/reports/{report_id}", response_model=ReportOut)
+def get_report(report_id: int, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    return visible_report(db, report_id, user)
+
+
+@app.patch("/reports/{report_id}", response_model=ReportOut)
+def update_report(report_id: int, payload: ReportUpdate, db: Annotated[Session, Depends(get_db)],
+                  user: Annotated[User, Depends(current_user)]):
+    report = visible_report(db, report_id, user)
+    if user.role != "admin" and report.status != "Pending":
+        raise HTTPException(status_code=403, detail="Only pending reports can be edited")
+    changes = payload.model_dump(exclude_unset=True, exclude_none=True)
+    for key, value in changes.items():
+        setattr(report, key, value)
+    db.commit()
+    db.refresh(report)
+    return report
+
+
+@app.delete("/reports/{report_id}", status_code=204)
+def delete_report(report_id: int, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    report = visible_report(db, report_id, user)
+    if user.role != "admin" and report.status != "Pending":
+        raise HTTPException(status_code=403, detail="Only pending reports can be deleted")
+    report.deleted_at = utc_now()
+    db.commit()
+
+
+@app.patch("/reports/{report_id}/status", response_model=ReportOut)
+def change_status(report_id: int, payload: StatusUpdate, db: Annotated[Session, Depends(get_db)],
+                  admin: Annotated[User, Depends(admin_user)]):
+    report = visible_report(db, report_id, admin)
+    if report.status != payload.status:
+        db.add(ReportStatusHistory(report_id=report.id, admin_id=admin.id, old_status=report.status,
+                                   new_status=payload.status))
+        report.status = payload.status
+        db.commit()
+        db.refresh(report)
+    return report
+
+
+@app.get("/dashboard")
+def dashboard(db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    conditions = [Report.deleted_at.is_(None)]
+    if user.role != "admin":
+        conditions.append(Report.user_id == user.id)
+    status_rows = db.execute(select(Report.status, func.count(Report.id)).where(*conditions).group_by(Report.status)).all()
+    category_rows = db.execute(select(Report.ai_category, func.count(Report.id)).where(*conditions, Report.ai_category.is_not(None)).group_by(Report.ai_category)).all()
+    by_status = {name: 0 for name in STATUSES}
+    by_status.update(dict(status_rows))
+    by_category = {name: 0 for name in CATEGORIES}
+    by_category.update(dict(category_rows))
+    return {"total": sum(by_status.values()), "by_status": by_status, "by_category": by_category}
+
+
+@app.get("/users", response_model=list[UserOut])
+def list_users(db: Annotated[Session, Depends(get_db)], admin: Annotated[User, Depends(admin_user)]):
+    return db.scalars(select(User).order_by(User.created_at.desc())).all()
+
+
+@app.post("/users", response_model=UserOut, status_code=201)
+def create_user(payload: UserCreate, db: Annotated[Session, Depends(get_db)], admin: Annotated[User, Depends(admin_user)]):
+    email = payload.email.lower()
+    if db.scalar(select(User).where(User.email == email)):
+        raise HTTPException(status_code=409, detail="Email already registered")
+    user = User(name=payload.name.strip(), email=email, password_hash=hash_password(payload.password), role=payload.role)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@app.patch("/users/{user_id}", response_model=UserOut)
+def update_user(user_id: int, payload: UserUpdate, db: Annotated[Session, Depends(get_db)],
+                admin: Annotated[User, Depends(admin_user)]):
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    changes = payload.model_dump(exclude_unset=True, exclude_none=True)
+    if admin.id == user.id and (changes.get("is_active") is False or changes.get("role") == "user"):
+        raise HTTPException(status_code=422, detail="Cannot remove your own admin access")
+    for key, value in changes.items():
+        setattr(user, key, value)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@app.post("/predict", response_model=PredictionOut)
+async def predict_endpoint(image: Annotated[UploadFile, File()], user: Annotated[User, Depends(current_user)]):
+    return predict_image(await image_bytes(image))

@@ -1,0 +1,43 @@
+databases:
+  - name: smart-waste-db
+    databaseName: smart_waste
+    user: smart_waste
+    plan: free
+
+services:
+  - type: web
+    name: smart-waste-api
+    runtime: python
+    plan: free
+    buildCommand: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r api/requirements.txt
+    startCommand: python api/start.py
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smart-waste-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MODEL_PATH
+        value: ../ml/artifacts/best_model.pt
+      - key: CORS_ORIGINS
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+  - type: web
+    name: smart-waste-web
+    runtime: static
+    buildCommand: cd web && npm ci && npm run build
+    staticPublishPath: web/dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
