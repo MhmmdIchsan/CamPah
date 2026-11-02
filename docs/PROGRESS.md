@@ -16,6 +16,7 @@ Nama aplikasi ditetapkan sebagai **CamPah**.
 
 - `python -m pytest api/tests -q`: **7 passed**, mencakup akses laporan, input kosong, password Unicode, pagination, kegagalan prediksi, dan migrasi Alembic naik–turun pada SQLite.
 - `npm run build` di `web/`: **berhasil**.
+- `npm run test:e2e`: **3 passed**, memverifikasi pembuatan/perubahan laporan, status Admin, ubah nama pengguna, izin tombol laporan, sesi rusak/kedaluwarsa, dan layout ponsel. Audit dependensi web: **0 vulnerabilities** setelah pembaruan Vite.
 - Pemeriksaan sintaks Python pada API, prediktor, dan training: **berhasil** sebelum perubahan terakhir.
 - Dependensi dasar API, Alembic, PyTorch CPU, dan torchvision sudah dipasang pada lingkungan pengerjaan.
 
@@ -23,7 +24,7 @@ Pengujian API menggunakan SQLite sementara dan prediksi pengganti. Hasil tersebu
 
 ## Masih dikerjakan / belum diverifikasi
 
-- Unduhan dataset terputus karena timeout dari server berkas sumber; mekanisme melanjutkan unduhan sedang diperbaiki. Flutter SDK sudah di-clone dan sedang mengunduh Dart SDK.
+- Dataset awal tidak menyediakan cukup gambar Plastic; sumber diganti ke RealWaste. Sebanyak 600 gambar telah diunduh, dan training sedang berjalan. Detail sumber dan lisensi ada di `ml/DATASET.md`.
 - Training model, evaluasi test set, bobot model, confusion matrix, dan classification report belum tersedia.
 - Migrasi database, PostgreSQL, Cloudinary, dan konfigurasi produksi belum diuji end to end.
 - Android belum dianalisis/dibuild; APK dan pengujian perangkat belum tersedia.
