@@ -175,8 +175,7 @@ def test_pagination_invalid_status_and_prediction(system):
 def test_real_model_prediction_and_report(system, monkeypatch):
     torch = pytest.importorskip("torch")
     model_path = Path(__file__).resolve().parents[2] / "ml" / "artifacts" / "best_model.pt"
-    if not model_path.exists():
-        pytest.skip("Trained model is not available")
+    assert model_path.exists(), "The trained checkpoint must be included with the source"
     from app.predictor import load_model
     torch.set_num_threads(2)
     monkeypatch.setenv("MODEL_PATH", str(model_path))

@@ -1,0 +1,3008 @@
+{
+  "train": [
+    {
+      "path": "Paper Waste/Paper_302.jpg",
+      "label": "Paper Waste",
+      "sha256": "a9b07d39a1f1a54d500be2e1162987c40e74d8cd9c0940ce7ec47dc2cf928455"
+    },
+    {
+      "path": "Plastic Waste/Plastic_579.jpg",
+      "label": "Plastic Waste",
+      "sha256": "17acab25db295a0c4edad3dee6dcae9338a62a2c1931f1a9dc5c01b47678918b"
+    },
+    {
+      "path": "Paper Waste/Paper_431.jpg",
+      "label": "Paper Waste",
+      "sha256": "2a530e1d42ac265702b4bc83399442f371849f4535ae8efd69879026ab8cb973"
+    },
+    {
+      "path": "Plastic Waste/Plastic_213.jpg",
+      "label": "Plastic Waste",
+      "sha256": "445701d61097b7eb2e3610c3cae95468ed77beb6601806292856b08557fe1ceb"
+    },
+    {
+      "path": "Organic Waste/Food Organics_192.jpg",
+      "label": "Organic Waste",
+      "sha256": "074ddd0af8a357248b1154f458c9d5d7fa6852b1c98aba6ab058d0414b00fe65"
+    },
+    {
+      "path": "Paper Waste/Paper_332.jpg",
+      "label": "Paper Waste",
+      "sha256": "d03a927049add139352fb1d5cc533041f77bae3d531987324f924dd4cabf94e4"
+    },
+    {
+      "path": "Plastic Waste/Plastic_658.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4aacf82b88b8ccf382b0aaaf879a72e8f5660633902b04b1637dbf310f48d9a9"
+    },
+    {
+      "path": "Organic Waste/Food Organics_1.jpg",
+      "label": "Organic Waste",
+      "sha256": "a5f890141b1d5d2cfdfa206b176eb0d6ec98c4f9028ea60a4afc267a5d54500a"
+    },
+    {
+      "path": "Organic Waste/Food Organics_30.jpg",
+      "label": "Organic Waste",
+      "sha256": "321aa1b072dc615080955147ceb5a7bf4178d8da09f0e5bcd58c532e9331fa9c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_304.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b1426ac5aeff76485e93309517511ad5130d14247cc61e80da7b44ec977eacb9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_135.jpg",
+      "label": "Plastic Waste",
+      "sha256": "18e9108e75c4069db907466fe878642349c7cb43ecbdf74f3264cde83b79ab25"
+    },
+    {
+      "path": "Paper Waste/Paper_409.jpg",
+      "label": "Paper Waste",
+      "sha256": "d8f4c9a3e53ac019df37adfb742ca2ad6c879cc024c02823e03aa6e3226d5679"
+    },
+    {
+      "path": "Plastic Waste/Plastic_674.jpg",
+      "label": "Plastic Waste",
+      "sha256": "eacea64f88a9f38d4a85d8c6e72983837576c681a3ace2228ba9e453fe15bcfe"
+    },
+    {
+      "path": "Organic Waste/Vegetation_18.jpg",
+      "label": "Organic Waste",
+      "sha256": "32ac93c81f9f254fa39584ef46a7d1cbb021931278accd1fd4fcc73bb5866d7e"
+    },
+    {
+      "path": "Plastic Waste/Plastic_404.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4a978bb01adc7d67cfe4918393726a901feb86326610e1d129d178eee92e9bcb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_649.jpg",
+      "label": "Plastic Waste",
+      "sha256": "334fcef07da6a6defad5e49bc41b20a3fbcb5d4719145077185fdfb8d1862476"
+    },
+    {
+      "path": "Organic Waste/Vegetation_84.jpg",
+      "label": "Organic Waste",
+      "sha256": "bdab335586e0fb38e0493785226cbad6ee664cb74ff55018402dfa4081edc063"
+    },
+    {
+      "path": "Organic Waste/Food Organics_324.jpg",
+      "label": "Organic Waste",
+      "sha256": "ea1cd28326fd15c52c384bbd94f518933197d544b9c855d203d44a35f9b0f3fb"
+    },
+    {
+      "path": "Paper Waste/Paper_495.jpg",
+      "label": "Paper Waste",
+      "sha256": "875c0633d04ef720aefd0734c37445d904b4b19f8208203608b28d4689f258db"
+    },
+    {
+      "path": "Paper Waste/Paper_344.jpg",
+      "label": "Paper Waste",
+      "sha256": "a5292f2dd13a6fd1468404dee9a590633a8570697be3b7a7cb869365a800563a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_864.jpg",
+      "label": "Plastic Waste",
+      "sha256": "429f5d72e732f77fbe6e693bef5030389e774b6ddbc4d03767771f32692ee8ea"
+    },
+    {
+      "path": "Plastic Waste/Plastic_890.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6f26de0cf31f6ecc1a69060c48387c7bdbc9bb91e67e36ff501ff3251d9b5469"
+    },
+    {
+      "path": "Organic Waste/Food Organics_309.jpg",
+      "label": "Organic Waste",
+      "sha256": "5b6967c2e879deb244d4a5b01abf1504cfebef1caa59a34b339838af05dad657"
+    },
+    {
+      "path": "Paper Waste/Paper_209.jpg",
+      "label": "Paper Waste",
+      "sha256": "fe198d0f5146e0792919fe39230484dece453b6576f682992ed377acb600d8a9"
+    },
+    {
+      "path": "Organic Waste/Vegetation_408.jpg",
+      "label": "Organic Waste",
+      "sha256": "2542c96570b2b45ec83c5e285e1b805a2d68ef9e2e801b919271859cc979e5dd"
+    },
+    {
+      "path": "Plastic Waste/Plastic_429.jpg",
+      "label": "Plastic Waste",
+      "sha256": "11f506d697c7af0bbf548ee421326b76499b840b076be337ebd5074e1034aff8"
+    },
+    {
+      "path": "Plastic Waste/Plastic_283.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ef966ceeaaac67747592318f097755d11b3d7e162be587332fd90e0e174bf825"
+    },
+    {
+      "path": "Plastic Waste/Plastic_345.jpg",
+      "label": "Plastic Waste",
+      "sha256": "cd1175b4a82607e39a62e23572c64d43ade946e336f8ac832482427436939be7"
+    },
+    {
+      "path": "Organic Waste/Food Organics_121.jpg",
+      "label": "Organic Waste",
+      "sha256": "4a564baff7eed6f68e24f824d89c78f0838f7b2058de93e84ed4ae5991183dd7"
+    },
+    {
+      "path": "Paper Waste/Paper_424.jpg",
+      "label": "Paper Waste",
+      "sha256": "b0681ae89fd716a6109f9968cb33533e5bc843d101df492a5456e264a955edc6"
+    },
+    {
+      "path": "Organic Waste/Food Organics_109.jpg",
+      "label": "Organic Waste",
+      "sha256": "6a929fe7ddad49df2db07f74d224a5c1c80985b5dd88fbed01e03ee9b3c940a6"
+    },
+    {
+      "path": "Paper Waste/Paper_274.jpg",
+      "label": "Paper Waste",
+      "sha256": "6d206db7f1f53f9fd3b12223e62ee9397825022721992ba8b6d9f3cecc7c5f56"
+    },
+    {
+      "path": "Organic Waste/Vegetation_400.jpg",
+      "label": "Organic Waste",
+      "sha256": "c7cd978eba5ebafb13d88a4bd5c09f8471db429c6bd371e736b9a405cb2e3bee"
+    },
+    {
+      "path": "Paper Waste/Paper_355.jpg",
+      "label": "Paper Waste",
+      "sha256": "b498d53effd1916b67cddfdacb5499368276edde6d3a2a748ae3c75d3aada78b"
+    },
+    {
+      "path": "Organic Waste/Vegetation_308.jpg",
+      "label": "Organic Waste",
+      "sha256": "50d4ccb9399ad2245e988589f0f0ebca886ea997c792d31b80167f701b43643e"
+    },
+    {
+      "path": "Organic Waste/Food Organics_8.jpg",
+      "label": "Organic Waste",
+      "sha256": "fb9647ef3c2daa520bf4357d8f5127ba776231fdcda03ec5f111432150adc690"
+    },
+    {
+      "path": "Paper Waste/Paper_227.jpg",
+      "label": "Paper Waste",
+      "sha256": "e1d4feeaa7f0a4d2fcd5cdcd0bdd5c8a10cbc34a76147e00325e3508559015a7"
+    },
+    {
+      "path": "Paper Waste/Paper_2.jpg",
+      "label": "Paper Waste",
+      "sha256": "60cf4d60d24c00f5d1ab82c0cd6ef4b1d9201a1ef9d55d9c8b36e47874f20224"
+    },
+    {
+      "path": "Paper Waste/Paper_492.jpg",
+      "label": "Paper Waste",
+      "sha256": "5f975063a65559317473b25a46826987c6995a27ef94cba967602fa2c86864a0"
+    },
+    {
+      "path": "Organic Waste/Vegetation_314.jpg",
+      "label": "Organic Waste",
+      "sha256": "a1d0f511bbb775fb3cf435f1e8a2299ad91dfdc8d0f662e56e352b435c7d94e6"
+    },
+    {
+      "path": "Organic Waste/Food Organics_128.jpg",
+      "label": "Organic Waste",
+      "sha256": "ac7b519e724f9df97b8b484e1bca0889c051cc436082cbaa00774738bd2591b1"
+    },
+    {
+      "path": "Organic Waste/Food Organics_330.jpg",
+      "label": "Organic Waste",
+      "sha256": "0c80bc3bbd805c7f2b32ae5e80181589eeb0961517f387775c982faa34fc11cd"
+    },
+    {
+      "path": "Organic Waste/Food Organics_374.jpg",
+      "label": "Organic Waste",
+      "sha256": "b9cd836bf7813753a0f5158f6761ab45acbaade4b6efd6aba96005cb958c3bfe"
+    },
+    {
+      "path": "Organic Waste/Vegetation_305.jpg",
+      "label": "Organic Waste",
+      "sha256": "d1356f6f7fa49cb56191de4edba1fcc2771373217aaf47d7f6941207e62692b5"
+    },
+    {
+      "path": "Plastic Waste/Plastic_723.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ade532af041f635917bfcbfc4e6432fb6e80113076e471f37dc6803479e4331f"
+    },
+    {
+      "path": "Paper Waste/Paper_126.jpg",
+      "label": "Paper Waste",
+      "sha256": "ba2ecf7e7fb4ed58bf9be90fed55285f502dec08cb5f0db538a3771d3b8f7805"
+    },
+    {
+      "path": "Organic Waste/Vegetation_251.jpg",
+      "label": "Organic Waste",
+      "sha256": "4b442539d5011cdf06f5ae5c0bcb7a900c223ff0393e91925869b09ef17162d9"
+    },
+    {
+      "path": "Paper Waste/Paper_170.jpg",
+      "label": "Paper Waste",
+      "sha256": "51a3c14b932709ae22dbde5e4ee066a63644eb0b06edf0c60710b864c61ce3fc"
+    },
+    {
+      "path": "Paper Waste/Paper_314.jpg",
+      "label": "Paper Waste",
+      "sha256": "fc82c634f8b661678ef75ee6d78590904e24fc6e09f2e5201eb59d7df1c42447"
+    },
+    {
+      "path": "Organic Waste/Vegetation_96.jpg",
+      "label": "Organic Waste",
+      "sha256": "b6d90a272c4dacbcb956a0cae714a83afad955b1248cff33604c75af2505d127"
+    },
+    {
+      "path": "Organic Waste/Food Organics_126.jpg",
+      "label": "Organic Waste",
+      "sha256": "71ae345dfb509938b99eaf924bbe88c12824cec7c84fa184e6b51778aca0259f"
+    },
+    {
+      "path": "Paper Waste/Paper_113.jpg",
+      "label": "Paper Waste",
+      "sha256": "8579c49fd9e3939d766405897e19d3ac5c9f3d76380b4bc0029328ea7ee50a12"
+    },
+    {
+      "path": "Plastic Waste/Plastic_725.jpg",
+      "label": "Plastic Waste",
+      "sha256": "2852ffbf1adf27bb27be3814aa5bda27f0690b5c3878e472f4a345207e7cf7cd"
+    },
+    {
+      "path": "Organic Waste/Vegetation_225.jpg",
+      "label": "Organic Waste",
+      "sha256": "e6bd1686468faa130f1b4bbabbb74f30afb2cea8decded0c82e66dde4f7b5277"
+    },
+    {
+      "path": "Plastic Waste/Plastic_415.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5cf1cd3c7443fcd44943f2284b369f65e8c7dacede9730bf5e75e7bd029495c1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_701.jpg",
+      "label": "Plastic Waste",
+      "sha256": "db8c75ccd8b28feeb33fc1e9e4138e5a146cbac390cf7960e805a25f03336d78"
+    },
+    {
+      "path": "Organic Waste/Vegetation_362.jpg",
+      "label": "Organic Waste",
+      "sha256": "93d1de991a4006790cdaae30db54be2d696d36f10be4074f3cb8312e4fafd85d"
+    },
+    {
+      "path": "Paper Waste/Paper_279.jpg",
+      "label": "Paper Waste",
+      "sha256": "141dca78ad05992045f67c91d070277fa2d928dbc37462f9f333b58aa63b0eb2"
+    },
+    {
+      "path": "Organic Waste/Food Organics_320.jpg",
+      "label": "Organic Waste",
+      "sha256": "a6e5da796686b25e5d1918a26e85c3f63e9364c8530fcdeb4c1e96cafd06942f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_565.jpg",
+      "label": "Plastic Waste",
+      "sha256": "11a16db02fe166eef27b9fa962132f848778d213664b43646e3e5787f664528c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_889.jpg",
+      "label": "Plastic Waste",
+      "sha256": "54512ae9f21f79d580b2b69957f3aa1a0842aad1555ebd929b0727e5e3301e41"
+    },
+    {
+      "path": "Paper Waste/Paper_322.jpg",
+      "label": "Paper Waste",
+      "sha256": "905878666fa197b137d561133bff9fdf715466d206708bb87975f3ed40414cbd"
+    },
+    {
+      "path": "Plastic Waste/Plastic_741.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e7cc17a52bcc111708c167fbec2e050612d843226bf4b9adfeaac99d8533f9be"
+    },
+    {
+      "path": "Organic Waste/Food Organics_142.jpg",
+      "label": "Organic Waste",
+      "sha256": "fe4d9a8f1d89722f5bcff751d8f669a971f142596351bae25e96286204758bf6"
+    },
+    {
+      "path": "Plastic Waste/Plastic_714.jpg",
+      "label": "Plastic Waste",
+      "sha256": "bc3d69749f36ac4bc700e9fd6d82e85526eee8bf4c70e96a5ee5fac6e256ef5f"
+    },
+    {
+      "path": "Paper Waste/Paper_36.jpg",
+      "label": "Paper Waste",
+      "sha256": "d27c61027f434c960c9fe206d953458cc3c35ff1adf6b98185061c4e618ce5de"
+    },
+    {
+      "path": "Organic Waste/Food Organics_282.jpg",
+      "label": "Organic Waste",
+      "sha256": "f287ffe9c880e7fc9ea57b59629261443629e3f336614582078a8e34ce8b9e17"
+    },
+    {
+      "path": "Organic Waste/Vegetation_197.jpg",
+      "label": "Organic Waste",
+      "sha256": "9932d298211257f02fe1aa81c01a2b16dd2a9452a72037ed02a65fdde2077c17"
+    },
+    {
+      "path": "Paper Waste/Paper_143.jpg",
+      "label": "Paper Waste",
+      "sha256": "ec44b46863de7ec460ae13e02a96c91ba9c3c58b54c7db5c805bbe99c66fb225"
+    },
+    {
+      "path": "Plastic Waste/Plastic_195.jpg",
+      "label": "Plastic Waste",
+      "sha256": "be02ab8e2fac16e60dd1245a400c4377c84122be0ae366009ca7590ea2b1d9d1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_359.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b41dbb186f9c7b720574801455318c781cbaf44572d4a3e2257b37a3b031f829"
+    },
+    {
+      "path": "Plastic Waste/Plastic_493.jpg",
+      "label": "Plastic Waste",
+      "sha256": "3cbd5f77f122c7b971941d0f6a5ba11c803488600fbb09a204c346c07b91e7c3"
+    },
+    {
+      "path": "Paper Waste/Paper_175.jpg",
+      "label": "Paper Waste",
+      "sha256": "b365a3963af60d4bcc1acd5ad5d2fd77602d2e176c7de27a31bbab2f94bdf3c1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_837.jpg",
+      "label": "Plastic Waste",
+      "sha256": "521e1c56e587470ca72cd6d8b54a8d4c1a0e42295a2b2652b5835e5d00af7513"
+    },
+    {
+      "path": "Organic Waste/Food Organics_123.jpg",
+      "label": "Organic Waste",
+      "sha256": "d43122d35bbfd8f62e7c2a34fb485a1c4c0207544e71b7b52cecb48d64fa1045"
+    },
+    {
+      "path": "Paper Waste/Paper_408.jpg",
+      "label": "Paper Waste",
+      "sha256": "e386258a3345838a1e697532ff3af7df6f81e923abb326f39b53db069b360145"
+    },
+    {
+      "path": "Paper Waste/Paper_435.jpg",
+      "label": "Paper Waste",
+      "sha256": "c01de44e4de7d7a8d2eb6ed6b7648462138803c1bfdc89caee99a348275f454b"
+    },
+    {
+      "path": "Paper Waste/Paper_98.jpg",
+      "label": "Paper Waste",
+      "sha256": "5523bced0fd11e5c4be9c7eb851c007923e92783ae904074b7bb571df5985afc"
+    },
+    {
+      "path": "Organic Waste/Vegetation_412.jpg",
+      "label": "Organic Waste",
+      "sha256": "7cc17f6f6d33d3f1c3c96e242ef2d9fe2a518a5d7d299904e642ac703a7e08e6"
+    },
+    {
+      "path": "Plastic Waste/Plastic_405.jpg",
+      "label": "Plastic Waste",
+      "sha256": "cfe467be497b5326f7b979421b4e247e617466e9b9396de8902f6eff4974e0f1"
+    },
+    {
+      "path": "Paper Waste/Paper_471.jpg",
+      "label": "Paper Waste",
+      "sha256": "e7c96fbc2e67c134a55bb0ad6ff04d40e9e8d99ef041782a4bbe0d384aeac820"
+    },
+    {
+      "path": "Paper Waste/Paper_387.jpg",
+      "label": "Paper Waste",
+      "sha256": "faee73872a42985402ddb519b42c92d410f2ae10d02ccea1c65ecd5baf3a1a6c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_49.jpg",
+      "label": "Plastic Waste",
+      "sha256": "bac0b37223f2d3c0f2a7cded30d5a17e26d33bb3f3fb86853b55ed77f4b5eaf8"
+    },
+    {
+      "path": "Organic Waste/Vegetation_216.jpg",
+      "label": "Organic Waste",
+      "sha256": "d60ff9d5e0c34135a1afeed54b3ac684fe54ab482950beb2d42a1033ee4d3358"
+    },
+    {
+      "path": "Plastic Waste/Plastic_14.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b116bf112079416aeac5c91b88dd82b51ef559317ef5143b9e88c4aa795f0a4b"
+    },
+    {
+      "path": "Organic Waste/Vegetation_92.jpg",
+      "label": "Organic Waste",
+      "sha256": "73e4ac78d1c5b4f347fb2e7a4318b9fc769c467c1e4ddc806c6b37416eb2097a"
+    },
+    {
+      "path": "Paper Waste/Paper_67.jpg",
+      "label": "Paper Waste",
+      "sha256": "d7de8de957310f3fe41fb2efe22782212ef8fc3f266d897bf96d17bbdcc46a94"
+    },
+    {
+      "path": "Organic Waste/Food Organics_193.jpg",
+      "label": "Organic Waste",
+      "sha256": "a16b8391d3412e63cd382e257a0fb1152cdc844b0ddba056c847d6216eb40678"
+    },
+    {
+      "path": "Plastic Waste/Plastic_88.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b711563c9d97d0cd03bd15812d91c93c600d8c80db6f8907000689de7793e66e"
+    },
+    {
+      "path": "Plastic Waste/Plastic_630.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b07f842246239f6a948ad1956afb8b9f21740cc6826f0df86ff99580291f7f2f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_569.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6e8606c5dae9065771adb7518d95ee906ab1df4922e4ec77e1e6fec52910ae01"
+    },
+    {
+      "path": "Paper Waste/Paper_154.jpg",
+      "label": "Paper Waste",
+      "sha256": "a8f910527383062717f12c03d2fbed238e77d15b0bcd45d4b96ce50aece04e51"
+    },
+    {
+      "path": "Paper Waste/Paper_370.jpg",
+      "label": "Paper Waste",
+      "sha256": "84abeefa76036de764419e532e2fe948b7bdc498dbbd80a788743862fb86ccbd"
+    },
+    {
+      "path": "Plastic Waste/Plastic_667.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6d5a4488587bba7c25500860468c2304b4ebffcb4accba3e87d306997bf98399"
+    },
+    {
+      "path": "Paper Waste/Paper_85.jpg",
+      "label": "Paper Waste",
+      "sha256": "612d61b9be87f00138ff9e1714998ea38562a4e7f217e2ade9a0ac5fc987b766"
+    },
+    {
+      "path": "Plastic Waste/Plastic_657.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4c285ed98556989b2c123d05522a17694d07a3fbb93ad82392667384361057d8"
+    },
+    {
+      "path": "Organic Waste/Vegetation_246.jpg",
+      "label": "Organic Waste",
+      "sha256": "8a067a95bd0c38ceb1631740d21ec4d19cdcd23e7184f2841c2cbfca40b397f1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_277.jpg",
+      "label": "Plastic Waste",
+      "sha256": "015974504b2ec20e9f985b1ef10312dcd35a875befeff410603168575160b0e1"
+    },
+    {
+      "path": "Paper Waste/Paper_105.jpg",
+      "label": "Paper Waste",
+      "sha256": "ff3bf19dcb4684709757ca97af893e36faa8e51e6ddd7588021c062cb1483bf0"
+    },
+    {
+      "path": "Plastic Waste/Plastic_816.jpg",
+      "label": "Plastic Waste",
+      "sha256": "00aabfbcbbfc7da0d9f4c09042523e52fa6bb58db10b8359677c60c1569c80b7"
+    },
+    {
+      "path": "Paper Waste/Paper_213.jpg",
+      "label": "Paper Waste",
+      "sha256": "a1f95ab4d672b43c177dc4011dd34b229295fc8eb7db6f77137016d2137b6a0a"
+    },
+    {
+      "path": "Paper Waste/Paper_465.jpg",
+      "label": "Paper Waste",
+      "sha256": "eda96077580a152d40a955c0734eebcbee5ee73b8b1cf9b447f13cf56f493301"
+    },
+    {
+      "path": "Organic Waste/Vegetation_328.jpg",
+      "label": "Organic Waste",
+      "sha256": "3d04f047774fc269b22ec045a4a60b94f97dfc7b5681027f51a90f0673e7e23d"
+    },
+    {
+      "path": "Paper Waste/Paper_359.jpg",
+      "label": "Paper Waste",
+      "sha256": "2356bbedc138dae6637301e42536275776abf4bea61c1e4cb7f50f5860802f58"
+    },
+    {
+      "path": "Paper Waste/Paper_251.jpg",
+      "label": "Paper Waste",
+      "sha256": "8a1e192a2181f57c13ac53406492c13744c5c3c6fd1e2ba7c2c565374739cb6d"
+    },
+    {
+      "path": "Organic Waste/Food Organics_84.jpg",
+      "label": "Organic Waste",
+      "sha256": "31060551139eebad43499467504bf288b704ae4477e645aaa4e557f05909db78"
+    },
+    {
+      "path": "Paper Waste/Paper_441.jpg",
+      "label": "Paper Waste",
+      "sha256": "36b8f08b164a17a1ec673e1afdf9329e06871ce9862d7b939d2fd82baf4d73bd"
+    },
+    {
+      "path": "Plastic Waste/Plastic_911.jpg",
+      "label": "Plastic Waste",
+      "sha256": "049ac42e106d1878788a012a7c71cc7dc4915e493fc9c91031102d2219eb1f23"
+    },
+    {
+      "path": "Paper Waste/Paper_361.jpg",
+      "label": "Paper Waste",
+      "sha256": "83f7e88b5f8a7566fc899ae21b6b45aa4ca616003bd92c512cb8c9d3de3bc11a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_131.jpg",
+      "label": "Plastic Waste",
+      "sha256": "94ed4db97d0454f1d64ca5ccde5f998d5975f037ada17e173ffc6753834c8002"
+    },
+    {
+      "path": "Paper Waste/Paper_470.jpg",
+      "label": "Paper Waste",
+      "sha256": "1abf79c395ff1f28f6d1e2a9cd66855c39b668a711c383b7ddb7d132c8e98f16"
+    },
+    {
+      "path": "Paper Waste/Paper_46.jpg",
+      "label": "Paper Waste",
+      "sha256": "7504f7c692ae6fa708787c853e4baef445655bb57d715c0bb9fc70f17d145299"
+    },
+    {
+      "path": "Organic Waste/Vegetation_184.jpg",
+      "label": "Organic Waste",
+      "sha256": "a6bedabe7845a45cbecc43e76fed9c75003fca726a7adc4c88e7a17569653300"
+    },
+    {
+      "path": "Paper Waste/Paper_142.jpg",
+      "label": "Paper Waste",
+      "sha256": "617fad75eda29675e3429b1c7255c3ea9bc8fe350ecf00d2a4dad7e128b3482c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_474.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5c243b6bf6fc68efcf7fabf0f6fe33da973d6cdd319bc17e3b097bf0fe051cc9"
+    },
+    {
+      "path": "Organic Waste/Vegetation_19.jpg",
+      "label": "Organic Waste",
+      "sha256": "1b6238ada0e19e7101bdd4a172aa5521c5883d883ec2c342308e0c85902c8863"
+    },
+    {
+      "path": "Organic Waste/Food Organics_346.jpg",
+      "label": "Organic Waste",
+      "sha256": "22067dbd47732e6d59587447a93203463d787d89689f092e0c0adc66e261b64b"
+    },
+    {
+      "path": "Paper Waste/Paper_88.jpg",
+      "label": "Paper Waste",
+      "sha256": "e05ad83dadfec81c53af0912ced1d89b6f2610c488bc566803c2aee6904e4cfc"
+    },
+    {
+      "path": "Plastic Waste/Plastic_671.jpg",
+      "label": "Plastic Waste",
+      "sha256": "0acaeb4be03747710fb1fa947a1308ed16a7aeefd5fe2196c669e6001afbc5a3"
+    },
+    {
+      "path": "Organic Waste/Vegetation_98.jpg",
+      "label": "Organic Waste",
+      "sha256": "57766bf67940b235e0d010ccdae7fef428e4fb8a475abd6b5ebe91e2e2a3c686"
+    },
+    {
+      "path": "Plastic Waste/Plastic_106.jpg",
+      "label": "Plastic Waste",
+      "sha256": "70d6804a448c9dad9b0b6c317f862e20aed9f9946f76610d93c31160d245468a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_169.jpg",
+      "label": "Plastic Waste",
+      "sha256": "de504081fbc6a006c8b759f6b57ff88658798aad9a8e6c26a6e205e850f2ffe8"
+    },
+    {
+      "path": "Plastic Waste/Plastic_771.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5bf79e53d7d4219cffcd36c5604e28de97371933eb66a95d5c9dbf7299e6d314"
+    },
+    {
+      "path": "Paper Waste/Paper_102.jpg",
+      "label": "Paper Waste",
+      "sha256": "69da37d722887b29b3371000c908ea32198ca7bb533479d7ee7b373cf72ef21b"
+    },
+    {
+      "path": "Plastic Waste/Plastic_401.jpg",
+      "label": "Plastic Waste",
+      "sha256": "f531f6db36c581920f3189cd37c8784872e78ca3634c3aa68e097cd10a1f63bd"
+    },
+    {
+      "path": "Plastic Waste/Plastic_222.jpg",
+      "label": "Plastic Waste",
+      "sha256": "05198a535a5ca87ff6c888811de8bc03edc9182a82371e3a6bdb189e32bb6a37"
+    },
+    {
+      "path": "Organic Waste/Vegetation_376.jpg",
+      "label": "Organic Waste",
+      "sha256": "629729fa1dfd9cc932c796211578c71b580368f955ec02c1ddb86e50eb8b71e7"
+    },
+    {
+      "path": "Organic Waste/Vegetation_319.jpg",
+      "label": "Organic Waste",
+      "sha256": "75f1dac82fbad2e94bda311f36451b69c6e808a12fbc7f285a1e9ac056c01c5f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_690.jpg",
+      "label": "Plastic Waste",
+      "sha256": "7c474e6201818553186db055577a518b6b2a88496e1aac93a26e86fbaf4932de"
+    },
+    {
+      "path": "Organic Waste/Food Organics_78.jpg",
+      "label": "Organic Waste",
+      "sha256": "6c04430c51b6733b62074917327d6ed940bcb4c3d80012b47a90d239b0e3d4a2"
+    },
+    {
+      "path": "Paper Waste/Paper_379.jpg",
+      "label": "Paper Waste",
+      "sha256": "2a92a2483ce199279095827c878656190c890afcf4b500509a3aefec0464e672"
+    },
+    {
+      "path": "Plastic Waste/Plastic_194.jpg",
+      "label": "Plastic Waste",
+      "sha256": "eaf2283af25ad4c739758e21497bc00f8c92704727ae13f038c4256ce321ba3d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_607.jpg",
+      "label": "Plastic Waste",
+      "sha256": "104ba4eaeab170f69e8986d502030dd69ee06a03abe9c875c92b3c15b5d24623"
+    },
+    {
+      "path": "Plastic Waste/Plastic_532.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4d2a653b07e0fe3a57347fa9b9c28a4334f499804e08894e0c4303338c570067"
+    },
+    {
+      "path": "Paper Waste/Paper_283.jpg",
+      "label": "Paper Waste",
+      "sha256": "16963ab85a5a1615d52a9a62fc99e50fb7fdae7d063cf14a8460d3b94bfabb90"
+    },
+    {
+      "path": "Paper Waste/Paper_317.jpg",
+      "label": "Paper Waste",
+      "sha256": "c5e7d8dfd087585b52d70548df2df70421faff41d1a83bded15219defc7a50cf"
+    },
+    {
+      "path": "Organic Waste/Vegetation_91.jpg",
+      "label": "Organic Waste",
+      "sha256": "c3519429f3e86a6240c19da50bbb385fd8cc5001a5f585a29be1b0e676cd162c"
+    },
+    {
+      "path": "Paper Waste/Paper_149.jpg",
+      "label": "Paper Waste",
+      "sha256": "a48eb3a5e016397f885d9686e64347aae15ebaf3e72143ccf30d88d5e97b0f9e"
+    },
+    {
+      "path": "Organic Waste/Vegetation_190.jpg",
+      "label": "Organic Waste",
+      "sha256": "5bda1d626177bf5ff59ed137909bda20f5a1c275062c018efa5940727a84329f"
+    },
+    {
+      "path": "Paper Waste/Paper_193.jpg",
+      "label": "Paper Waste",
+      "sha256": "34a897143684f13e8c7ec9f72e9d89300c9d95d7ce17f2cdef206e53ceb6e3b8"
+    },
+    {
+      "path": "Paper Waste/Paper_9.jpg",
+      "label": "Paper Waste",
+      "sha256": "ac5a7a2d317e2626b69da90ce72e2a3f44a0b39e06a2f45e19aa4d580e7587d0"
+    },
+    {
+      "path": "Plastic Waste/Plastic_775.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1488bf458c2d127ebe71cc7c205f81d64a4accec736a82a0a9c305044a24a0e8"
+    },
+    {
+      "path": "Organic Waste/Vegetation_239.jpg",
+      "label": "Organic Waste",
+      "sha256": "26605fdbe477c882495470168d18e5cbecab2b2bc1c13579b0b5eb397d7e62dc"
+    },
+    {
+      "path": "Plastic Waste/Plastic_487.jpg",
+      "label": "Plastic Waste",
+      "sha256": "04aa07e221d7e3819a6143ecac892062d875e9099c76fd8f14cbfda03cac5082"
+    },
+    {
+      "path": "Organic Waste/Vegetation_326.jpg",
+      "label": "Organic Waste",
+      "sha256": "f59abd7af614384fdfd804b6dec72bddf12cbeef8dfab9544f6cb9cbdc58d107"
+    },
+    {
+      "path": "Plastic Waste/Plastic_449.jpg",
+      "label": "Plastic Waste",
+      "sha256": "50576c7366da637364720ad95a144d4cfc44bb65d660f8837051e5fa2a3ffb05"
+    },
+    {
+      "path": "Plastic Waste/Plastic_425.jpg",
+      "label": "Plastic Waste",
+      "sha256": "19f069c514243830f13d5df44bbd3d8dd9c80b0566432db93b5e8ed11280fa77"
+    },
+    {
+      "path": "Paper Waste/Paper_354.jpg",
+      "label": "Paper Waste",
+      "sha256": "410334680527e7d6dccf35f9fc0ea6cdc11ce6a0ea1f93b00cbdafd82e988e68"
+    },
+    {
+      "path": "Paper Waste/Paper_47.jpg",
+      "label": "Paper Waste",
+      "sha256": "e9ad17ca332055e417c9a0c9a5b7c26c98231ec6c65f7972b1ca149476945523"
+    },
+    {
+      "path": "Organic Waste/Vegetation_429.jpg",
+      "label": "Organic Waste",
+      "sha256": "e956edd65e0d75db4dcaf059dad116fbcceb4ca761346f6ade4c7584036af2db"
+    },
+    {
+      "path": "Plastic Waste/Plastic_121.jpg",
+      "label": "Plastic Waste",
+      "sha256": "9d431341194c092b099edf4e1205775776cf90608f564232c5c2f62ea1250962"
+    },
+    {
+      "path": "Plastic Waste/Plastic_829.jpg",
+      "label": "Plastic Waste",
+      "sha256": "c3b4a86dc0e7c1533e57538100cfab576c93c76133b8b25299e44afe1fba416e"
+    },
+    {
+      "path": "Paper Waste/Paper_54.jpg",
+      "label": "Paper Waste",
+      "sha256": "6243c657269a5aae98d9d22f4d011467e2801d6b7536e300c4945a7673222595"
+    },
+    {
+      "path": "Plastic Waste/Plastic_736.jpg",
+      "label": "Plastic Waste",
+      "sha256": "fea901f8d75d49e097e72a7c94b95336b1f41c4d9d70af1e3fb86da945dd47a5"
+    },
+    {
+      "path": "Organic Waste/Food Organics_32.jpg",
+      "label": "Organic Waste",
+      "sha256": "d48a9add8cb0d81cfdcb1a4775ac0e07f70a721a52a9b5a6173283a8a04d9de2"
+    },
+    {
+      "path": "Organic Waste/Vegetation_32.jpg",
+      "label": "Organic Waste",
+      "sha256": "04fedad526d23f5ed7e09355186ed37534d5724feba70722eecb560334f89fb5"
+    },
+    {
+      "path": "Paper Waste/Paper_141.jpg",
+      "label": "Paper Waste",
+      "sha256": "75f62bd5c96d6231953d6a8bcb0dc799ec871a039d801cb582fa6317c8da7727"
+    },
+    {
+      "path": "Organic Waste/Food Organics_116.jpg",
+      "label": "Organic Waste",
+      "sha256": "3e7fd2aa9ac3b98d21da49811efe06bd6510ea39465391c176960b9dc0aa977d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_35.jpg",
+      "label": "Plastic Waste",
+      "sha256": "851cacadc2d2bee1cf859ccab507718c62806fc3b7b62306ce4b4dcf72e9d42d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_201.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5678484aea3d8e29359b90869e60f6032e59177f2d8192c2d4a2b024238ba00b"
+    },
+    {
+      "path": "Paper Waste/Paper_292.jpg",
+      "label": "Paper Waste",
+      "sha256": "a1b71359703045cf8da23cbd246830288744c359677c403c8c7e6a7cda39bdab"
+    },
+    {
+      "path": "Paper Waste/Paper_333.jpg",
+      "label": "Paper Waste",
+      "sha256": "c534b8b6d406569408c966b1f21f69515cb3863e69b045417f9a17c01f0cfd0c"
+    },
+    {
+      "path": "Organic Waste/Food Organics_352.jpg",
+      "label": "Organic Waste",
+      "sha256": "7ae38508c780d955c65681bd589b105472033b762b15954e2a1948f5af444687"
+    },
+    {
+      "path": "Plastic Waste/Plastic_434.jpg",
+      "label": "Plastic Waste",
+      "sha256": "aa53191b626d48fe8a7b66ec62a01e027574acddba67ab8751ed097155a740cd"
+    },
+    {
+      "path": "Paper Waste/Paper_390.jpg",
+      "label": "Paper Waste",
+      "sha256": "7b76674a45b206a4853b2dc7f447ab34f82273c8f15b2a79f34992fa9053eabb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_435.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ce9314b364377dfe462be976f000e1ca70da1443e3c338958417388f071810f0"
+    },
+    {
+      "path": "Plastic Waste/Plastic_634.jpg",
+      "label": "Plastic Waste",
+      "sha256": "cefddff10dff7dbf417077e82ecd7a0f4774f3c470042353543c523f71d251c7"
+    },
+    {
+      "path": "Paper Waste/Paper_369.jpg",
+      "label": "Paper Waste",
+      "sha256": "10dbbc945374621fcc32669dc4879a9f0edddc07afa8910bc73223b3428ac1d5"
+    },
+    {
+      "path": "Organic Waste/Vegetation_359.jpg",
+      "label": "Organic Waste",
+      "sha256": "e05f2834c1fb62a14db83cfcb9092e48a2d43c5599251d6577f4294acab1b945"
+    },
+    {
+      "path": "Organic Waste/Food Organics_348.jpg",
+      "label": "Organic Waste",
+      "sha256": "b0b66e8e3644781c5f4298c9cb8a4abb41ab319809750e4efa9ac1241dabbf5d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_615.jpg",
+      "label": "Plastic Waste",
+      "sha256": "afec15259babe35c68d671cd926a4828ec77480ffb06ea14dbccc360d4ffef40"
+    },
+    {
+      "path": "Paper Waste/Paper_307.jpg",
+      "label": "Paper Waste",
+      "sha256": "93baa659a078b47063e99cac21c7c6aa016e7ea0ff5f0b6b12bf1e135dfd1c26"
+    },
+    {
+      "path": "Plastic Waste/Plastic_790.jpg",
+      "label": "Plastic Waste",
+      "sha256": "c0ae0ded1e422144dbc02bdbb32b86d1e0c9bc7821b0165013a1f41fe2fdf801"
+    },
+    {
+      "path": "Plastic Waste/Plastic_276.jpg",
+      "label": "Plastic Waste",
+      "sha256": "36f29b7ab64429549fb08de85836119658ea6ca7c99da6170c3e3aca7259d25a"
+    },
+    {
+      "path": "Paper Waste/Paper_71.jpg",
+      "label": "Paper Waste",
+      "sha256": "af52055eab29222584d84f54a49fb5982c0cfde7d2f9afe0db5e6dd58bdf5187"
+    },
+    {
+      "path": "Organic Waste/Food Organics_213.jpg",
+      "label": "Organic Waste",
+      "sha256": "a1e60c870dd71fbd7240622e6bf254af207266ffce609f7e9a5bf07c15899114"
+    },
+    {
+      "path": "Plastic Waste/Plastic_596.jpg",
+      "label": "Plastic Waste",
+      "sha256": "f9f10dd42debb83ed21efe773aab2d4b57d7242a48f52f98e191108fa3bf03e8"
+    },
+    {
+      "path": "Organic Waste/Food Organics_326.jpg",
+      "label": "Organic Waste",
+      "sha256": "b227450ecc9be4102164d42bdbf7136201b46b459d68132eab7e3c2591c835e7"
+    },
+    {
+      "path": "Organic Waste/Food Organics_263.jpg",
+      "label": "Organic Waste",
+      "sha256": "ef4525aedfdae877d1a68db1a4d04d36466fd1faa247da261a8480e3396d7d32"
+    },
+    {
+      "path": "Organic Waste/Vegetation_61.jpg",
+      "label": "Organic Waste",
+      "sha256": "a05f3f319f3e626998935ea717b2805fc12a16176e2199de8d2cd1f1aed57979"
+    },
+    {
+      "path": "Organic Waste/Vegetation_3.jpg",
+      "label": "Organic Waste",
+      "sha256": "1544b46ed265a192a1dd1b92e8f4ae27ece5f796bf4c386e12dcde6e8abeed40"
+    },
+    {
+      "path": "Organic Waste/Vegetation_47.jpg",
+      "label": "Organic Waste",
+      "sha256": "c843b8586f41ccf725d55d253dfa0bf71895e4f80e3f5dd933615c121c55d9a4"
+    },
+    {
+      "path": "Paper Waste/Paper_447.jpg",
+      "label": "Paper Waste",
+      "sha256": "9c9a99c276c9aa5d2a52b37b14b353841336afc949486f9066f2a408abad976e"
+    },
+    {
+      "path": "Organic Waste/Food Organics_79.jpg",
+      "label": "Organic Waste",
+      "sha256": "ffddbedb9e66b61927fb0a9bcd74d27abfbe2557e767d933a68abd1046c88386"
+    },
+    {
+      "path": "Paper Waste/Paper_365.jpg",
+      "label": "Paper Waste",
+      "sha256": "617e2dc061b582eb6accce806426118e534c8a857853f67a294f09b0d57bac06"
+    },
+    {
+      "path": "Organic Waste/Vegetation_13.jpg",
+      "label": "Organic Waste",
+      "sha256": "5a8b4da55d842fc968fb767fddaa55f414135edc38511f7d905912f3a9ac03f3"
+    },
+    {
+      "path": "Organic Waste/Food Organics_345.jpg",
+      "label": "Organic Waste",
+      "sha256": "72eb4449aa8a554a6101524d9b0ca67fadfa0e192fae8f34608a6c2bb7b5d44a"
+    },
+    {
+      "path": "Paper Waste/Paper_45.jpg",
+      "label": "Paper Waste",
+      "sha256": "62e748aefcd9f98486d81c3c72fff17d27f5b4de64c35eb1cab96ac11d447acb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_473.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b96d5526f0166934f487e16126815e7f2a66658bc2bb8173dce71101e6c06e95"
+    },
+    {
+      "path": "Organic Waste/Vegetation_333.jpg",
+      "label": "Organic Waste",
+      "sha256": "1d622af8d9026b750cf1c362a7915c8101f68e1c145b148933d8c0814c985942"
+    },
+    {
+      "path": "Paper Waste/Paper_294.jpg",
+      "label": "Paper Waste",
+      "sha256": "07af26a9b3792757d05f2eba71a65c3bdc7fe4ab9e88934e280305422e7ca691"
+    },
+    {
+      "path": "Paper Waste/Paper_185.jpg",
+      "label": "Paper Waste",
+      "sha256": "ec901a40ad71716611198d054a7a25b731c17e162069a17a773a77d713678d33"
+    },
+    {
+      "path": "Organic Waste/Vegetation_358.jpg",
+      "label": "Organic Waste",
+      "sha256": "f9e1640b43d5b89aa79bb2379e5eac12a5b9cfa6ba7aa0791fbe797d2850d7b8"
+    },
+    {
+      "path": "Paper Waste/Paper_41.jpg",
+      "label": "Paper Waste",
+      "sha256": "cbc70ee004739125d28bfe4490f27eed8ca61923f199f51eec355d58d30a68ed"
+    },
+    {
+      "path": "Organic Waste/Vegetation_85.jpg",
+      "label": "Organic Waste",
+      "sha256": "d693b625ada9bf4a2d91fd424c97fcae6c707c773fccdddd5ac6835e339a7441"
+    },
+    {
+      "path": "Organic Waste/Food Organics_183.jpg",
+      "label": "Organic Waste",
+      "sha256": "9155ce1757d1808b474409864f5e94e988f8a295c6c1e6c7b1b2466b275273c7"
+    },
+    {
+      "path": "Paper Waste/Paper_336.jpg",
+      "label": "Paper Waste",
+      "sha256": "0fc7e57ebe443e4f2524138b8757d4ec458c6e1db79072887763bd3029c5242f"
+    },
+    {
+      "path": "Paper Waste/Paper_63.jpg",
+      "label": "Paper Waste",
+      "sha256": "cabee87e9b015628814f4b6481d0c8d7f49ea1bb99073674b7f2277b1de179a8"
+    },
+    {
+      "path": "Plastic Waste/Plastic_242.jpg",
+      "label": "Plastic Waste",
+      "sha256": "8ed4afef4818e7f299190191cc9d8dbbb120bae305a16ebfbf6119f9a3a14481"
+    },
+    {
+      "path": "Organic Waste/Vegetation_118.jpg",
+      "label": "Organic Waste",
+      "sha256": "803ab741c8c678395c04b57a634f97c9f7142418fda34468fce5b90524b2392e"
+    },
+    {
+      "path": "Organic Waste/Vegetation_94.jpg",
+      "label": "Organic Waste",
+      "sha256": "9e16c6356bb7f91dc1b050f3fc58e906b82fe57e73c8f2204b776ef5c01c2ba9"
+    },
+    {
+      "path": "Paper Waste/Paper_191.jpg",
+      "label": "Paper Waste",
+      "sha256": "cf7c806da06bed4e030fe456c54a55f21d81c4b8cdd0bc87dadc094f2e48f88f"
+    },
+    {
+      "path": "Organic Waste/Food Organics_189.jpg",
+      "label": "Organic Waste",
+      "sha256": "473f5c3f9c5d5742df70476368c087772c24de85f4fea86b24698dea7afd40d6"
+    },
+    {
+      "path": "Paper Waste/Paper_27.jpg",
+      "label": "Paper Waste",
+      "sha256": "7d21004c7b1528102ce85591f8daa2be8b143012d8ce038a88c5aadd0816814b"
+    },
+    {
+      "path": "Paper Waste/Paper_475.jpg",
+      "label": "Paper Waste",
+      "sha256": "cc217071e56aa9732d1e7e4266c6878208825530167c4137ef03198bad389f00"
+    },
+    {
+      "path": "Organic Waste/Vegetation_356.jpg",
+      "label": "Organic Waste",
+      "sha256": "b59135202ef7ec9bd96d6c39747c405a94a130b258506871eb65f7ce283a2955"
+    },
+    {
+      "path": "Paper Waste/Paper_187.jpg",
+      "label": "Paper Waste",
+      "sha256": "b5e6d00b4754875647de270ad7968c6feacd405442cc0d4c6482a32091d29740"
+    },
+    {
+      "path": "Plastic Waste/Plastic_779.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ac318ad43502a635b49799aa5fbfd704494c623c415ab874fdc86f60e5e0d4d7"
+    },
+    {
+      "path": "Paper Waste/Paper_235.jpg",
+      "label": "Paper Waste",
+      "sha256": "cf28cbbd461a59f756953a4fe1a80069d51e6380812d7107d4914a9fc17a8462"
+    },
+    {
+      "path": "Organic Waste/Vegetation_195.jpg",
+      "label": "Organic Waste",
+      "sha256": "590e5b4a66b5b70b233bc701dfd519715ddb607ac649b480f3c4e450044ff303"
+    },
+    {
+      "path": "Organic Waste/Vegetation_347.jpg",
+      "label": "Organic Waste",
+      "sha256": "ef7afd1a37a7daa7d6bf36a0ae35593210df12f39a871715cb3f26f0d4db5253"
+    },
+    {
+      "path": "Organic Waste/Vegetation_65.jpg",
+      "label": "Organic Waste",
+      "sha256": "afec3aa34dd9c537caf4d7f4ca61e0c09586cd3bbf02e032f90cf884e2732749"
+    },
+    {
+      "path": "Organic Waste/Vegetation_238.jpg",
+      "label": "Organic Waste",
+      "sha256": "1ad5c572410d1a6a9969304ff51441634590449f0678cf23504db9898554d895"
+    },
+    {
+      "path": "Organic Waste/Vegetation_374.jpg",
+      "label": "Organic Waste",
+      "sha256": "69312e8f48dd41dbeff9df8adfde3a8126a506cd32d29c1069bd56fc2a4a8f8c"
+    },
+    {
+      "path": "Organic Waste/Food Organics_201.jpg",
+      "label": "Organic Waste",
+      "sha256": "33949bf886da1498014970b4b0e3858bcf281ec9c79b62e652a8a7b44bedf1a0"
+    },
+    {
+      "path": "Organic Waste/Vegetation_363.jpg",
+      "label": "Organic Waste",
+      "sha256": "0c1464ff6755d5c1e732ccf714f34c3ec577395a3bc756ae79b96f7e0fe2e68e"
+    },
+    {
+      "path": "Paper Waste/Paper_130.jpg",
+      "label": "Paper Waste",
+      "sha256": "9ce1239ddc5f7d138b827adbc6368bb8851f137938474c2d00395bde137b62c9"
+    },
+    {
+      "path": "Paper Waste/Paper_366.jpg",
+      "label": "Paper Waste",
+      "sha256": "5bbbdb60689b6bbe0bd69d6cc9176562e8bb29b6e15b2af9c53ddda8ad6ac483"
+    },
+    {
+      "path": "Organic Waste/Food Organics_65.jpg",
+      "label": "Organic Waste",
+      "sha256": "ef1c3b11c33abc5cb627bdc2a8dc02d981a4cdeb776f5bd4828b5d253da3f655"
+    },
+    {
+      "path": "Organic Waste/Food Organics_25.jpg",
+      "label": "Organic Waste",
+      "sha256": "3ff2b4adcc9f569c6374caca264f761245e466ae49a68e2a841dd7b5559aadfb"
+    },
+    {
+      "path": "Organic Waste/Food Organics_399.jpg",
+      "label": "Organic Waste",
+      "sha256": "70ade1bdc50639c1df65d25994b411c0964ea8228b3c555a92118a000f164861"
+    },
+    {
+      "path": "Organic Waste/Vegetation_63.jpg",
+      "label": "Organic Waste",
+      "sha256": "6c02b098e84a85e3244367f633c6b9144eb20cee1207eaed38d2b9bb9f37aa0e"
+    },
+    {
+      "path": "Paper Waste/Paper_395.jpg",
+      "label": "Paper Waste",
+      "sha256": "9d525875c52b80d4e36ec66ec36b0caefc3732592ae2b4df288f78578ca80ae4"
+    },
+    {
+      "path": "Paper Waste/Paper_237.jpg",
+      "label": "Paper Waste",
+      "sha256": "60d5f902fb5fce2f6a487517ebed2f2f127753491a9d76be3cd50475e03f0a84"
+    },
+    {
+      "path": "Organic Waste/Vegetation_220.jpg",
+      "label": "Organic Waste",
+      "sha256": "75ad796089df175a3e33e738940fc42a16dbebaffe90b3b69287a0c5c601f239"
+    },
+    {
+      "path": "Organic Waste/Vegetation_267.jpg",
+      "label": "Organic Waste",
+      "sha256": "783006df55fb12e07a7750de41e080d42c104f838ca389c1556c274c71fde838"
+    },
+    {
+      "path": "Organic Waste/Vegetation_290.jpg",
+      "label": "Organic Waste",
+      "sha256": "adcf431d40d95a9d94fa2bc72b6967b6c651fc650e39aac483dfd2621f309528"
+    },
+    {
+      "path": "Paper Waste/Paper_108.jpg",
+      "label": "Paper Waste",
+      "sha256": "ed3780e0337b684d4e054012ed9c3c676c3909942de8c0277c9d8b5ef0ff78cb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_293.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ea3ca8a5d933555a90fd4c8d7055288e1234bb7218fa832cdc2ac64de93fcc77"
+    },
+    {
+      "path": "Plastic Waste/Plastic_805.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e0a843647a1f3b55b4bf648775d18f39a3ea9144560980fb73e42069ad3fdcc9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_2.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ad7d7161980cae742618dd5c3de0bec9e6599ab732c7b94f23779b84cc3c7f2a"
+    },
+    {
+      "path": "Paper Waste/Paper_208.jpg",
+      "label": "Paper Waste",
+      "sha256": "ad78de186ba85b4fc7b9de8a4cb0368e311d78f215694c9db74241abbad16d1e"
+    },
+    {
+      "path": "Organic Waste/Food Organics_171.jpg",
+      "label": "Organic Waste",
+      "sha256": "a74b21384ad41107470ad455a3c12ebfef11ea807c6bea2f22c15da057e6be68"
+    },
+    {
+      "path": "Paper Waste/Paper_289.jpg",
+      "label": "Paper Waste",
+      "sha256": "54718906f37b3582430fa08906b6df8959ba096889045f4fde27d361fa5240bd"
+    },
+    {
+      "path": "Paper Waste/Paper_423.jpg",
+      "label": "Paper Waste",
+      "sha256": "bab39e0dfc2660d349dac5104d01595430e75b4c8f8a8f63962b4bf1c2792241"
+    },
+    {
+      "path": "Organic Waste/Food Organics_152.jpg",
+      "label": "Organic Waste",
+      "sha256": "42892a55c2a5cb0d9f6df7a73fa1e23712fee15d0e232d86ea1e80a71b1a9465"
+    },
+    {
+      "path": "Paper Waste/Paper_64.jpg",
+      "label": "Paper Waste",
+      "sha256": "c06dbc2afc768619d763de5325637bd6ce07aeaebc06058c79ab8a6d52403a1f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_333.jpg",
+      "label": "Plastic Waste",
+      "sha256": "92dbaccae02418f93381a35e22fa212ccfb6d39a8c02af56d43fe9075e312b2f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_309.jpg",
+      "label": "Plastic Waste",
+      "sha256": "164a4768edd90f51abe5cc2636352c4ca9f4afb8b7fc7fb64ca1cffa75db7b5c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_601.jpg",
+      "label": "Plastic Waste",
+      "sha256": "d52cd066fa891455b8890f3e61357d6bb5ef8e97b7be4c5c849c5a35262e11f9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_909.jpg",
+      "label": "Plastic Waste",
+      "sha256": "f9e4945dacebd5f6d4dc2de108bd45d50b99df5aade15117d7de3c4217266a9a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_496.jpg",
+      "label": "Plastic Waste",
+      "sha256": "86377c42a864420847412312ab94ebc86b775977abaf112fbf1f0ef40c85bfec"
+    },
+    {
+      "path": "Plastic Waste/Plastic_855.jpg",
+      "label": "Plastic Waste",
+      "sha256": "00543e45964aaa977326fb5e44ce08e1c5323799e86fb09faa1f7dec21615589"
+    },
+    {
+      "path": "Paper Waste/Paper_473.jpg",
+      "label": "Paper Waste",
+      "sha256": "0f3f89e63f5d7eca58e7e6b3dbaae58bb60b500e7d41b0119ed1cee24cfab86e"
+    },
+    {
+      "path": "Paper Waste/Paper_8.jpg",
+      "label": "Paper Waste",
+      "sha256": "2e5f916f150a340d310be45f3ddddf9a2d8338846643f63ddcee6a39901c889d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_199.jpg",
+      "label": "Plastic Waste",
+      "sha256": "18293fc7ba893097f6a42843f8cae8ba0f5eb3a297465bb06acc6fa2224fdcdf"
+    },
+    {
+      "path": "Plastic Waste/Plastic_663.jpg",
+      "label": "Plastic Waste",
+      "sha256": "42c1fbf7b249137e913e56ab91dbd65676ec4a57810bfc6f82d0a946f3c543b1"
+    },
+    {
+      "path": "Paper Waste/Paper_346.jpg",
+      "label": "Paper Waste",
+      "sha256": "5296aa8532f4ec326f2ccfae84c8eb473722e5d332c046fb6c417c0a30f56b4f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_389.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1d97d07045dccd046a0f2ca9e90f166eb83fedca33ae049f5a4b32eedd8f8ec9"
+    },
+    {
+      "path": "Organic Waste/Food Organics_248.jpg",
+      "label": "Organic Waste",
+      "sha256": "a03af74d43c09f2e1d75dd4792180202ad279106e5b25f71939971b6799692cc"
+    },
+    {
+      "path": "Organic Waste/Food Organics_6.jpg",
+      "label": "Organic Waste",
+      "sha256": "591c1191ea29d81ff94fd53f6957a2a28e7d2537e078d7ea8c694b23d6438574"
+    },
+    {
+      "path": "Paper Waste/Paper_23.jpg",
+      "label": "Paper Waste",
+      "sha256": "302aad895cd9c51fb53e8251bc17f480017003b36edc5b095625c00200d985af"
+    },
+    {
+      "path": "Organic Waste/Vegetation_435.jpg",
+      "label": "Organic Waste",
+      "sha256": "c3768dfa6a8559703b97f15b95771a8be97e066da1430f946402ae3f76a30119"
+    },
+    {
+      "path": "Plastic Waste/Plastic_523.jpg",
+      "label": "Plastic Waste",
+      "sha256": "61578ea7e60c9ac699d6c9a0c0ace253a5923bfac4f4537ecd4954898f72d8c9"
+    },
+    {
+      "path": "Organic Waste/Food Organics_295.jpg",
+      "label": "Organic Waste",
+      "sha256": "0dac649c1fcae1afc1805cd4e375049c6b4005dd359c0ae64dd6d2fa28b481b6"
+    },
+    {
+      "path": "Paper Waste/Paper_319.jpg",
+      "label": "Paper Waste",
+      "sha256": "60a43e624ae45fe2ed7b3a429ef52d6bcc653108e3b48111a8afff92e80f0b1f"
+    },
+    {
+      "path": "Paper Waste/Paper_197.jpg",
+      "label": "Paper Waste",
+      "sha256": "5fb1b78d5a1cf3ea640dc96defb3ed0b470ff54bec149c546dca9343893e9d2d"
+    },
+    {
+      "path": "Paper Waste/Paper_92.jpg",
+      "label": "Paper Waste",
+      "sha256": "51bde697306954941362d56b17b992cb530555858dd64d4c2442adec01512cd3"
+    },
+    {
+      "path": "Plastic Waste/Plastic_124.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4b0f85becea41b306bcb4d6cca004c255cf559b0cea41b8c85f84967dc79806b"
+    },
+    {
+      "path": "Paper Waste/Paper_133.jpg",
+      "label": "Paper Waste",
+      "sha256": "8fb1f6b18a77b480159635b4a55dde007279438c4e33afeebbc449b3a6f1728c"
+    },
+    {
+      "path": "Organic Waste/Food Organics_390.jpg",
+      "label": "Organic Waste",
+      "sha256": "dad789d68dc3ae3ed1c9c4bd52aba786e80a727869511776fd484aedddf857cf"
+    },
+    {
+      "path": "Plastic Waste/Plastic_567.jpg",
+      "label": "Plastic Waste",
+      "sha256": "c2edd7a9435e1a23650f16b1f6f20b9dc3f3bd7b6feb2ffee70f529180c4b540"
+    },
+    {
+      "path": "Paper Waste/Paper_26.jpg",
+      "label": "Paper Waste",
+      "sha256": "8d88fd35e04b4b9be8fea493245acd9dbda288af5b4bae22a5ae594c4bf0b99d"
+    },
+    {
+      "path": "Paper Waste/Paper_489.jpg",
+      "label": "Paper Waste",
+      "sha256": "e49671581a8de949216fc053811fbf25eab9f40303c2a64acccd8d07fcd48181"
+    },
+    {
+      "path": "Paper Waste/Paper_347.jpg",
+      "label": "Paper Waste",
+      "sha256": "a4f4ba7ffc76deae26ae040ca8c3d80b7613430abd6eff753626d0f17d0fdcb3"
+    },
+    {
+      "path": "Plastic Waste/Plastic_497.jpg",
+      "label": "Plastic Waste",
+      "sha256": "0d95b6fd2103ecb0ce2d118a3dafa224dede2b53cceb5bc8f02d828920313066"
+    },
+    {
+      "path": "Organic Waste/Vegetation_321.jpg",
+      "label": "Organic Waste",
+      "sha256": "da96ce201fae83f9d9aa3f584e2aea24c116e6b52f544a877a41d929e5095ec3"
+    },
+    {
+      "path": "Paper Waste/Paper_308.jpg",
+      "label": "Paper Waste",
+      "sha256": "d0c553f4a012f31b1deddeaf84516cc0b35cdc2f9eb6ee9aa90a6cc404d00269"
+    },
+    {
+      "path": "Plastic Waste/Plastic_500.jpg",
+      "label": "Plastic Waste",
+      "sha256": "bf4910eeaa0ef0fc8a0877bd3a9d89f7143eefa223e5e8d2697597631f09446f"
+    },
+    {
+      "path": "Organic Waste/Vegetation_281.jpg",
+      "label": "Organic Waste",
+      "sha256": "e1a2a9e8d1ffaad0479f1a3a848d19a1a130b2b33a8d6b38cb5f61b5c89d5293"
+    },
+    {
+      "path": "Paper Waste/Paper_202.jpg",
+      "label": "Paper Waste",
+      "sha256": "17326f9b1894b6b4ba52038bc2a9e4ee4b017f502866d4364964353aa89575b6"
+    },
+    {
+      "path": "Organic Waste/Food Organics_150.jpg",
+      "label": "Organic Waste",
+      "sha256": "b34309fefb84e911f683886ad24d69926ccac6be10d63dd6a01f64d540527e1f"
+    },
+    {
+      "path": "Organic Waste/Vegetation_223.jpg",
+      "label": "Organic Waste",
+      "sha256": "f263a9a9e5761a4541c8d57a7027a6866e1de3936dcf9147db267ffc665437f9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_274.jpg",
+      "label": "Plastic Waste",
+      "sha256": "51baee4512b654e0e142b1069c468f5d407540a2b6af828aa7377e13ad2d84ec"
+    },
+    {
+      "path": "Paper Waste/Paper_84.jpg",
+      "label": "Paper Waste",
+      "sha256": "36fde1b4594d0bb9f9695e7fb499e711cc055a537053a2cf0a2296e1435680b8"
+    },
+    {
+      "path": "Paper Waste/Paper_52.jpg",
+      "label": "Paper Waste",
+      "sha256": "04997f27d12fae8224626e3fc10b056c629fb6996c4a472b4041d1782c40c98d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_707.jpg",
+      "label": "Plastic Waste",
+      "sha256": "43f2c6b62a53566e7d171e6d6c00a2806dce1c80714269b026f1f96c54923699"
+    },
+    {
+      "path": "Paper Waste/Paper_219.jpg",
+      "label": "Paper Waste",
+      "sha256": "a9e1b8a3689841523e3314710b8eba26fccd11d4e8d77677065c784cb14ca4f9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_825.jpg",
+      "label": "Plastic Waste",
+      "sha256": "66e3d3e9ad0fe8730645ed98c2162afe08e7fabe733f5d577b9f4f4280d62579"
+    },
+    {
+      "path": "Plastic Waste/Plastic_44.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ededb7a0c087245cd1016a5b33ab0416a84f62eeb6c3ff2a06cdb8e076a79cfe"
+    },
+    {
+      "path": "Organic Waste/Vegetation_307.jpg",
+      "label": "Organic Waste",
+      "sha256": "6a41ae550e3c5c22958f12e45fa5368f44fec665c94924a2978211c12253063b"
+    },
+    {
+      "path": "Plastic Waste/Plastic_422.jpg",
+      "label": "Plastic Waste",
+      "sha256": "def95694251dd882239cc7dadb38946033d8c61a05817f6502dfb8f2400dbe53"
+    },
+    {
+      "path": "Paper Waste/Paper_285.jpg",
+      "label": "Paper Waste",
+      "sha256": "077eb709b4135fc34d8aacea40c10e24d64e6e70187021e74fb2f25022fdb5db"
+    },
+    {
+      "path": "Plastic Waste/Plastic_840.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ffa6601f6ac1b445adccda72ea1193b086b4d91a12b932ee01ef697f38839d71"
+    },
+    {
+      "path": "Paper Waste/Paper_20.jpg",
+      "label": "Paper Waste",
+      "sha256": "c14157db7b09fe879b3d17abc3d1370f2c6bf20164c2dbacde7195949f975a61"
+    },
+    {
+      "path": "Organic Waste/Vegetation_62.jpg",
+      "label": "Organic Waste",
+      "sha256": "9146e7bab20b0e805eb9c062fa879addfcbf3d5b722f274c697a7e8284f16288"
+    },
+    {
+      "path": "Paper Waste/Paper_255.jpg",
+      "label": "Paper Waste",
+      "sha256": "90fc0fb2d4f18a8bcda05395c8aacf39c7f61f557335efa6b7ae20b04782d1aa"
+    },
+    {
+      "path": "Organic Waste/Vegetation_39.jpg",
+      "label": "Organic Waste",
+      "sha256": "f773d63f0224cecc41507a2c2539a79b88f72cda005d3ed2b3a37f7c84296125"
+    },
+    {
+      "path": "Organic Waste/Vegetation_226.jpg",
+      "label": "Organic Waste",
+      "sha256": "67da0f1aee7b70c96806a72372eb44c0109c708e8f1ccdc9c3cf36b1c708652a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_763.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4b8bac9bd1c4cefee98832a07db48ae5db26363c719bb94830979530527268ae"
+    },
+    {
+      "path": "Paper Waste/Paper_349.jpg",
+      "label": "Paper Waste",
+      "sha256": "b0248bd8bd8f63150b1c0601e1f232a3df6b2fd30fe1d63d0cf8f1f2cef00a44"
+    },
+    {
+      "path": "Organic Waste/Food Organics_409.jpg",
+      "label": "Organic Waste",
+      "sha256": "d678cb9a1172a1417df1ec9d6a55f1df8d4d42464f04ad85a846cb8b624b8853"
+    },
+    {
+      "path": "Plastic Waste/Plastic_329.jpg",
+      "label": "Plastic Waste",
+      "sha256": "9d602a00df3ef515f1c31ffd0bf3b804e2ac78fb630cf0c9ac9d6bfbabe87c37"
+    },
+    {
+      "path": "Organic Waste/Food Organics_292.jpg",
+      "label": "Organic Waste",
+      "sha256": "44f0fde11f6fbac2873bd62bc3f276bbdd030420f78d0be433877796e864ea50"
+    },
+    {
+      "path": "Paper Waste/Paper_68.jpg",
+      "label": "Paper Waste",
+      "sha256": "c1c97f0b196ed7c7fe122f2de8972dfb1bbc8b812ca52e545c81de24bff46ac5"
+    },
+    {
+      "path": "Plastic Waste/Plastic_795.jpg",
+      "label": "Plastic Waste",
+      "sha256": "071b6d58d21154747920fe67d3d1facaa58ee227b578707740dd1655f02e0069"
+    },
+    {
+      "path": "Paper Waste/Paper_305.jpg",
+      "label": "Paper Waste",
+      "sha256": "0978b7a502c17f4890210571e1725275f357083497239d80c1bb2986501d962b"
+    },
+    {
+      "path": "Paper Waste/Paper_323.jpg",
+      "label": "Paper Waste",
+      "sha256": "6bfe3aa1f2fc4b7be7be8695fb31bf55bf9f3d44d57153d3b42cd327a51e160d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_376.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e7c12d8ee98d36a13b9dd15a8f47f02d3b35fc8131765a22bea6751073c88b53"
+    },
+    {
+      "path": "Organic Waste/Food Organics_197.jpg",
+      "label": "Organic Waste",
+      "sha256": "31816edf8bc2ab66b35f65a43332ff1669d0bb5f94ab838e10ad54208bbc48c5"
+    },
+    {
+      "path": "Paper Waste/Paper_300.jpg",
+      "label": "Paper Waste",
+      "sha256": "0832f17e4bfcc88d4de605b40291d6285d6ab0a86383b69dc45b0fab26aa6cd6"
+    },
+    {
+      "path": "Paper Waste/Paper_262.jpg",
+      "label": "Paper Waste",
+      "sha256": "9d74711097e178c4f4c02093b4c827f28ca937aac0cff5041a2907149e008928"
+    },
+    {
+      "path": "Plastic Waste/Plastic_343.jpg",
+      "label": "Plastic Waste",
+      "sha256": "22582e358e4365b5ca03932cca825ba9b047c85f12312fbd0f051d505238c2e9"
+    },
+    {
+      "path": "Organic Waste/Food Organics_184.jpg",
+      "label": "Organic Waste",
+      "sha256": "8d62ffbf8ac797d43e21fbdd1ff9e81a2efa499d43cb787e584796ab30b8b45a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_40.jpg",
+      "label": "Plastic Waste",
+      "sha256": "94899c6deb10eab8100130ea363ffe497d828fcb1b14a6dba5f49aec11ce7bde"
+    },
+    {
+      "path": "Plastic Waste/Plastic_107.jpg",
+      "label": "Plastic Waste",
+      "sha256": "9a62d2a2a05de475326d72e25d30a32d55d2576bbf9afdaca99935d2b70701cf"
+    },
+    {
+      "path": "Plastic Waste/Plastic_421.jpg",
+      "label": "Plastic Waste",
+      "sha256": "859e75607ac6206e82cc28c2f0d10f22e6391dafc9319ac7a24ff58761b9dc4a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_34.jpg",
+      "label": "Plastic Waste",
+      "sha256": "3a9c5a88dc7f5589f4c0a85ba18641b6b8ee2e735a7d2a25d6eb11853f06c0b7"
+    },
+    {
+      "path": "Organic Waste/Food Organics_244.jpg",
+      "label": "Organic Waste",
+      "sha256": "80ae8b11a9e65c06ddf6366bd86eeea57e632e7dd7d9580d670f4a64361fb744"
+    },
+    {
+      "path": "Paper Waste/Paper_414.jpg",
+      "label": "Paper Waste",
+      "sha256": "e7addcd4c685a98c66ffbddc5b4be88d18a32c41aaadf284183be5043ca0bdbd"
+    },
+    {
+      "path": "Organic Waste/Food Organics_230.jpg",
+      "label": "Organic Waste",
+      "sha256": "5081f22e3d678ffae859aba1d9afdea95cd0bc97d466f1a5370798c8e295b99d"
+    },
+    {
+      "path": "Paper Waste/Paper_271.jpg",
+      "label": "Paper Waste",
+      "sha256": "f0c37f6839318fe66f6d64e5228e1a93171433412524b2766e588bb03f85af8f"
+    },
+    {
+      "path": "Paper Waste/Paper_77.jpg",
+      "label": "Paper Waste",
+      "sha256": "97948a9d3eb0e351bb2aa4636cb2f9f53bc5e2412720ebdf3de2437775c6fa3f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_570.jpg",
+      "label": "Plastic Waste",
+      "sha256": "9c62e4488c221c804dd53275def4ebba894fa6327b13440242eb37048e45b578"
+    },
+    {
+      "path": "Organic Waste/Food Organics_276.jpg",
+      "label": "Organic Waste",
+      "sha256": "d76fd4c9f7445c1040feb5d668df3e9b164b0829a05542294e49c479e3669d9a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_784.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e0dea43a3d03ff83c0e70ed53b7cc11a9ac120c78560316c217f538525d566ed"
+    },
+    {
+      "path": "Organic Waste/Vegetation_73.jpg",
+      "label": "Organic Waste",
+      "sha256": "2d9a3b1ccb0e0c4620f4a0aeccc374004e426a52fd97a4ba4370c4775745d173"
+    },
+    {
+      "path": "Organic Waste/Vegetation_411.jpg",
+      "label": "Organic Waste",
+      "sha256": "28ac055c11baee3492604ba5c922cece01690cce18e809b040435ae0d69a4982"
+    },
+    {
+      "path": "Plastic Waste/Plastic_328.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5448757f1919e2100e602083d4c6d5845c0d6ca279e5ddbea35c6b80839e2c63"
+    },
+    {
+      "path": "Paper Waste/Paper_434.jpg",
+      "label": "Paper Waste",
+      "sha256": "656d33d890f40e13505b955d9b4e08ec6d3cf43c4af0f88e726b98cb92eef2d8"
+    },
+    {
+      "path": "Paper Waste/Paper_207.jpg",
+      "label": "Paper Waste",
+      "sha256": "1869598766da4124b6c664462e2bcc6358cf5675f1d2ab617c9eb8b79edca877"
+    },
+    {
+      "path": "Plastic Waste/Plastic_384.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1d47ed6fc8fd6b22ac875358ba2eb240ab7b4de9739e64caf85cdb899b08e481"
+    },
+    {
+      "path": "Plastic Waste/Plastic_371.jpg",
+      "label": "Plastic Waste",
+      "sha256": "c2dad0243df61a1dc0d35e216d3392cde73293b81c956acf8db7de21a841abaf"
+    },
+    {
+      "path": "Plastic Waste/Plastic_146.jpg",
+      "label": "Plastic Waste",
+      "sha256": "035dfee2a3f54c61a2f824aebc98e530583128afa11f685ee3901e8790a3d5ab"
+    },
+    {
+      "path": "Plastic Waste/Plastic_246.jpg",
+      "label": "Plastic Waste",
+      "sha256": "dd65b2376dec4642a005627082539928abfb9445ac5b4e091ec068e84ff8a8ff"
+    },
+    {
+      "path": "Organic Waste/Vegetation_387.jpg",
+      "label": "Organic Waste",
+      "sha256": "ee3d37428e80a7b6eaa1d729d38e9f52eebfa3c2b2b3c44cb498ac1e385ec5c8"
+    },
+    {
+      "path": "Plastic Waste/Plastic_375.jpg",
+      "label": "Plastic Waste",
+      "sha256": "aac0a1a6d43fb04d9c4e0c2d960bf7d01904c2d3dfe226421cca621cc3eac976"
+    },
+    {
+      "path": "Paper Waste/Paper_484.jpg",
+      "label": "Paper Waste",
+      "sha256": "cf366df49f27c3cc7d1c044fb5d9f9bd825232e58452b300c93fafd57800c96f"
+    },
+    {
+      "path": "Organic Waste/Vegetation_199.jpg",
+      "label": "Organic Waste",
+      "sha256": "e23d4555ce5c2675232f4c0dcecfa43de2451d93d59c8cdd6d3d2ae9731060e9"
+    },
+    {
+      "path": "Organic Waste/Vegetation_279.jpg",
+      "label": "Organic Waste",
+      "sha256": "8dfe22ab2c955c556ab7968c4ef36564f21d756e6627b028cc1ad135c955d411"
+    },
+    {
+      "path": "Paper Waste/Paper_407.jpg",
+      "label": "Paper Waste",
+      "sha256": "70beb3fdc2c5772691febd2a232e23c295ff0e0a0221ac3b520f0b6ecacec60a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_467.jpg",
+      "label": "Plastic Waste",
+      "sha256": "eaf8fef96e16283c833d382b91aa5f2eaad6d3cc1e24422ba36c19577f3ecfdb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_236.jpg",
+      "label": "Plastic Waste",
+      "sha256": "aa3dd4fb78e18e206306924a07c2a9cd9de31479dae48443e2173afcc18255cf"
+    },
+    {
+      "path": "Paper Waste/Paper_452.jpg",
+      "label": "Paper Waste",
+      "sha256": "ea94d08f7ae3fa6a7a263e21a45bab20123e09f53ebf1ad601ee39b459ca4cfc"
+    },
+    {
+      "path": "Plastic Waste/Plastic_468.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6da790bd017f61b69f10d4f30b2bb361795ec4d6e90593cfad91cb9bce4e6475"
+    },
+    {
+      "path": "Plastic Waste/Plastic_869.jpg",
+      "label": "Plastic Waste",
+      "sha256": "37860c1918ff0caf1c35c5f5ecc0543f420c31025562d8d0fb80f57bdc162ff0"
+    },
+    {
+      "path": "Paper Waste/Paper_127.jpg",
+      "label": "Paper Waste",
+      "sha256": "bd032f1df294cb7a7e29ea608e49bf5b4e47308f72c5e9aab99d78c2e2cf799b"
+    },
+    {
+      "path": "Plastic Waste/Plastic_356.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e9a298f38a610d5b443ff394a30a4f5eb878c13b3df5e7ada4f9195972237e04"
+    },
+    {
+      "path": "Organic Waste/Vegetation_42.jpg",
+      "label": "Organic Waste",
+      "sha256": "7f65fde5891a09469df1e4604fe63b69ba9aa5d90f406a84906e766caafa87ae"
+    },
+    {
+      "path": "Organic Waste/Food Organics_246.jpg",
+      "label": "Organic Waste",
+      "sha256": "6c371075111a22d66ffb6623163fd6d57af7a1a98856af0008cc1fc589cbd61c"
+    },
+    {
+      "path": "Paper Waste/Paper_171.jpg",
+      "label": "Paper Waste",
+      "sha256": "581cb2182e07b00e440252f78b66b51df0e31c8cea0c06fc69629f55b9b06eae"
+    },
+    {
+      "path": "Plastic Waste/Plastic_317.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6a08b027d24f60ee3812e09bda59e3e8445996fc094ad02bf683627ecdd6998c"
+    },
+    {
+      "path": "Organic Waste/Vegetation_261.jpg",
+      "label": "Organic Waste",
+      "sha256": "5ddf5d5db43e177db70cf9192017b049c0df25d2cc0e392c6e7b73107589e269"
+    },
+    {
+      "path": "Plastic Waste/Plastic_10.jpg",
+      "label": "Plastic Waste",
+      "sha256": "160e39572e1528bfa6a3f1e39745ee6644a44de6e352674309118113181d62b3"
+    },
+    {
+      "path": "Organic Waste/Food Organics_37.jpg",
+      "label": "Organic Waste",
+      "sha256": "8b3241de8827072d8052ff3d1e27a2bc10dd24d4451ad3947f99aa3ded220046"
+    },
+    {
+      "path": "Organic Waste/Vegetation_339.jpg",
+      "label": "Organic Waste",
+      "sha256": "808bedec3e645cd4c6fdbb5b8b88473d1eec8e14cc401ea09d6cd9d63d05bb57"
+    },
+    {
+      "path": "Organic Waste/Vegetation_352.jpg",
+      "label": "Organic Waste",
+      "sha256": "c7543c284778c73792497e8ffbdfdd69f919a8ade9defe32970b6b3c4d459a17"
+    },
+    {
+      "path": "Paper Waste/Paper_242.jpg",
+      "label": "Paper Waste",
+      "sha256": "eeca7beb33de8404d621d7aa7cf389290d5d7aad011ac35a7d414d835af6e24a"
+    },
+    {
+      "path": "Paper Waste/Paper_131.jpg",
+      "label": "Paper Waste",
+      "sha256": "850b8dbe4d87b02b2dfad7b71632a131c65f150639ef3a06119ab651d662ab68"
+    },
+    {
+      "path": "Organic Waste/Vegetation_142.jpg",
+      "label": "Organic Waste",
+      "sha256": "10fca3aa41b237a028364f4bfe374584080d681ea368bc663bc9be347a7f0fb2"
+    },
+    {
+      "path": "Organic Waste/Food Organics_24.jpg",
+      "label": "Organic Waste",
+      "sha256": "d75a0a19b465a152ac950bd0ffa30c48d0af6050b39f05c81cf699cbbc487f11"
+    },
+    {
+      "path": "Paper Waste/Paper_460.jpg",
+      "label": "Paper Waste",
+      "sha256": "3489e7f7bd6b40910956bd719a17bd7216df0330c803c6c7ac7ba40e47d4a481"
+    },
+    {
+      "path": "Organic Waste/Food Organics_16.jpg",
+      "label": "Organic Waste",
+      "sha256": "4b5553970ffa28bedbe94cbcf459f484bebe80f0094bec9a567282a839775949"
+    },
+    {
+      "path": "Plastic Waste/Plastic_476.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5bd64b093c8d2f0d8a4c6a7e7b88e10d12d62895342a4563624fe12cd7947e85"
+    },
+    {
+      "path": "Paper Waste/Paper_298.jpg",
+      "label": "Paper Waste",
+      "sha256": "2e957dc821144d10eddfd1d039ff30332565e6d589abd1b399e233fd717f7bc3"
+    },
+    {
+      "path": "Organic Waste/Food Organics_97.jpg",
+      "label": "Organic Waste",
+      "sha256": "772c38556765b616731ac51c7e65ab18fd703f98c92c31eaf61b3788488bf603"
+    },
+    {
+      "path": "Plastic Waste/Plastic_26.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b742d16b9e0b2e2af4daecb754a0245f64195a1808fea0796481c678eda95098"
+    },
+    {
+      "path": "Plastic Waste/Plastic_900.jpg",
+      "label": "Plastic Waste",
+      "sha256": "17b481800c7a6733057de7437b6219596a9e0274b61ebd2c7781b0a73e3f4703"
+    },
+    {
+      "path": "Paper Waste/Paper_496.jpg",
+      "label": "Paper Waste",
+      "sha256": "99a9141be6364d1b43d2182b27e4f43ad665605b1d3b4fed8294b6c64da1c016"
+    },
+    {
+      "path": "Plastic Waste/Plastic_403.jpg",
+      "label": "Plastic Waste",
+      "sha256": "51124d3e7e2303c06c415f606ee61f8f6ebde6fe0cc94079cf864580d60850d0"
+    },
+    {
+      "path": "Organic Waste/Vegetation_286.jpg",
+      "label": "Organic Waste",
+      "sha256": "35387cdfc26658f198f131fa3d70211e2a567f1968456400426fe2caf7569181"
+    },
+    {
+      "path": "Plastic Waste/Plastic_287.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ed771be3c373038641dce5ab8eb7fd00034a71a6ec183ae9e7ad53994a4d0dd4"
+    },
+    {
+      "path": "Organic Waste/Vegetation_379.jpg",
+      "label": "Organic Waste",
+      "sha256": "d95677a7bdf9d2f9f36f3a1d655c0a3c3624d608c4b1c6598d32f1246f7cd4ee"
+    },
+    {
+      "path": "Paper Waste/Paper_497.jpg",
+      "label": "Paper Waste",
+      "sha256": "d908ea239fafe3e849a1917b30657cdc7c731d78556484be482e3d099c6703b7"
+    },
+    {
+      "path": "Organic Waste/Food Organics_31.jpg",
+      "label": "Organic Waste",
+      "sha256": "92e1f2778be96d0e42292bcf85c79c016fe85d32e0c1ba67601cabc9aff67c29"
+    },
+    {
+      "path": "Plastic Waste/Plastic_248.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b7f3def2cd20d14800e5d2a4a6575d76916c527b63c97b8cf18bf4441ece0b9d"
+    },
+    {
+      "path": "Paper Waste/Paper_287.jpg",
+      "label": "Paper Waste",
+      "sha256": "4dc87ce4b37811c4173b1bab84b0fc2fe5cecf259ef728ec321f6285621ec865"
+    },
+    {
+      "path": "Paper Waste/Paper_157.jpg",
+      "label": "Paper Waste",
+      "sha256": "d3c07e6e296a2e80b81e14b6ea1a56b26e1d0fee909483945bd3383d123eb6be"
+    },
+    {
+      "path": "Paper Waste/Paper_34.jpg",
+      "label": "Paper Waste",
+      "sha256": "754a015ad06ad32ba157f84dce7a8071047e416b6d1127bfb52c95c858d62dde"
+    },
+    {
+      "path": "Organic Waste/Food Organics_355.jpg",
+      "label": "Organic Waste",
+      "sha256": "cc98239fa5461ce112441f3086ff6b1974b219f558681e6918860d0b5501304c"
+    },
+    {
+      "path": "Organic Waste/Vegetation_76.jpg",
+      "label": "Organic Waste",
+      "sha256": "c6dc709d506505c5db742589b45cc74cc90ff47ac8d13179bc65466c5c7ee4fe"
+    },
+    {
+      "path": "Paper Waste/Paper_342.jpg",
+      "label": "Paper Waste",
+      "sha256": "3d536ddd6caf3a5bbbab7bbab805bd553591c1b9456f98ab198d4fe5148665cb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_216.jpg",
+      "label": "Plastic Waste",
+      "sha256": "fa1afd07baf45f3c9476c117c819c3725ad08950634969c3d13c69e74f2132ad"
+    },
+    {
+      "path": "Paper Waste/Paper_40.jpg",
+      "label": "Paper Waste",
+      "sha256": "1400aa12480c476492b3a0b995a0b3870fe93553faa767d9128fb34eafdd2d4c"
+    },
+    {
+      "path": "Paper Waste/Paper_402.jpg",
+      "label": "Paper Waste",
+      "sha256": "3fde4c1693bcb6488981b1d2a787536f1f9b84d7cc34b0c138aec55f3f1286bf"
+    },
+    {
+      "path": "Paper Waste/Paper_204.jpg",
+      "label": "Paper Waste",
+      "sha256": "2a608270994c894d9a8fb065599433bab60869e82126536d53ccb973f34ae27e"
+    },
+    {
+      "path": "Paper Waste/Paper_417.jpg",
+      "label": "Paper Waste",
+      "sha256": "5f6b808702fe072ceb8afb93d002cda7ec09e3f85283ba21c72833ee697bb2ca"
+    },
+    {
+      "path": "Plastic Waste/Plastic_886.jpg",
+      "label": "Plastic Waste",
+      "sha256": "766a65c6225352d1a492b01b64cd74e804dba1d590295a3639faa67abe257353"
+    },
+    {
+      "path": "Organic Waste/Food Organics_398.jpg",
+      "label": "Organic Waste",
+      "sha256": "920199ecc295d931cc4061d3c9a8ddf64a83c2897f14e38e1cb3ba0f314bfda9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_342.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e9da5f189783937d4954855e5973a36f90a8b6e90294094719c33dedb3af7aba"
+    },
+    {
+      "path": "Paper Waste/Paper_31.jpg",
+      "label": "Paper Waste",
+      "sha256": "385867c1ef58cb03763e5c82b58df730343b92c5bd34af9c95485ca8f8baadb3"
+    },
+    {
+      "path": "Plastic Waste/Plastic_280.jpg",
+      "label": "Plastic Waste",
+      "sha256": "fdec23ffd508c841009bebbfa767a5576d616b5c1e6e1a7726d980e4829f624f"
+    },
+    {
+      "path": "Organic Waste/Vegetation_44.jpg",
+      "label": "Organic Waste",
+      "sha256": "a723755201910ebc1bc3ba3de4a3bf73826fcda1397ce54a5790a4eda1877c7f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_198.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5ec0c811de015ffc554e0e226b491b095515e7a991567438244f273dbeb2e169"
+    },
+    {
+      "path": "Plastic Waste/Plastic_796.jpg",
+      "label": "Plastic Waste",
+      "sha256": "21690b83a3ade34e61aa43cdf9e913db9f1da58910316af62fdd2dd499432c4d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_608.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4fc5a93fd1e81d1001bb9cdf1cc79b031fefd04f88fe08a475b34c8e30766405"
+    },
+    {
+      "path": "Plastic Waste/Plastic_303.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e614eaa8126d91fb4e42dc53f1016bd1038f061f35db9a4811c038951431bb53"
+    },
+    {
+      "path": "Organic Waste/Food Organics_343.jpg",
+      "label": "Organic Waste",
+      "sha256": "85f8f1bea8e01bddfd60e38b71e80bb8a7672cb58db61d11cfad2aa018dda7cb"
+    },
+    {
+      "path": "Organic Waste/Food Organics_42.jpg",
+      "label": "Organic Waste",
+      "sha256": "c31aadf978327e5683b46bb6547aa54aea987f5a0ae18adec2fedbb26fd151a1"
+    },
+    {
+      "path": "Organic Waste/Food Organics_94.jpg",
+      "label": "Organic Waste",
+      "sha256": "b2a34b6c9652c0adf1cf515ba9374d60a5596cc97537d825f621d64a5b91ef5d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_732.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b9e115923098d604bdea4e7e21ba6fcb9b6caee7fe825a4ca7aa19ba1bad209e"
+    },
+    {
+      "path": "Plastic Waste/Plastic_75.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ef5aa3ddbd561f8f31e82eb1cf2eddf679953ff7adf20b8c2d1e49178e5bcb01"
+    },
+    {
+      "path": "Plastic Waste/Plastic_833.jpg",
+      "label": "Plastic Waste",
+      "sha256": "7fed52940fab0dabc13701f67c1d91cfdc5245f9b771bd5a297a0e0038d658f3"
+    },
+    {
+      "path": "Paper Waste/Paper_284.jpg",
+      "label": "Paper Waste",
+      "sha256": "56c0973f056de9342373bb9591a9d5830966da5a31d5bc70e8d6d34b5598f63d"
+    },
+    {
+      "path": "Paper Waste/Paper_446.jpg",
+      "label": "Paper Waste",
+      "sha256": "7983fed1cb6690f11ff26a30b6fb8469e03fd743d2b7a7e38057cd75ee409c4e"
+    },
+    {
+      "path": "Plastic Waste/Plastic_262.jpg",
+      "label": "Plastic Waste",
+      "sha256": "8c41ed3a1def77e51c0e919e5a17770c4cdbfdf59397930c64435670d534aade"
+    },
+    {
+      "path": "Plastic Waste/Plastic_783.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4e5748e30877035bce10adba0c55cc91bcd3ba9bf41a43adb7b35b96293f4980"
+    },
+    {
+      "path": "Plastic Waste/Plastic_417.jpg",
+      "label": "Plastic Waste",
+      "sha256": "9c9c6798e835eed7fffefc62892f994a5152812ba0cc45ebde01515c1b735dc1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_506.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1fc1957f22971126d882aaa82df999a87d5de6c3721a4db03d24b1d712285516"
+    },
+    {
+      "path": "Paper Waste/Paper_478.jpg",
+      "label": "Paper Waste",
+      "sha256": "46857d7e80b354ec28b19d08fd9942cf58f41d98890486c463f1fc159f7709f4"
+    },
+    {
+      "path": "Organic Waste/Vegetation_419.jpg",
+      "label": "Organic Waste",
+      "sha256": "2caa6f9cd946fe08f9e56b854a1de3e35cb63a4592f4de84a38380b1c9af885d"
+    },
+    {
+      "path": "Organic Waste/Food Organics_99.jpg",
+      "label": "Organic Waste",
+      "sha256": "298d72a012705ee6b4fba08b0425d61624077aa7d20e1cf4ca8a00a4f63b498d"
+    },
+    {
+      "path": "Paper Waste/Paper_198.jpg",
+      "label": "Paper Waste",
+      "sha256": "df53e035816994029a4e87611ab686ca9620d3f663b1e24c67d6791da557bd92"
+    },
+    {
+      "path": "Plastic Waste/Plastic_1.jpg",
+      "label": "Plastic Waste",
+      "sha256": "16dd5e776206eda43b6eaffd4a4a939496b7cb66177e8a874c810d02ab4c7759"
+    },
+    {
+      "path": "Paper Waste/Paper_123.jpg",
+      "label": "Paper Waste",
+      "sha256": "b794ae8be244f5ec88e02dfe23994788cac6b270648ad236bfaf4f93406cb3ad"
+    },
+    {
+      "path": "Organic Waste/Vegetation_401.jpg",
+      "label": "Organic Waste",
+      "sha256": "612ccc7130b8921f5be7013793b23cdedce5d3169cf55d86988872e4c8368b67"
+    },
+    {
+      "path": "Organic Waste/Vegetation_273.jpg",
+      "label": "Organic Waste",
+      "sha256": "32bd7e8e927714e7c551056fd3748674f6b78934fa518702cf13ea929e92d13e"
+    },
+    {
+      "path": "Paper Waste/Paper_352.jpg",
+      "label": "Paper Waste",
+      "sha256": "2fa39665f7707e4de7389968be4e68e2bb7ba686b43e75cd3f3bf82ff4a62145"
+    },
+    {
+      "path": "Organic Waste/Food Organics_165.jpg",
+      "label": "Organic Waste",
+      "sha256": "f01af05102fbfc655efe24d82bf414cb0296974bc05e8dff49ad66d9fefe024d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_623.jpg",
+      "label": "Plastic Waste",
+      "sha256": "a164404cf651f5b65dee5f02e4211b05d7ab688d9fd22c923a25e9013b39c7ca"
+    },
+    {
+      "path": "Organic Waste/Vegetation_284.jpg",
+      "label": "Organic Waste",
+      "sha256": "98185188553555dcc2c5642d472b3a6ed76eb0aad0722d3d5ea57ce6b11a97de"
+    },
+    {
+      "path": "Paper Waste/Paper_121.jpg",
+      "label": "Paper Waste",
+      "sha256": "073d5926d289185c46eecebe2634cd37978f555671218233ed8a3b2fe6ec71d7"
+    },
+    {
+      "path": "Plastic Waste/Plastic_710.jpg",
+      "label": "Plastic Waste",
+      "sha256": "aeb11fc1b2d20b3ce46320dc49cecdb5365292916235ec25a78db036dc1f698d"
+    },
+    {
+      "path": "Organic Waste/Food Organics_298.jpg",
+      "label": "Organic Waste",
+      "sha256": "69fda83736aaf7acb134f172d2614d185f89ca9072424015eedbcca1ec856a0a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_354.jpg",
+      "label": "Plastic Waste",
+      "sha256": "7248e566535457c254675accc8436907c9712452dd417b1c8aeb45271fbcc140"
+    },
+    {
+      "path": "Plastic Waste/Plastic_748.jpg",
+      "label": "Plastic Waste",
+      "sha256": "97075925da5be672b0244aa08551643d2ea90eadae01fd5e610bdfac37f97502"
+    },
+    {
+      "path": "Paper Waste/Paper_81.jpg",
+      "label": "Paper Waste",
+      "sha256": "701157f230453f4dcfae44b31f9ac6c50e4bf6f64d9063130d6a1d548065d3e1"
+    },
+    {
+      "path": "Paper Waste/Paper_211.jpg",
+      "label": "Paper Waste",
+      "sha256": "f5cbb9d923991b498a939e21f6465cffab8d69d37990b71679c41e24a9ae026f"
+    },
+    {
+      "path": "Organic Waste/Vegetation_242.jpg",
+      "label": "Organic Waste",
+      "sha256": "ef1c5b386bd7555ac514a9da440477993298fcb5a017cbdcdb2644ca1b97fe41"
+    },
+    {
+      "path": "Organic Waste/Food Organics_185.jpg",
+      "label": "Organic Waste",
+      "sha256": "c1d8ca2d4210c641af3b1592daac38d6e4ddf988cbb816c75a274a7f96533b05"
+    }
+  ],
+  "validation": [
+    {
+      "path": "Plastic Waste/Plastic_746.jpg",
+      "label": "Plastic Waste",
+      "sha256": "61d3c866dc1d090e9aa9a87a121f7b3e7c31c15f501f2a836c05eab62ba26dd1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_241.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6188e1df02d5c1843922e37a531993affd3932e6036eb9a50c61f48fee8215e4"
+    },
+    {
+      "path": "Paper Waste/Paper_343.jpg",
+      "label": "Paper Waste",
+      "sha256": "2e9db7db1167e552c16273c501f30eccc56b13008a02d1c64383c38632c46840"
+    },
+    {
+      "path": "Organic Waste/Food Organics_249.jpg",
+      "label": "Organic Waste",
+      "sha256": "08be196d5f0ddeb7c07d2dbbaf3974aa72bd5f242e3c1a3e56798442385f74e1"
+    },
+    {
+      "path": "Organic Waste/Food Organics_227.jpg",
+      "label": "Organic Waste",
+      "sha256": "1cbdeb5828ffa439fdda8743af9b02bd175a3f9ada508478a54f93d240799c8c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_820.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ca8d2c1b224b76ade7283cd7f41d00eca708a41c8c014cdbf5afa0c54269ad95"
+    },
+    {
+      "path": "Plastic Waste/Plastic_604.jpg",
+      "label": "Plastic Waste",
+      "sha256": "d0d6d165719f57c6727fd89a68dbb003afe11d168dc5959badfe78b4211b8e81"
+    },
+    {
+      "path": "Organic Waste/Food Organics_257.jpg",
+      "label": "Organic Waste",
+      "sha256": "dd445ff372606d61f01f233daa7fc4791be6bcc7e6cbc6b07ae414f5f041f34f"
+    },
+    {
+      "path": "Paper Waste/Paper_16.jpg",
+      "label": "Paper Waste",
+      "sha256": "4f4f4d13eeec2443eb065635b3454aacc0662b3a7fc7e774794b30cc28c55a61"
+    },
+    {
+      "path": "Organic Waste/Food Organics_172.jpg",
+      "label": "Organic Waste",
+      "sha256": "dbb16a24568ea0f3b1361a4a895ee6bde73eb26239230fbc93751174b9db7483"
+    },
+    {
+      "path": "Organic Waste/Food Organics_63.jpg",
+      "label": "Organic Waste",
+      "sha256": "6af1dbbbf82c6a521a0ed59c939021e21a66a0bdf20dd30605780980d10b6c52"
+    },
+    {
+      "path": "Plastic Waste/Plastic_587.jpg",
+      "label": "Plastic Waste",
+      "sha256": "430763acc5bc030897fe2e9564531e7eaa4d3bb19428cf11eed59fe477026225"
+    },
+    {
+      "path": "Organic Waste/Food Organics_304.jpg",
+      "label": "Organic Waste",
+      "sha256": "8b2e024dbcedd21bbb75d07965394f00f88b1ceec509c9c74b4c8422ed954c33"
+    },
+    {
+      "path": "Plastic Waste/Plastic_184.jpg",
+      "label": "Plastic Waste",
+      "sha256": "0b3a7a25892c2be0f61612550efa40ec19e79fcb8334d9ad0f49eaa2d9b54e45"
+    },
+    {
+      "path": "Paper Waste/Paper_210.jpg",
+      "label": "Paper Waste",
+      "sha256": "eae797834627c79d18f00e5188972567bbc568d892449645dd37448a0c5f865a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_752.jpg",
+      "label": "Plastic Waste",
+      "sha256": "afbc205497c376021659195e5e346e953e0bc1162fa9c67a0f9566e50fc2b132"
+    },
+    {
+      "path": "Plastic Waste/Plastic_451.jpg",
+      "label": "Plastic Waste",
+      "sha256": "d4eeded35f75378e0a1dee5474446eb6dd23feab466854394e125e5a949b71cb"
+    },
+    {
+      "path": "Organic Waste/Food Organics_104.jpg",
+      "label": "Organic Waste",
+      "sha256": "c6e44ba6d1049dedc5dfc438c1cd37e7608c0a46b1d52f8fa67454bc0dd17fa1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_5.jpg",
+      "label": "Plastic Waste",
+      "sha256": "58806e04559a3b90f8c3b1269166c8e24856e66b7f22cadc8181462a45fe9b71"
+    },
+    {
+      "path": "Organic Waste/Vegetation_155.jpg",
+      "label": "Organic Waste",
+      "sha256": "cc78dd58400c07782e8aedefb34f6bd889d24d8dc3400afc2a28fa24e6763a59"
+    },
+    {
+      "path": "Organic Waste/Food Organics_62.jpg",
+      "label": "Organic Waste",
+      "sha256": "94c6b5ccd703b942ccd84f3ba9b065f240543efe0045d92442be99f5d3bbd0cb"
+    },
+    {
+      "path": "Plastic Waste/Plastic_264.jpg",
+      "label": "Plastic Waste",
+      "sha256": "7734edd9edc3436b956a763a40072e603a09a0e0a92dc44b30da2536e8856752"
+    },
+    {
+      "path": "Paper Waste/Paper_330.jpg",
+      "label": "Paper Waste",
+      "sha256": "9a91286fba30b672bb733c2d92d65ec761b027fac0b00b426b8b5d118492a278"
+    },
+    {
+      "path": "Paper Waste/Paper_101.jpg",
+      "label": "Paper Waste",
+      "sha256": "6326cf532542d2ba44119a2e4a7730904d6b50bb2f01c920e083a3ceb58c6215"
+    },
+    {
+      "path": "Organic Waste/Vegetation_68.jpg",
+      "label": "Organic Waste",
+      "sha256": "d036006818a6573595c6b0ef40f31532349a5c10e6d704ea8fa42a4c5ae1768e"
+    },
+    {
+      "path": "Plastic Waste/Plastic_55.jpg",
+      "label": "Plastic Waste",
+      "sha256": "0d57d3e536b9e4c2508f16111cf0db4943d26734612afd59d222cf4044c870f7"
+    },
+    {
+      "path": "Organic Waste/Food Organics_163.jpg",
+      "label": "Organic Waste",
+      "sha256": "aaf7ab43b966fab8e0a0b5aa0022feecb3229fdc43893f1addcba5933fd5a7cf"
+    },
+    {
+      "path": "Organic Waste/Food Organics_20.jpg",
+      "label": "Organic Waste",
+      "sha256": "99a762cce85686fb175d7976ebd752651b4650f38a7b6482cf129fe74eaedec8"
+    },
+    {
+      "path": "Paper Waste/Paper_498.jpg",
+      "label": "Paper Waste",
+      "sha256": "3398da17bbec4d64853a9b861e4b28b7442ad83e184cf5d012ccfa3f0993c672"
+    },
+    {
+      "path": "Plastic Waste/Plastic_377.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4d840d0aeaf3411c5a54c566716023406d836571b30a1d200cd6d724d0761fd9"
+    },
+    {
+      "path": "Paper Waste/Paper_311.jpg",
+      "label": "Paper Waste",
+      "sha256": "a2e1ef6c22746c4fc324e38a1ebdf175bb060e7d1ac78edd7d4e78bebc5b1f2d"
+    },
+    {
+      "path": "Paper Waste/Paper_281.jpg",
+      "label": "Paper Waste",
+      "sha256": "a3bd35f2e10865e2406c1cec638aab086e83f8d4c7dded3d59d7c9317aae542c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_134.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e47e791f397ef57858ad5e633d58fbcbd02d7854cc26fcd52ec41f9ac6db5bcf"
+    },
+    {
+      "path": "Paper Waste/Paper_403.jpg",
+      "label": "Paper Waste",
+      "sha256": "bc7205dcd5db1756a707c048f62db31a826606e4a3e857759f51bea1d87ac496"
+    },
+    {
+      "path": "Organic Waste/Vegetation_152.jpg",
+      "label": "Organic Waste",
+      "sha256": "8bd208067c19d4dfc260df142abbf19a472fb242027bed9d83b77da4a2614ca0"
+    },
+    {
+      "path": "Plastic Waste/Plastic_684.jpg",
+      "label": "Plastic Waste",
+      "sha256": "dce4b7120399e8095c8862d58adc8686b1346010952d32fa69d2b424dfd7513f"
+    },
+    {
+      "path": "Organic Waste/Food Organics_341.jpg",
+      "label": "Organic Waste",
+      "sha256": "ceabe8c313ad2f5767535e1cadad9fc26fc55277dca34a60fc99a535c5e836d6"
+    },
+    {
+      "path": "Paper Waste/Paper_399.jpg",
+      "label": "Paper Waste",
+      "sha256": "98f92ed0e0725547a8f02f741275c7d6614bcc055aedee07cf8c61116125b8b5"
+    },
+    {
+      "path": "Organic Waste/Food Organics_204.jpg",
+      "label": "Organic Waste",
+      "sha256": "82172414897a892e4b761211f84b31721b1e715b9ca552a7c94f2900e1a94c85"
+    },
+    {
+      "path": "Paper Waste/Paper_125.jpg",
+      "label": "Paper Waste",
+      "sha256": "8175aa80e3b7954f42f5fef360785f04608a7076fa7cbc97859120949dc97074"
+    },
+    {
+      "path": "Plastic Waste/Plastic_219.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1cada0653dbacbf44afc32bea421336c9774c412963dc0b947ad23d7bbf5421c"
+    },
+    {
+      "path": "Paper Waste/Paper_57.jpg",
+      "label": "Paper Waste",
+      "sha256": "80dc786551bbfe255342fa12456a880d31ddbc54cdf54c8443cb396ed6f5caec"
+    },
+    {
+      "path": "Plastic Waste/Plastic_120.jpg",
+      "label": "Plastic Waste",
+      "sha256": "7a14e46730a564537169d9a80a8da270704130a3beab378f7f1492db45b26efd"
+    },
+    {
+      "path": "Organic Waste/Food Organics_46.jpg",
+      "label": "Organic Waste",
+      "sha256": "3a64bb24b5e8a1c5435354a08379afe51902261892d4447dc721c17f92c2eb04"
+    },
+    {
+      "path": "Paper Waste/Paper_55.jpg",
+      "label": "Paper Waste",
+      "sha256": "f8c9fd23928abe69e55f64e227e4a146773165eb5e1fcc322fbbd1c9e8171d2c"
+    },
+    {
+      "path": "Organic Waste/Food Organics_301.jpg",
+      "label": "Organic Waste",
+      "sha256": "e10dbf85e53859dd4076474eca0df2b43b2a54ebff8db0db5f271fa900c52520"
+    },
+    {
+      "path": "Plastic Waste/Plastic_868.jpg",
+      "label": "Plastic Waste",
+      "sha256": "c9e74108841f08fb9d584d0749b37a8cff0f338ade2217c2200e3c099023a06a"
+    },
+    {
+      "path": "Plastic Waste/Plastic_249.jpg",
+      "label": "Plastic Waste",
+      "sha256": "a89c3fe3d7920df2d0ece82522bcfa7a802d63e92915da735d792984e3745019"
+    },
+    {
+      "path": "Organic Waste/Food Organics_139.jpg",
+      "label": "Organic Waste",
+      "sha256": "716638efc1bf849e501695f384bc74f07ab288f38cfc9a5f26dad107454855c2"
+    },
+    {
+      "path": "Paper Waste/Paper_163.jpg",
+      "label": "Paper Waste",
+      "sha256": "c436b9b655a76919a296ad142eec60ef0f3a88aef272c2c846b826d90dfe7ec0"
+    },
+    {
+      "path": "Organic Waste/Vegetation_318.jpg",
+      "label": "Organic Waste",
+      "sha256": "eabc1918ac46bdaf755d483e7717abe965734fe99a4fe8a77d8b6126f07e82a3"
+    },
+    {
+      "path": "Plastic Waste/Plastic_137.jpg",
+      "label": "Plastic Waste",
+      "sha256": "20eef18ebe67ae06e8455c0248cb427401e297780139954a069d465c67c1b281"
+    },
+    {
+      "path": "Organic Waste/Food Organics_342.jpg",
+      "label": "Organic Waste",
+      "sha256": "4d948df20c86ff9b2c0295a22af7f6b974f9596a6ddb6e186448526005e6e4ff"
+    },
+    {
+      "path": "Plastic Waste/Plastic_406.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ec2c8f2869870f2dd7be2ff6aed912bca2387ab3c623fb954053e42293ad9793"
+    },
+    {
+      "path": "Paper Waste/Paper_158.jpg",
+      "label": "Paper Waste",
+      "sha256": "6e475109e1a4f1a071a101ce3772ee12d9505ecb3fd0551cbfadc57c433fece3"
+    },
+    {
+      "path": "Plastic Waste/Plastic_163.jpg",
+      "label": "Plastic Waste",
+      "sha256": "8f036d0a6555a9c94f71d3efb59082fbfcab24f940eabdba08395ba61a3fcb65"
+    },
+    {
+      "path": "Organic Waste/Food Organics_39.jpg",
+      "label": "Organic Waste",
+      "sha256": "acab9194847cc096f90800a56d5b062f66f073b9406c588cf68fc8a087582071"
+    },
+    {
+      "path": "Organic Waste/Vegetation_397.jpg",
+      "label": "Organic Waste",
+      "sha256": "bb8d8c9b87404ac8d7410629855f90c685b915d387e13f4d3bfe50b022d62625"
+    },
+    {
+      "path": "Paper Waste/Paper_145.jpg",
+      "label": "Paper Waste",
+      "sha256": "80bb8f90c7e40dd0ed5a7b8029c7a6766675f2188e555dbb51c15fe2bc136acf"
+    },
+    {
+      "path": "Plastic Waste/Plastic_340.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1569a81842a08f2abfba0b01c52257cb167bea0f94e96d9c5dba6daaaabc64db"
+    },
+    {
+      "path": "Paper Waste/Paper_494.jpg",
+      "label": "Paper Waste",
+      "sha256": "953625703875afad1a0b85da0ff0956a913b68a28fbf9d9637583e85397a8f07"
+    },
+    {
+      "path": "Paper Waste/Paper_420.jpg",
+      "label": "Paper Waste",
+      "sha256": "a01b63ba98e1786c39ea58bad79b9d143607ade73ceef8122ba222d9fa7fad87"
+    },
+    {
+      "path": "Organic Waste/Vegetation_432.jpg",
+      "label": "Organic Waste",
+      "sha256": "c8c62f1aae38e908b9699cf141a5aff153e08228d4d4f97171f1cbd9b63eb20c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_60.jpg",
+      "label": "Plastic Waste",
+      "sha256": "fdfe98a8e12406e2812ae60da7e3a15eaba042b57b6038e09bf02f58bb5a88b9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_90.jpg",
+      "label": "Plastic Waste",
+      "sha256": "ab29423c86dcd41cdc8e3be5025e0ee5ce2b4daef5f2164d2dd28d0c2e042150"
+    },
+    {
+      "path": "Paper Waste/Paper_188.jpg",
+      "label": "Paper Waste",
+      "sha256": "714b506b44c6b2f7b8f945472b9c5739591cf7dfc90d7983f05a6fd9472052e1"
+    },
+    {
+      "path": "Organic Waste/Vegetation_80.jpg",
+      "label": "Organic Waste",
+      "sha256": "dfb1c01528886de974828c6b5431754811a8f8cba1d3f32fa8f54dcaaacb0e7c"
+    },
+    {
+      "path": "Organic Waste/Vegetation_115.jpg",
+      "label": "Organic Waste",
+      "sha256": "028694952a216ea7eb0c038c331339e5171716fb8956fb340b1ba5a8bf525a28"
+    },
+    {
+      "path": "Paper Waste/Paper_183.jpg",
+      "label": "Paper Waste",
+      "sha256": "97305db73e60ee729749164f329633301257b49b41f251436c82dfde16605993"
+    },
+    {
+      "path": "Plastic Waste/Plastic_916.jpg",
+      "label": "Plastic Waste",
+      "sha256": "7f7528d625aa6e60971dcb9dfb160d81d3f97c70c608e51857bbe098a1ece17f"
+    },
+    {
+      "path": "Paper Waste/Paper_117.jpg",
+      "label": "Paper Waste",
+      "sha256": "dd22218addec3ed9afe907f714cb607c87283bf3d2e21ce668edaaa26eded6b2"
+    },
+    {
+      "path": "Plastic Waste/Plastic_811.jpg",
+      "label": "Plastic Waste",
+      "sha256": "c0757eb6f0091616c2746b15f2e1a26f296a2acb1b6a5f5578d4f5521d8dc47d"
+    },
+    {
+      "path": "Paper Waste/Paper_493.jpg",
+      "label": "Paper Waste",
+      "sha256": "8c1667c81e947a7a22dc1a70d40d596064e743437247939db7f988f62d5830d3"
+    },
+    {
+      "path": "Paper Waste/Paper_469.jpg",
+      "label": "Paper Waste",
+      "sha256": "94d140993e9d0ab4fae98b67fc14fcbb937ed916925091a5c25b81e44faf5516"
+    },
+    {
+      "path": "Paper Waste/Paper_451.jpg",
+      "label": "Paper Waste",
+      "sha256": "a73422941fa04c617ea4bdb1112c607e1b4a6c62db4054d8c6484f51f234d38a"
+    },
+    {
+      "path": "Paper Waste/Paper_89.jpg",
+      "label": "Paper Waste",
+      "sha256": "f8c20e32709a1932434de7b3fb9b975f27b79e45e765042a557e96f0c07a8c7b"
+    },
+    {
+      "path": "Organic Waste/Food Organics_140.jpg",
+      "label": "Organic Waste",
+      "sha256": "b1fc333ef5e18d0c8475c2770d3614fc613d8060a2d749d4bcce3af1e847aa2c"
+    },
+    {
+      "path": "Paper Waste/Paper_13.jpg",
+      "label": "Paper Waste",
+      "sha256": "b39092ab7baeae4c14799a6254fd0b6229d7fa973e73b55bc000b6ecd458a74d"
+    },
+    {
+      "path": "Plastic Waste/Plastic_760.jpg",
+      "label": "Plastic Waste",
+      "sha256": "86bda87565a338a8599ef798b0d524ad808bb3f17b2ec7a3ab0bc6eb6a436db4"
+    },
+    {
+      "path": "Plastic Waste/Plastic_728.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6df5d22525afff07db729b02c247785dbabc78c9f99c7b6f1e20c388c7e38838"
+    },
+    {
+      "path": "Plastic Waste/Plastic_235.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4da7a772adb7291a7a435a112cbed79088bef167143f5585a16dd30085d4e60a"
+    },
+    {
+      "path": "Organic Waste/Food Organics_56.jpg",
+      "label": "Organic Waste",
+      "sha256": "9c5719366422678eeb267e6b16a3ea4292b85ebe9a47f1acc5c1e63a1be2a32b"
+    },
+    {
+      "path": "Organic Waste/Vegetation_59.jpg",
+      "label": "Organic Waste",
+      "sha256": "61749451bb5705f9c17f9ec51b88cc7f3e5f25798100eb054a6d4ed7c72f7c22"
+    },
+    {
+      "path": "Plastic Waste/Plastic_912.jpg",
+      "label": "Plastic Waste",
+      "sha256": "d80b48aa180ef059178c79bc686215f7b8184b3358d9bcf40d5cd900268ecbb5"
+    },
+    {
+      "path": "Organic Waste/Vegetation_177.jpg",
+      "label": "Organic Waste",
+      "sha256": "1a87b8bbe9a7bc306fdc2a644066aff323fdaf1e57093edfef014313188d9f73"
+    },
+    {
+      "path": "Paper Waste/Paper_99.jpg",
+      "label": "Paper Waste",
+      "sha256": "325e1251f782f7bf13c68e218a8b98042869e81d9153af1a463d92e0d7bd4301"
+    },
+    {
+      "path": "Paper Waste/Paper_500.jpg",
+      "label": "Paper Waste",
+      "sha256": "f72b30104bb059970165342d8ec89bc2a5e7558218c87cef9219397414e9bcf0"
+    },
+    {
+      "path": "Paper Waste/Paper_132.jpg",
+      "label": "Paper Waste",
+      "sha256": "6396d744b6e7d8bfc14b561011a8ced27ebfb12a4b943d146f667b22de93725a"
+    },
+    {
+      "path": "Organic Waste/Food Organics_226.jpg",
+      "label": "Organic Waste",
+      "sha256": "5f14bca9938ffdc8e47ecef0b32f86f7bb6cc692d8698b2123c67c1c0ca981f6"
+    },
+    {
+      "path": "Paper Waste/Paper_472.jpg",
+      "label": "Paper Waste",
+      "sha256": "41376d01cf6f12caf9da4226c0c21fe74c198f15b7b8385889a0136c96b1d633"
+    }
+  ],
+  "test": [
+    {
+      "path": "Organic Waste/Food Organics_80.jpg",
+      "label": "Organic Waste",
+      "sha256": "8a31b77a3a12ecdcc39547810aba3cc36f8b8c225a380216f298d84f53f581d2"
+    },
+    {
+      "path": "Plastic Waste/Plastic_594.jpg",
+      "label": "Plastic Waste",
+      "sha256": "a1a0811d42476267f9a9908fca92fa396672adf229343cc83c60d4a28bd0bdb1"
+    },
+    {
+      "path": "Organic Waste/Food Organics_313.jpg",
+      "label": "Organic Waste",
+      "sha256": "471b0deb7b2cc02076df1163ca89afadeb84e8c404367abdd0c20a5c10e9f553"
+    },
+    {
+      "path": "Paper Waste/Paper_176.jpg",
+      "label": "Paper Waste",
+      "sha256": "2ae7c0f72349e8861d9b5d4147c3572756509f138f96b2b4ae18ab2ddd275d44"
+    },
+    {
+      "path": "Organic Waste/Vegetation_151.jpg",
+      "label": "Organic Waste",
+      "sha256": "5f9b7e31a17217111f0d820591e45f522d58c3945b88c8fc8323100f88050498"
+    },
+    {
+      "path": "Paper Waste/Paper_362.jpg",
+      "label": "Paper Waste",
+      "sha256": "43f637cd2c85a8a46307d4d2de1069d5d3b72bc2af7925601ad351cb07c55150"
+    },
+    {
+      "path": "Paper Waste/Paper_62.jpg",
+      "label": "Paper Waste",
+      "sha256": "f4679df2f1d251917ddfeceec4b20e26682bf9f8ae50a204dfe41a0bbe2f60af"
+    },
+    {
+      "path": "Plastic Waste/Plastic_609.jpg",
+      "label": "Plastic Waste",
+      "sha256": "a522cbab86bdc7527a86e36061490931f90a1ccf81d2b605d6bfc65861d6980e"
+    },
+    {
+      "path": "Organic Waste/Food Organics_300.jpg",
+      "label": "Organic Waste",
+      "sha256": "2bd6db49350ea9420de982a2a9192758bec7a2034cff9714eaea48639823db3a"
+    },
+    {
+      "path": "Organic Waste/Food Organics_70.jpg",
+      "label": "Organic Waste",
+      "sha256": "9cbd1be7ef6a073ef0025e4c99500235183b18bc1f6f3ac3df3254e69cbeb2ce"
+    },
+    {
+      "path": "Organic Waste/Vegetation_147.jpg",
+      "label": "Organic Waste",
+      "sha256": "7438ac14c2aa26e5cb04da2d42bd8af105291964b60d9619fb197ccfece08533"
+    },
+    {
+      "path": "Organic Waste/Food Organics_18.jpg",
+      "label": "Organic Waste",
+      "sha256": "c7b17fda6d40db31bdee8a69325063d42ef4a96b74727879538994040c420399"
+    },
+    {
+      "path": "Paper Waste/Paper_337.jpg",
+      "label": "Paper Waste",
+      "sha256": "9c8d575c73fd4029abde0204403cc9e9a0f0ffbc719046cdb9c700dd7168c738"
+    },
+    {
+      "path": "Organic Waste/Vegetation_272.jpg",
+      "label": "Organic Waste",
+      "sha256": "b026344f6cafdd9fb7b4f078824f33b94f7eb2636284a6e2bfdf7bf7ee9ff1f7"
+    },
+    {
+      "path": "Organic Waste/Vegetation_336.jpg",
+      "label": "Organic Waste",
+      "sha256": "7187a69428b2adb0bfd767a72f263a87e65bfa998837d79f2240b123b9e4a639"
+    },
+    {
+      "path": "Paper Waste/Paper_411.jpg",
+      "label": "Paper Waste",
+      "sha256": "bc94360e10b7627e26cdbffa7adbcb20e4a3cc7b78f45bc0578cafb75482bf2c"
+    },
+    {
+      "path": "Paper Waste/Paper_42.jpg",
+      "label": "Paper Waste",
+      "sha256": "7adf057dda3f45436159e0ec1ff5891c2e5bfd6eadeab2eaebc09173d8178de7"
+    },
+    {
+      "path": "Paper Waste/Paper_463.jpg",
+      "label": "Paper Waste",
+      "sha256": "9d813cc56f9fbfd18cb9d471fc1c6b41143764541f376155bfdc2793d7b6dd89"
+    },
+    {
+      "path": "Organic Waste/Food Organics_242.jpg",
+      "label": "Organic Waste",
+      "sha256": "ab3dfb3faee2195f249511f053fe0d9aca07eb8c2e6391ae32ea56aec2caab4b"
+    },
+    {
+      "path": "Paper Waste/Paper_230.jpg",
+      "label": "Paper Waste",
+      "sha256": "2e41910739236375b88ff859d5c042edcd9ddfd9c9319ffce65ef5a54f3eb907"
+    },
+    {
+      "path": "Plastic Waste/Plastic_81.jpg",
+      "label": "Plastic Waste",
+      "sha256": "108aac0229bbe4ef652f052d97d86cc708812ad9530a981c8e0b44375a82bb0a"
+    },
+    {
+      "path": "Organic Waste/Food Organics_382.jpg",
+      "label": "Organic Waste",
+      "sha256": "ad5f8ff379fcef1ab8e5397f72f39a25f6563c4430ac7f54b492cfc4810ad9c3"
+    },
+    {
+      "path": "Paper Waste/Paper_389.jpg",
+      "label": "Paper Waste",
+      "sha256": "351126149330cbf60812ef59d5c31efb4ee39ec96762ff57b19b08f6c71fc496"
+    },
+    {
+      "path": "Paper Waste/Paper_243.jpg",
+      "label": "Paper Waste",
+      "sha256": "51cb0c3ca2fca63aa274d1d92d75ab34d16498c2a3caf7291aa60b1dc918832f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_815.jpg",
+      "label": "Plastic Waste",
+      "sha256": "6d949513acd417c985aa05a71f7da46b4c82296ddd7212557d34c57106107fe4"
+    },
+    {
+      "path": "Paper Waste/Paper_483.jpg",
+      "label": "Paper Waste",
+      "sha256": "af186b26f521a70d483e64a214450fbaa2d521d6c2aa126487980b5623eed998"
+    },
+    {
+      "path": "Paper Waste/Paper_212.jpg",
+      "label": "Paper Waste",
+      "sha256": "2947ccc09303ffe4f8794d6e5d09b487fbf99f123bf0bffd3dae1c9e031fd980"
+    },
+    {
+      "path": "Plastic Waste/Plastic_263.jpg",
+      "label": "Plastic Waste",
+      "sha256": "a1157923d2a995b3489d454995c39af132a9d9de4024e2caad937f9351665ae3"
+    },
+    {
+      "path": "Organic Waste/Vegetation_99.jpg",
+      "label": "Organic Waste",
+      "sha256": "f39a5ba96489a3b398d3c424b2837de8763037786ba598b1f3310439103496da"
+    },
+    {
+      "path": "Plastic Waste/Plastic_616.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1e1fc2c8c87d84e59f7dc0ddef32de64fd244f779ea62dcfd30440709b89b270"
+    },
+    {
+      "path": "Paper Waste/Paper_373.jpg",
+      "label": "Paper Waste",
+      "sha256": "6829f9715dd46655d038460fe0ccc0c81be847b0c9b3afef1325de3ab32f3f2c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_383.jpg",
+      "label": "Plastic Waste",
+      "sha256": "fd56c1137c13273545e88e958f160ca3e23ade45cdfaf6908d6aaaf75e062531"
+    },
+    {
+      "path": "Plastic Waste/Plastic_454.jpg",
+      "label": "Plastic Waste",
+      "sha256": "f845de9ace03b95f1f8b7fa310e0bd76ee5fd8cb305cbcd0682cdb375e21b389"
+    },
+    {
+      "path": "Paper Waste/Paper_220.jpg",
+      "label": "Paper Waste",
+      "sha256": "9be6cad2070ae50bf91e25c5bd813a3347e25bfee6447e778fa33f736822c452"
+    },
+    {
+      "path": "Organic Waste/Vegetation_88.jpg",
+      "label": "Organic Waste",
+      "sha256": "25c9b4c4c11af8ebb2259d0369338383f9f92250f8448feded25d170e3cfc340"
+    },
+    {
+      "path": "Plastic Waste/Plastic_48.jpg",
+      "label": "Plastic Waste",
+      "sha256": "4bd9d14066f237273c19d0002521c18ab529b1746c88266a1f98f5332b1c1542"
+    },
+    {
+      "path": "Plastic Waste/Plastic_713.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1218db5b21a46eedb20d5e40750ba58711822453e03f8061ec3194a9653d4def"
+    },
+    {
+      "path": "Organic Waste/Vegetation_77.jpg",
+      "label": "Organic Waste",
+      "sha256": "a196addb98dda31b7d7cfb00ddc4f0302bc9a1ceab8f54a61ac7738113809d74"
+    },
+    {
+      "path": "Organic Waste/Vegetation_123.jpg",
+      "label": "Organic Waste",
+      "sha256": "7eb83cba156915d48725d5381d7ac77a5154770a6cc2ecfb3361aca6f05969a1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_711.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1ce651e015584d493e6c1210abe8c134d647847e85aab092fe2f6d9e727d499f"
+    },
+    {
+      "path": "Plastic Waste/Plastic_918.jpg",
+      "label": "Plastic Waste",
+      "sha256": "d134e06f07ec5e2539602c5cdf47534a405a6f8407dbd5dbde59150f27c4ff53"
+    },
+    {
+      "path": "Organic Waste/Food Organics_158.jpg",
+      "label": "Organic Waste",
+      "sha256": "5d9d5702447cdb5af34bafb205d10dcfec321511846ce9759232be39cc19af96"
+    },
+    {
+      "path": "Organic Waste/Vegetation_218.jpg",
+      "label": "Organic Waste",
+      "sha256": "b9bb16aae4b4f9f659e07f2c1e8435e35243b1691203229b4abbe0d8654d59ff"
+    },
+    {
+      "path": "Organic Waste/Vegetation_268.jpg",
+      "label": "Organic Waste",
+      "sha256": "cbaf7fe83f9b69f1ebe14ee8d334596154c2cc93a9a54a5980feaf2fb08192bc"
+    },
+    {
+      "path": "Organic Waste/Food Organics_73.jpg",
+      "label": "Organic Waste",
+      "sha256": "868acf172f752b528e19d41eba1b0c98206bf47d4fb8b1333f359ef9f9ccb6bc"
+    },
+    {
+      "path": "Plastic Waste/Plastic_470.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5829e3254608611d25ed5abf71f6745213e9984fc30106e333bc675327d75da2"
+    },
+    {
+      "path": "Paper Waste/Paper_320.jpg",
+      "label": "Paper Waste",
+      "sha256": "fea7b3876797c571cecc21c38ea04cf78a9d75df9aef12624b916e12dbf879c6"
+    },
+    {
+      "path": "Paper Waste/Paper_4.jpg",
+      "label": "Paper Waste",
+      "sha256": "db8d443f72a12ecbec5e206f27436a3f8199f55617b790622fdc8c87f1eaf3a9"
+    },
+    {
+      "path": "Organic Waste/Food Organics_366.jpg",
+      "label": "Organic Waste",
+      "sha256": "e0b6069a6b83534b68fec46cb2ebb1f4022b49ad96b8be0efd9081517a68c7b1"
+    },
+    {
+      "path": "Plastic Waste/Plastic_777.jpg",
+      "label": "Plastic Waste",
+      "sha256": "bd38259c602dc78959935a76eea700c1c6b9aaf40132f7a1d9d9ae594abe8f4e"
+    },
+    {
+      "path": "Paper Waste/Paper_425.jpg",
+      "label": "Paper Waste",
+      "sha256": "0107c1acc74d34126f019f3e28dd370714cc954de9263b437d86ae8aee726711"
+    },
+    {
+      "path": "Organic Waste/Vegetation_160.jpg",
+      "label": "Organic Waste",
+      "sha256": "461514d9ddc7451d630078203a01257b648da1a30a0d243478dc827ee6280bc5"
+    },
+    {
+      "path": "Paper Waste/Paper_128.jpg",
+      "label": "Paper Waste",
+      "sha256": "976a19b363b1f8a4836e43ad4b1a792358625580fa02d3894ab6ebe456d23f64"
+    },
+    {
+      "path": "Plastic Waste/Plastic_843.jpg",
+      "label": "Plastic Waste",
+      "sha256": "887a5b25a29f6a1554e3ce51f9e1f4742bc36265d6c99237606a9b822b1d621b"
+    },
+    {
+      "path": "Organic Waste/Vegetation_90.jpg",
+      "label": "Organic Waste",
+      "sha256": "402d6994ffbf769b63214dbf6e9f0aaf06e6aff4a45bc9a0516d46111d3af76e"
+    },
+    {
+      "path": "Plastic Waste/Plastic_636.jpg",
+      "label": "Plastic Waste",
+      "sha256": "89d0836f621b37c1c826b414a4b5012da2d72dc1d3b99aa80b4779a36c9fabb9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_378.jpg",
+      "label": "Plastic Waste",
+      "sha256": "3aebcc73450ea0774e43c8e5f99afefb8dfbeac0d55baa9c6965d97d84f3a6a7"
+    },
+    {
+      "path": "Paper Waste/Paper_432.jpg",
+      "label": "Paper Waste",
+      "sha256": "f2cc873820e063ec3ac9f7cea0299109be1e5c4d079ba445cc580e703111e508"
+    },
+    {
+      "path": "Plastic Waste/Plastic_205.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5ec54ceec8cf869e2d3f173c4b086a4b6b955ebf6f377072732fe959f07dbeb3"
+    },
+    {
+      "path": "Paper Waste/Paper_368.jpg",
+      "label": "Paper Waste",
+      "sha256": "e1cfe9c00fc8a092a9c093c54843d32f5cd4592a8fce31c321c67d3c572ab510"
+    },
+    {
+      "path": "Organic Waste/Vegetation_344.jpg",
+      "label": "Organic Waste",
+      "sha256": "3d431cac729504416ed22d8cfe854caab2ed82fb67f3f20aec4de18801fafdd6"
+    },
+    {
+      "path": "Paper Waste/Paper_244.jpg",
+      "label": "Paper Waste",
+      "sha256": "b4587834c0487852634583dfe26cadfb15612b249e8a4a0d9596360c9d55833a"
+    },
+    {
+      "path": "Paper Waste/Paper_428.jpg",
+      "label": "Paper Waste",
+      "sha256": "4d3f5ae951842fcf19ece8e9232bfe0cdb1f0deb22a80dd157ed4500ba26b8da"
+    },
+    {
+      "path": "Plastic Waste/Plastic_762.jpg",
+      "label": "Plastic Waste",
+      "sha256": "5a005d94492074ee39273ddd75f351d45ffac81b8c7fb76fcf6203a632e4912f"
+    },
+    {
+      "path": "Paper Waste/Paper_144.jpg",
+      "label": "Paper Waste",
+      "sha256": "c9e6df6c78191590ea7b77ef1b7f53a52dddcb89facc87dc5e1e279a4d9b19fb"
+    },
+    {
+      "path": "Paper Waste/Paper_385.jpg",
+      "label": "Paper Waste",
+      "sha256": "80bcc436cc466fa316f77c2e65a40103aefab1565887c09e50be2f80f1ad02b9"
+    },
+    {
+      "path": "Paper Waste/Paper_60.jpg",
+      "label": "Paper Waste",
+      "sha256": "85befe616a7396718899d48253bdb24bf5bf292989d627a5299a5921306dc953"
+    },
+    {
+      "path": "Plastic Waste/Plastic_330.jpg",
+      "label": "Plastic Waste",
+      "sha256": "db88de7f1d2a8ef53cfba876ddc4bf873a959a0d3ba9866851358a9756a87889"
+    },
+    {
+      "path": "Plastic Waste/Plastic_904.jpg",
+      "label": "Plastic Waste",
+      "sha256": "05620a4322b7c7f1d393fe469d84131efad6db0089050c7af492430340e42326"
+    },
+    {
+      "path": "Plastic Waste/Plastic_717.jpg",
+      "label": "Plastic Waste",
+      "sha256": "0d56db7166c567a40274cc99448fdc5a92f3e03a9c0ac2fc419b76b982d8b396"
+    },
+    {
+      "path": "Organic Waste/Vegetation_231.jpg",
+      "label": "Organic Waste",
+      "sha256": "36fc3870d0038c9045476f8ab6af7902ca05a78329e6590b3f12598014d6c272"
+    },
+    {
+      "path": "Plastic Waste/Plastic_380.jpg",
+      "label": "Plastic Waste",
+      "sha256": "b162715717bbf74320b561a87ec361cb678222226d2a913c4c4250971eb27cb3"
+    },
+    {
+      "path": "Organic Waste/Food Organics_294.jpg",
+      "label": "Organic Waste",
+      "sha256": "e60957283854f1d02285aca7d98f39bd09f6870158ed0e9c6610c9b3c85b0b14"
+    },
+    {
+      "path": "Organic Waste/Food Organics_178.jpg",
+      "label": "Organic Waste",
+      "sha256": "cc08bad19523f8d2789be6681f7b26f1d83a64dff75c5896626c7e0e9481f066"
+    },
+    {
+      "path": "Organic Waste/Food Organics_101.jpg",
+      "label": "Organic Waste",
+      "sha256": "e1737532076661bd831b2d8f6bce10837f145aa9c67eb2e18301061462300a27"
+    },
+    {
+      "path": "Plastic Waste/Plastic_479.jpg",
+      "label": "Plastic Waste",
+      "sha256": "0787bbb00f0e7bc8689cd250a55ae139a78e642ffe12e28a0019ff19c36f6800"
+    },
+    {
+      "path": "Plastic Waste/Plastic_61.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1e9b068a8da7d4def54c61ff08b9886d5c9dd5ec2d7028b7ebe6f6cf9b7dce63"
+    },
+    {
+      "path": "Organic Waste/Vegetation_55.jpg",
+      "label": "Organic Waste",
+      "sha256": "f4e36130a841256ab0e04debd570c4f1f97f63aa499001faec54fb83579de45c"
+    },
+    {
+      "path": "Plastic Waste/Plastic_852.jpg",
+      "label": "Plastic Waste",
+      "sha256": "3c512454fb9928411eb149d481f6a5dc25487276139895a12899b91eeba69e49"
+    },
+    {
+      "path": "Organic Waste/Vegetation_360.jpg",
+      "label": "Organic Waste",
+      "sha256": "2e6e1acfa2d7a9070ac61bfa26fdd5b945f1ea1967c2c4ae4eb0f7a79e6b5d02"
+    },
+    {
+      "path": "Plastic Waste/Plastic_818.jpg",
+      "label": "Plastic Waste",
+      "sha256": "bb530da2b7d533b8343892ebb21160835c9524402c016dd25f2c1aee554491ee"
+    },
+    {
+      "path": "Paper Waste/Paper_318.jpg",
+      "label": "Paper Waste",
+      "sha256": "c84f414923746a09bef103b28e05fbb2099e3129f9449783564e09121e640822"
+    },
+    {
+      "path": "Plastic Waste/Plastic_101.jpg",
+      "label": "Plastic Waste",
+      "sha256": "e3e60c0c8ac0a1f20063a0c0c4b2ffb0f0081c733ed1218183942f74c32987c3"
+    },
+    {
+      "path": "Organic Waste/Vegetation_372.jpg",
+      "label": "Organic Waste",
+      "sha256": "98bdeed00022904a03d525b70e30d0fbe766dac580ea6d10909f1656bb1a26fe"
+    },
+    {
+      "path": "Paper Waste/Paper_397.jpg",
+      "label": "Paper Waste",
+      "sha256": "e2fa783f1a5bcad89e5e866e349a8da8172a70257910b9ab038c31a22e5f3e76"
+    },
+    {
+      "path": "Paper Waste/Paper_136.jpg",
+      "label": "Paper Waste",
+      "sha256": "1ae6bc5d3e505ec6faaa88e5fb7c2cdc42a5c17583a7db9db732385cb0d663e9"
+    },
+    {
+      "path": "Plastic Waste/Plastic_687.jpg",
+      "label": "Plastic Waste",
+      "sha256": "1783314679ec12cef4d1b863e1c5a6d6931e2772517afa698d00d9e1c229b9ea"
+    },
+    {
+      "path": "Plastic Waste/Plastic_716.jpg",
+      "label": "Plastic Waste",
+      "sha256": "a3bfb7767431fc583f6df71e2f559ea87d1d88623a5d9c5e77ed11b1357406f4"
+    },
+    {
+      "path": "Paper Waste/Paper_348.jpg",
+      "label": "Paper Waste",
+      "sha256": "f5a7ed039a0f310ee193a39a00f0e861306e9dd4c48c1c4a9bb30cbb40c6fef6"
+    },
+    {
+      "path": "Paper Waste/Paper_10.jpg",
+      "label": "Paper Waste",
+      "sha256": "d55d1854240cc972c4edc7b6bd211c23ac1557cbf44da4d91b14db4be1eb8120"
+    }
+  ]
+}

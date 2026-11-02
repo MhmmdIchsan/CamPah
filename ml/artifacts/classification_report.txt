@@ -1,0 +1,9 @@
+               precision    recall  f1-score   support
+
+Organic Waste       1.00      0.97      0.98        30
+Plastic Waste       0.91      1.00      0.95        30
+  Paper Waste       1.00      0.93      0.97        30
+
+     accuracy                           0.97        90
+    macro avg       0.97      0.97      0.97        90
+ weighted avg       0.97      0.97      0.97        90
