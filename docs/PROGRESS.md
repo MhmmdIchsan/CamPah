@@ -2,6 +2,8 @@
 
 Tanggal pencatatan awal: **2 November 2026 (Asia/Jakarta)**.
 
+Nama aplikasi ditetapkan sebagai **CamPah**.
+
 ## Sudah dibuat
 
 - Source API untuk registrasi/login JWT, akses Admin/User, CRUD laporan dengan soft delete, pencarian/filter/pagination, status laporan, dashboard, manajemen pengguna, dan endpoint prediksi.
@@ -26,7 +28,7 @@ Pengujian API menggunakan SQLite sementara dan prediksi pengganti. Hasil tersebu
 - Migrasi database, PostgreSQL, Cloudinary, dan konfigurasi produksi belum diuji end to end.
 - Android belum dianalisis/dibuild; APK dan pengujian perangkat belum tersedia.
 - Pemeriksaan UI di browser, dokumentasi instalasi/API/ERD lengkap, dan video demo belum selesai.
-- Repository GitHub dan layanan Render belum dibuat; remote Git belum dikonfigurasi.
+- Repository GitHub: https://github.com/MhmmdIchsan/CamPah. Remote `origin` disiapkan untuk sinkronisasi progres; layanan Render belum dibuat.
 
 ## Tahap berikutnya
 

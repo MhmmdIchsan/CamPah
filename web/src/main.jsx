@@ -18,7 +18,7 @@ async function request(path, { token, method = 'GET', body } = {}) {
 }
 
 function App() {
-  const [session, setSession] = useState(() => JSON.parse(localStorage.getItem('smart-waste-session') || 'null'))
+  const [session, setSession] = useState(() => JSON.parse(localStorage.getItem('campah-session') || 'null'))
   const [view, setView] = useState('dashboard')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -40,8 +40,8 @@ function App() {
   useEffect(() => {
     if (!token) return
     request('/auth/me', { token }).then(user => {
-      const next = { ...session, user }; setSession(next); localStorage.setItem('smart-waste-session', JSON.stringify(next))
-    }).catch(() => { setSession(null); localStorage.removeItem('smart-waste-session') })
+      const next = { ...session, user }; setSession(next); localStorage.setItem('campah-session', JSON.stringify(next))
+    }).catch(() => { setSession(null); localStorage.removeItem('campah-session') })
   }, [token])
   useEffect(() => {
     if (!token) return
@@ -58,13 +58,13 @@ function App() {
     request('/users', { token }).then(setUsers).catch(e => setError(e.message))
   }, [token, isAdmin, view, refresh])
 
-  if (!session) return <Auth onLogin={value => { localStorage.setItem('smart-waste-session', JSON.stringify(value)); setSession(value) }} />
+  if (!session) return <Auth onLogin={value => { localStorage.setItem('campah-session', JSON.stringify(value)); setSession(value) }} />
   const switchView = value => { setView(value); setEditing(null); setError('') }
   const imageSource = url => url?.startsWith('/') ? `${API}${url}` : url
 
   return <div className="shell">
     <aside className="sidebar">
-      <div className="brand"><span className="brand-icon">♻</span><div><strong>Smart Waste</strong><small>Management System</small></div></div>
+      <div className="brand"><span className="brand-icon">♻</span><div><strong>CamPah</strong><small>Management System</small></div></div>
       <nav aria-label="Navigasi utama">
         <button className={view === 'dashboard' ? 'active' : ''} onClick={() => switchView('dashboard')}>◫ <span>Dashboard</span></button>
         <button className={view === 'reports' ? 'active' : ''} onClick={() => switchView('reports')}>▤ <span>Laporan</span></button>
@@ -74,7 +74,7 @@ function App() {
       <div className="sidebar-bottom"><div className="avatar">{session.user.name.slice(0, 1).toUpperCase()}</div><div><strong>{session.user.name}</strong><small>{isAdmin ? 'Administrator' : 'Pengguna'}</small></div></div>
     </aside>
     <main>
-      <header className="topbar"><div><span className="eyebrow">SMART WASTE MANAGEMENT</span><h1>{view === 'dashboard' ? 'Dashboard' : view === 'reports' ? 'Laporan sampah' : view === 'new' ? 'Buat laporan' : 'Manajemen pengguna'}</h1></div><button className="text-button" onClick={() => { localStorage.removeItem('smart-waste-session'); setSession(null) }}>Keluar ↗</button></header>
+      <header className="topbar"><div><span className="eyebrow">CAMPAH ? SMART WASTE</span><h1>{view === 'dashboard' ? 'Dashboard' : view === 'reports' ? 'Laporan sampah' : view === 'new' ? 'Buat laporan' : 'Manajemen pengguna'}</h1></div><button className="text-button" onClick={() => { localStorage.removeItem('campah-session'); setSession(null) }}>Keluar ↗</button></header>
       {error && <div className="alert" role="alert">{error}</div>}
       {view === 'dashboard' && <section>
         <div className="intro"><div><span className="eyebrow">RINGKASAN</span><h2>Pantau lingkungan, tindak lanjuti laporan.</h2><p>Setiap laporan membantu penanganan sampah lebih terarah.</p></div><button className="primary" onClick={() => switchView('new')}>＋ Buat laporan</button></div>
@@ -102,7 +102,7 @@ function Auth({ onLogin }) {
     const data = Object.fromEntries(new FormData(e.currentTarget))
     try { onLogin(await request(register ? '/auth/register' : '/auth/login', { method: 'POST', body: data })) } catch (err) { setError(err.message) } finally { setBusy(false) }
   }
-  return <div className="auth-page"><div className="auth-side"><span className="brand-icon">♻</span><span className="eyebrow">SMART WASTE MANAGEMENT</span><h1>Lingkungan bersih dimulai dari satu laporan.</h1><p>Laporkan, pantau, dan bantu tindak lanjut sampah di sekitar Anda.</p><div className="auth-art">♻</div></div><form className="auth-form" onSubmit={submit}><span className="eyebrow">SELAMAT DATANG</span><h2>{register ? 'Buat akun baru' : 'Masuk ke akun Anda'}</h2><p>{register ? 'Mulai buat laporan sampah dengan mudah.' : 'Akses dashboard dan pantau laporan Anda.'}</p>{error && <div className="alert" role="alert">{error}</div>}{register && <label>Nama lengkap<input name="name" minLength="2" required /></label>}<label>Email<input type="email" name="email" required /></label><label>Kata sandi<input type="password" name="password" minLength="8" required /></label><button className="primary full" disabled={busy}>{busy ? 'Memproses...' : register ? 'Daftar' : 'Masuk'}</button><p className="switch">{register ? 'Sudah punya akun?' : 'Belum punya akun?'} <button type="button" onClick={() => { setRegister(!register); setError('') }}>{register ? 'Masuk' : 'Daftar sekarang'}</button></p></form></div>
+  return <div className="auth-page"><div className="auth-side"><span className="brand-icon">♻</span><span className="eyebrow">CAMPAH ? SMART WASTE</span><h1>Lingkungan bersih dimulai dari satu laporan.</h1><p>Laporkan, pantau, dan bantu tindak lanjut sampah di sekitar Anda.</p><div className="auth-art">♻</div></div><form className="auth-form" onSubmit={submit}><span className="eyebrow">SELAMAT DATANG</span><h2>{register ? 'Buat akun baru' : 'Masuk ke akun Anda'}</h2><p>{register ? 'Mulai buat laporan sampah dengan mudah.' : 'Akses dashboard dan pantau laporan Anda.'}</p>{error && <div className="alert" role="alert">{error}</div>}{register && <label>Nama lengkap<input name="name" minLength="2" required /></label>}<label>Email<input type="email" name="email" required /></label><label>Kata sandi<input type="password" name="password" minLength="8" required /></label><button className="primary full" disabled={busy}>{busy ? 'Memproses...' : register ? 'Daftar' : 'Masuk'}</button><p className="switch">{register ? 'Sudah punya akun?' : 'Belum punya akun?'} <button type="button" onClick={() => { setRegister(!register); setError('') }}>{register ? 'Masuk' : 'Daftar sekarang'}</button></p></form></div>
 }
 
 function ReportForm({ onSubmit, busy }) {

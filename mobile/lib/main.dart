@@ -102,7 +102,7 @@ class _WasteAppState extends State<WasteApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Smart Waste',
+        title: 'CamPah',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: forest), useMaterial3: true, scaffoldBackgroundColor: const Color(0xFFF5F7F3)),
         home: loading
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
   int revision = 0;
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Smart Waste'), actions: [IconButton(onPressed: widget.onSignOut, icon: const Icon(Icons.logout), tooltip: 'Keluar')]),
+        appBar: AppBar(title: const Text('CamPah'), actions: [IconButton(onPressed: widget.onSignOut, icon: const Icon(Icons.logout), tooltip: 'Keluar')]),
         body: index == 0
             ? DashboardPage(key: ValueKey(revision), name: widget.user['name'] ?? 'Pengguna', openReport: () => setState(() => index = 1))
             : index == 1

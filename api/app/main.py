@@ -225,7 +225,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Smart Waste Management API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="CamPah API", version="1.0.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")],

@@ -1,6 +1,8 @@
-# Smart Waste Management System
+# CamPah
 
-Technical assessment untuk aplikasi laporan sampah dengan web React, Android Flutter, FastAPI, PostgreSQL, dan klasifikasi gambar menggunakan PyTorch MobileNetV2.
+**CamPah** adalah aplikasi laporan sampah dengan web React, Android Flutter, FastAPI, PostgreSQL, dan klasifikasi gambar menggunakan PyTorch MobileNetV2.
+
+Repository: https://github.com/MhmmdIchsan/CamPah
 
 Implementasi masih berjalan. Lihat [catatan progres](docs/PROGRESS.md) untuk hasil verifikasi dan pekerjaan yang belum selesai.
 
