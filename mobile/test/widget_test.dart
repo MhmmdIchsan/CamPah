@@ -5,8 +5,43 @@ import 'package:http/testing.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campah_mobile/main.dart';
+import 'package:campah_mobile/splash.dart';
 
 void main() {
+  testWidgets('camera splash flashes briefly before showing login',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(const WasteApp());
+    await tester.pump();
+    expect(find.byKey(const ValueKey('splash')), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 940));
+    final flash =
+        tester.widget<Opacity>(find.byKey(const ValueKey('splash-flash')));
+    expect(flash.opacity, greaterThan(0));
+    expect(flash.opacity, lessThanOrEqualTo(.16));
+    await tester.pumpAndSettle();
+    expect(find.text('Selamat datang'), findsOneWidget);
+  });
+
+  testWidgets('reduced motion completes the splash without a flash',
+      (tester) async {
+    var completed = 0;
+    await tester.pumpWidget(MaterialApp(
+        home: MediaQuery(
+      data: const MediaQueryData(disableAnimations: true),
+      child: CamPahSplash(onComplete: () => completed++),
+    )));
+    await tester.pump();
+    expect(completed, 1);
+    expect(
+        tester
+            .widget<Opacity>(find.byKey(const ValueKey('splash-flash')))
+            .opacity,
+        0);
+    await tester.pump(const Duration(seconds: 2));
+    expect(completed, 1);
+  });
+
   testWidgets('shows login and validates empty registration fields', (
     tester,
   ) async {

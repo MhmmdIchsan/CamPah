@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'design.dart';
+import 'navigation.dart';
+import 'splash.dart';
 
 const apiUrl = String.fromEnvironment(
   'API_URL',
@@ -94,6 +96,7 @@ class WasteApp extends StatefulWidget {
 class _WasteAppState extends State<WasteApp> {
   Map<String, dynamic>? user;
   bool loading = true;
+  bool splashComplete = false;
 
   @override
   void initState() {
@@ -122,7 +125,7 @@ class _WasteAppState extends State<WasteApp> {
       'token',
       api.token!,
     );
-    setState(() => user = Map<String, dynamic>.from(data['user']));
+    if (mounted) setState(() => user = Map<String, dynamic>.from(data['user']));
   }
 
   Future<void> signOut() async {
@@ -136,11 +139,53 @@ class _WasteAppState extends State<WasteApp> {
         title: 'CamPah',
         debugShowCheckedModeBanner: false,
         theme: campahTheme(),
-        home: loading
-            ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-            : user == null
-                ? AuthPage(onSignedIn: signedIn)
-                : HomePage(user: user!, onSignOut: signOut),
+        home: Builder(
+            builder: (context) => AnimatedSwitcher(
+                  duration: MediaQuery.disableAnimationsOf(context)
+                      ? Duration.zero
+                      : const Duration(milliseconds: 260),
+                  child: !splashComplete
+                      ? CamPahSplash(
+                          key: const ValueKey('splash'),
+                          onComplete: () {
+                            if (mounted) setState(() => splashComplete = true);
+                          })
+                      : loading
+                          ? Scaffold(
+                              key: const ValueKey('loading'),
+                              backgroundColor: forest,
+                              body: Center(
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                    const CamPahMark(size: 96),
+                                    const SizedBox(height: 24),
+                                    SizedBox(
+                                        width: 22,
+                                        height: 22,
+                                        child: CircularProgressIndicator(
+                                            value:
+                                                MediaQuery.disableAnimationsOf(
+                                                        context)
+                                                    ? 1
+                                                    : null,
+                                            strokeWidth: 2,
+                                            color: lime)),
+                                    const SizedBox(height: 14),
+                                    const Text('Menyiapkan aplikasi...',
+                                        style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 12)),
+                                  ])))
+                          : user == null
+                              ? AuthPage(
+                                  key: const ValueKey('auth'),
+                                  onSignedIn: signedIn)
+                              : HomePage(
+                                  key: const ValueKey('home'),
+                                  user: user!,
+                                  onSignOut: signOut),
+                )),
       );
 }
 
@@ -379,76 +424,54 @@ class _HomePageState extends State<HomePage> {
   String? historyStatus;
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Row(children: [
-            CamPahMark(size: 38),
-            SizedBox(width: 10),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('CamPah',
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -.6)),
-              Text('LEBIH PEDULI BUMI',
-                  style: TextStyle(
-                      fontSize: 7,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1,
-                      color: muted)),
-            ]),
+        appBar: CamPahHeader(
+            name: widget.user['name'] ?? 'Pengguna',
+            onSignOut: widget.onSignOut),
+        body: AnimatedSwitcher(
+          duration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : const Duration(milliseconds: 240),
+          transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                  position: Tween<Offset>(
+                          begin: const Offset(0, .025), end: Offset.zero)
+                      .animate(animation),
+                  child: child)),
+          layoutBuilder: (current, previous) => Stack(children: [
+            for (final child in previous) IgnorePointer(child: child),
+            if (current != null) current
           ]),
-          actions: [
-            IconButton(
-              onPressed: widget.onSignOut,
-              icon: const Icon(Icons.logout_rounded, size: 21),
-              tooltip: 'Keluar',
-            ),
-          ],
+          child: index == 0
+              ? DashboardPage(
+                  key: ValueKey(revision),
+                  name: widget.user['name'] ?? 'Pengguna',
+                  openReport: () => setState(() => index = 1),
+                  openHistory: (status) => setState(() {
+                    historyStatus = status;
+                    index = 2;
+                    revision++;
+                  }),
+                )
+              : index == 1
+                  ? CreateReportPage(
+                      key: const ValueKey('create'),
+                      onCreated: () => setState(() {
+                        index = 2;
+                        historyStatus = null;
+                        revision++;
+                      }),
+                    )
+                  : HistoryPage(
+                      key: ValueKey(revision), initialStatus: historyStatus),
         ),
-        body: index == 0
-            ? DashboardPage(
-                key: ValueKey(revision),
-                name: widget.user['name'] ?? 'Pengguna',
-                openReport: () => setState(() => index = 1),
-                openHistory: (status) => setState(() {
-                  historyStatus = status;
-                  index = 2;
-                  revision++;
-                }),
-              )
-            : index == 1
-                ? CreateReportPage(
-                    onCreated: () => setState(() {
-                      index = 2;
-                      historyStatus = null;
-                      revision++;
-                    }),
-                  )
-                : HistoryPage(
-                    key: ValueKey(revision), initialStatus: historyStatus),
-        bottomNavigationBar: NavigationBar(
+        bottomNavigationBar: CamPahBottomNav(
           selectedIndex: index,
-          onDestinationSelected: (value) => setState(() {
+          onSelected: (value) => setState(() {
             index = value;
             if (value == 2) historyStatus = null;
             revision++;
           }),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.grid_view_rounded),
-              selectedIcon: Icon(Icons.dashboard_rounded),
-              label: 'Dashboard',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.add_a_photo_outlined),
-              selectedIcon: Icon(Icons.add_a_photo_rounded),
-              label: 'Lapor',
-            ),
-            NavigationDestination(
-                icon: Icon(Icons.article_outlined),
-                selectedIcon: Icon(Icons.article_rounded),
-                label: 'Riwayat'),
-          ],
         ),
       );
 }
