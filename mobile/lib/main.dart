@@ -205,7 +205,9 @@ class _WasteAppState extends State<WasteApp> {
                               : HomePage(
                                   key: const ValueKey('home'),
                                   user: user!,
-                                  onSignOut: signOut),
+                                  onSignOut: signOut,
+                                  onProfileUpdated: (value) =>
+                                      setState(() => user = value)),
                 )),
       ));
 }
@@ -437,9 +439,14 @@ class _AuthPageState extends State<AuthPage> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.user, required this.onSignOut});
+  const HomePage(
+      {super.key,
+      required this.user,
+      required this.onSignOut,
+      this.onProfileUpdated});
   final Map<String, dynamic> user;
   final Future<void> Function() onSignOut;
+  final ValueChanged<Map<String, dynamic>>? onProfileUpdated;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -447,12 +454,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 0;
   int revision = 0;
+  String? profileName;
   String? historyStatus;
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: CamPahHeader(
-            name: widget.user['name'] ?? 'Pengguna',
+            name: profileName ?? widget.user['name'] ?? 'Pengguna',
             onSignOut: widget.onSignOut,
+            onProfile: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                showDragHandle: true,
+                builder: (_) => _ProfileSheet(
+                        user: {
+                          ...widget.user,
+                          'name': profileName ?? widget.user['name']
+                        },
+                        onUpdated: (value) {
+                          widget.onProfileUpdated?.call(value);
+                          setState(() {
+                            profileName = value['name'];
+                          });
+                        })),
             onNotifications: () => showModalBottomSheet<void>(
                 context: context,
                 isScrollControlled: true,
@@ -478,7 +501,7 @@ class _HomePageState extends State<HomePage> {
           child: index == 0
               ? DashboardPage(
                   key: ValueKey(revision),
-                  name: widget.user['name'] ?? 'Pengguna',
+                  name: profileName ?? widget.user['name'] ?? 'Pengguna',
                   openReport: () => setState(() => index = 1),
                   openHistory: (status) => setState(() {
                     historyStatus = status;
@@ -507,6 +530,105 @@ class _HomePageState extends State<HomePage> {
           }),
         ),
       );
+}
+
+class _ProfileSheet extends StatefulWidget {
+  const _ProfileSheet({required this.user, required this.onUpdated});
+  final Map<String, dynamic> user;
+  final ValueChanged<Map<String, dynamic>> onUpdated;
+  @override
+  State<_ProfileSheet> createState() => _ProfileSheetState();
+}
+
+class _ProfileSheetState extends State<_ProfileSheet> {
+  final form = GlobalKey<FormState>();
+  late final TextEditingController name;
+  final current = TextEditingController();
+  final password = TextEditingController();
+  bool busy = false;
+  String? error;
+  @override
+  void initState() {
+    super.initState();
+    name = TextEditingController(text: widget.user['name']);
+  }
+
+  @override
+  void dispose() {
+    name.dispose();
+    current.dispose();
+    password.dispose();
+    super.dispose();
+  }
+
+  Future<void> submit() async {
+    if (!form.currentState!.validate()) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      final data = await api.call('/auth/me', method: 'PATCH', body: {
+        'name': name.text.trim(),
+        if (password.text.isNotEmpty) 'current_password': current.text,
+        if (password.text.isNotEmpty) 'new_password': password.text
+      });
+      widget.onUpdated(Map<String, dynamic>.from(data));
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) setState(() => error = '$e'.replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+      child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+              20, 0, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
+          child: Form(
+              key: form,
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('Profil',
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                        controller: name,
+                        decoration: const InputDecoration(labelText: 'Nama'),
+                        validator: (v) => (v?.trim().length ?? 0) < 2
+                            ? 'Minimal 2 karakter'
+                            : null),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                        controller: current,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                            labelText: 'Kata sandi saat ini')),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                        controller: password,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                            labelText: 'Kata sandi baru (opsional)'),
+                        validator: (v) =>
+                            v != null && v.isNotEmpty && v.length < 8
+                                ? 'Minimal 8 karakter'
+                                : null),
+                    if (error != null)
+                      Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text(error!,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error))),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                        onPressed: busy ? null : submit,
+                        child: Text(busy ? 'Menyimpan...' : 'Simpan profil')),
+                  ]))));
 }
 
 class _NotificationsSheet extends StatefulWidget {

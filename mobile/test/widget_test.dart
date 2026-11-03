@@ -144,6 +144,10 @@ void main() {
     final oldClient = api.client;
     api.token = 'test-token';
     api.client = MockClient((request) async {
+      if (request.url.path == '/auth/me' && request.method == 'PATCH') {
+        return http.Response(
+            jsonEncode({'name': 'Ari Baru', 'role': 'user'}), 200);
+      }
       if (request.url.path == '/notifications') {
         return http.Response(
             jsonEncode([
@@ -225,6 +229,17 @@ void main() {
         home: HomePage(user: const {'name': 'Ari'}, onSignOut: () async {})));
     await tester.pumpAndSettle();
     expect(find.text('Halo, Ari!\nYuk, jaga lingkungan\nbersama.'),
+        findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('profile-button')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+        find.widgetWithText(TextFormField, 'Nama'), 'Ari Baru');
+    await tester.tap(find.text('Simpan profil'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byWidgetPredicate((widget) =>
+            widget is Semantics &&
+            widget.properties.label == 'Profil Ari Baru'),
         findsOneWidget);
     await tester.tap(find.byTooltip('Notifikasi'));
     await tester.pumpAndSettle();

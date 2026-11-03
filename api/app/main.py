@@ -129,6 +129,22 @@ class UserUpdate(BaseModel):
         return RegisterIn.nonblank_name(value) if value is not None else None
 
 
+class ProfileUpdate(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    current_password: str | None = Field(default=None, max_length=72)
+    new_password: str | None = Field(default=None, min_length=8, max_length=72)
+
+    @field_validator('name')
+    @classmethod
+    def valid_name(cls, value: str) -> str:
+        return RegisterIn.nonblank_name(value)
+
+    @field_validator('new_password')
+    @classmethod
+    def valid_password(cls, value: str | None) -> str | None:
+        return RegisterIn.password_bytes(value) if value is not None else None
+
+
 class ReportOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -343,6 +359,18 @@ def login(payload: LoginIn, db: Annotated[Session, Depends(get_db)]):
 
 @app.get("/auth/me", response_model=UserOut)
 def me(user: Annotated[User, Depends(current_user)]):
+    return user
+
+
+@app.patch("/auth/me", response_model=UserOut)
+def update_profile(payload: ProfileUpdate, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    if payload.new_password is not None:
+        if not payload.current_password or not verify_password(payload.current_password, user.password_hash):
+            raise HTTPException(status_code=422, detail="Kata sandi saat ini tidak sesuai.")
+        user.password_hash = hash_password(payload.new_password)
+    user.name = payload.name
+    db.commit()
+    db.refresh(user)
     return user
 
 

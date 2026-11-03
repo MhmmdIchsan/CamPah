@@ -38,6 +38,12 @@ test("dark theme remains usable in the dashboard and report form", async ({
 }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await register(page, `theme-${suffix()}@example.com`);
+  await page.getByRole("button", { name: "Profil", exact: true }).click();
+  const profile = page.getByRole("dialog", { name: "Profil" });
+  await profile.getByLabel("Nama", { exact: true }).fill("Pengguna Baru");
+  await profile.getByRole("button", { name: "Simpan profil" }).click();
+  await expect(page.getByRole("dialog", { name: "Profil" })).toHaveCount(0);
+  await expect(page.locator(".sidebar-bottom")).toContainText("Pengguna Baru");
   await page.getByRole("button", { name: "Aktifkan mode gelap" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.locator(".stat").first()).toHaveCSS(

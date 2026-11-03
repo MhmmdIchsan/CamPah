@@ -81,6 +81,16 @@ def test_authentication_and_registration_role(system):
     assert client.get("/users", headers=auth(account)).status_code == 403
 
 
+def test_profile_update_requires_current_password(system):
+    client, _ = system
+    account = signup(client)
+    url = '/auth/me'
+    assert client.patch(url, headers=auth(account), json={'name': 'New name', 'current_password': 'wrong', 'new_password': 'NewPassword123'}).status_code == 422
+    assert client.patch(url, headers=auth(account), json={'name': 'New name', 'current_password': 'StrongPassword123', 'new_password': 'NewPassword123'}).json()['name'] == 'New name'
+    assert client.post('/auth/login', json={'email': 'alice@example.com', 'password': 'StrongPassword123'}).status_code == 401
+    assert client.post('/auth/login', json={'email': 'alice@example.com', 'password': 'NewPassword123'}).status_code == 200
+
+
 def test_report_access_status_and_dashboard(system):
     client, sessions = system
     alice = signup(client)

@@ -7,10 +7,12 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
       {super.key,
       required this.name,
       required this.onSignOut,
-      required this.onNotifications});
+      required this.onNotifications,
+      required this.onProfile});
   final String name;
   final Future<void> Function() onSignOut;
   final VoidCallback onNotifications;
+  final VoidCallback onProfile;
 
   @override
   Size get preferredSize => const Size.fromHeight(72);
@@ -54,20 +56,24 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
             tooltip: 'Notifikasi',
             icon: const Icon(Icons.notifications_none_rounded, size: 21)),
         const ThemeToggle(),
-        Semantics(
-            label: 'Profil $name',
-            child: Container(
-                width: 36,
-                height: 36,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFE3F1DB),
-                    borderRadius: BorderRadius.circular(12)),
-                child: Text(initial,
-                    style: const TextStyle(
-                        color: forest,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800)))),
+        InkWell(
+            key: const ValueKey('profile-button'),
+            onTap: onProfile,
+            borderRadius: BorderRadius.circular(12),
+            child: Semantics(
+                label: 'Profil $name',
+                child: Container(
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFE3F1DB),
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Text(initial,
+                        style: const TextStyle(
+                            color: forest,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800))))),
         const SizedBox(width: 4),
         IconButton(
             onPressed: onSignOut,

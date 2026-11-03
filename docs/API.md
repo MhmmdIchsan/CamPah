@@ -13,6 +13,7 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | Metode | Path | Isi/parameter | Akses |
 | --- | --- | --- | --- |
 | GET | `/auth/me` | Akun saat ini | Login |
+| PATCH | `/auth/me` | JSON `name`; opsional `current_password` dan `new_password` | Login |
 | GET | `/reports` | `q`, `status`, `page` (mulai 1), `page_size` (1–100) | User: sendiri; Admin: semua |
 | POST | `/reports` | Multipart `image`, `description`, `latitude`, `longitude` | Login |
 | GET | `/reports/{id}` | Detail laporan | Pemilik/Admin |

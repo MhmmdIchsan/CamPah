@@ -107,6 +107,7 @@ function App() {
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
   const [detail, setDetail] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
   const [notices, setNotices] = useState([]);
   const [showNotices, setShowNotices] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
@@ -121,6 +122,7 @@ function App() {
     setView("dashboard");
     setEditing(null);
     setDetail(null);
+    setShowProfile(false);
     setNotices([]);
     setShowNotices(false);
     setStats(null);
@@ -335,6 +337,12 @@ function App() {
             </h1>
           </div>
           <div className="topbar-actions">
+            <button
+              className="text-button"
+              onClick={() => setShowProfile(true)}
+            >
+              Profil
+            </button>
             <button
               className="theme-toggle notification-button"
               aria-label="Notifikasi"
@@ -616,6 +624,81 @@ function App() {
             onClose={() => setDetail(null)}
             onUpdated={() => setRefresh((n) => n + 1)}
           />
+        )}
+        {showProfile && (
+          <div className="modal-backdrop">
+            <form
+              className="modal report-detail"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Profil"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = new FormData(e.currentTarget);
+                const payload = { name: form.get("name") };
+                if (form.get("new_password")) {
+                  payload.current_password = form.get("current_password");
+                  payload.new_password = form.get("new_password");
+                }
+                await run(async () => {
+                  const user = await request("/auth/me", {
+                    token,
+                    method: "PATCH",
+                    body: payload,
+                  });
+                  const next = { ...session, user };
+                  setSession(next);
+                  localStorage.setItem("campah-session", JSON.stringify(next));
+                  setShowProfile(false);
+                });
+              }}
+            >
+              <div className="section-head">
+                <h2>Profil</h2>
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label="Tutup profil"
+                  onClick={() => setShowProfile(false)}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <label>
+                Nama
+                <input
+                  name="name"
+                  defaultValue={session.user.name}
+                  minLength="2"
+                  maxLength="120"
+                  required
+                />
+              </label>
+              <p>Untuk mengubah kata sandi, isi kedua kolom berikut.</p>
+              <label>
+                Kata sandi saat ini
+                <input
+                  name="current_password"
+                  type="password"
+                  autoComplete="current-password"
+                />
+              </label>
+              <label>
+                Kata sandi baru
+                <input
+                  name="new_password"
+                  type="password"
+                  minLength="8"
+                  maxLength="72"
+                  autoComplete="new-password"
+                />
+              </label>
+              <button className="primary" disabled={busy}>
+                Simpan profil
+              </button>
+              {error && <p role="alert">{error}</p>}
+            </form>
+          </div>
         )}
         {showNotices && (
           <div className="modal-backdrop">
