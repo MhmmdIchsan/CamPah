@@ -50,7 +50,7 @@ test("user reports, admin status and user management work together", async ({
   await context.setGeolocation({ latitude: -5.55, longitude: 95.32 });
   const unique = suffix();
   const email = `test-${unique}@example.com`;
-  const description = `Sampah plastik dekat sungai ${unique}`;
+  const description = `Sampah plastik dekat sungai ${unique}. Terdapat tumpukan botol dan kantong plastik berserakan di pinggir jalan dekat tempat sampah yang perlu segera dibersihkan.`;
   await register(page, email);
   await page.screenshot({
     path: "../artifacts/web-dashboard.png",
@@ -106,6 +106,19 @@ test("user reports, admin status and user management work together", async ({
   await expect(row).toHaveCount(1);
   await row.getByRole("combobox").selectOption("Completed");
   await expect(row.locator(".badge")).toHaveText("Completed");
+  await page.getByRole("navigation").getByRole("button", { name: "Dashboard" }).click();
+  const recent = page.locator('.recent-item').filter({ hasText: unique });
+  await expect(recent.locator('.badge')).toHaveText('Completed');
+  for (const width of [1280, 320]) {
+    await page.setViewportSize({ width, height: 800 });
+    const card = await page.locator('.recent-item').filter({ hasText: unique }).boundingBox();
+    const badge = await recent.locator('.badge').boundingBox();
+    const title = await recent.locator('.recent-copy strong').boundingBox();
+    expect(badge.x + badge.width).toBeLessThanOrEqual(card.x + card.width + 1);
+    expect(title.x + title.width).toBeLessThanOrEqual(badge.x);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+  }
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page
     .getByRole("navigation")
     .getByRole("button", { name: "Pengguna", exact: true })
