@@ -8,6 +8,26 @@ import 'package:campah_mobile/main.dart';
 import 'package:campah_mobile/splash.dart';
 
 void main() {
+  testWidgets('theme can be changed and persists after restart',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(const WasteApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Aktifkan mode gelap'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Aktifkan mode terang'), findsOneWidget);
+    expect(Theme.of(tester.element(find.text('Selamat datang'))).brightness,
+        Brightness.dark);
+    expect((await SharedPreferences.getInstance()).getString('theme'), 'dark');
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(const WasteApp());
+    await tester.pumpAndSettle();
+    expect(Theme.of(tester.element(find.text('Selamat datang'))).brightness,
+        Brightness.dark);
+    await tester.tap(find.byTooltip('Aktifkan mode terang'));
+    await tester.pumpAndSettle();
+    expect((await SharedPreferences.getInstance()).getString('theme'), 'light');
+  });
   testWidgets('camera splash flashes briefly before showing login',
       (tester) async {
     SharedPreferences.setMockInitialValues({});

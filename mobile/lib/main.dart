@@ -97,6 +97,7 @@ class _WasteAppState extends State<WasteApp> {
   Map<String, dynamic>? user;
   bool loading = true;
   bool splashComplete = false;
+  ThemeMode themeMode = ThemeMode.system;
 
   @override
   void initState() {
@@ -107,6 +108,11 @@ class _WasteAppState extends State<WasteApp> {
 
   Future<void> restore() async {
     final prefs = await SharedPreferences.getInstance();
+    final savedTheme = prefs.getString('theme');
+    if (mounted && (savedTheme == 'dark' || savedTheme == 'light')) {
+      setState(() =>
+          themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light);
+    }
     api.token = prefs.getString('token');
     if (api.token != null) {
       try {
@@ -117,6 +123,17 @@ class _WasteAppState extends State<WasteApp> {
       }
     }
     if (mounted) setState(() => loading = false);
+  }
+
+  Future<void> toggleTheme() async {
+    final isDark = themeMode == ThemeMode.dark ||
+        (themeMode == ThemeMode.system &&
+            WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                Brightness.dark);
+    final next = isDark ? ThemeMode.light : ThemeMode.dark;
+    setState(() => themeMode = next);
+    await (await SharedPreferences.getInstance())
+        .setString('theme', next == ThemeMode.dark ? 'dark' : 'light');
   }
 
   Future<void> signedIn(Map<String, dynamic> data) async {
@@ -135,10 +152,14 @@ class _WasteAppState extends State<WasteApp> {
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) => ThemeControl(
+      toggle: toggleTheme,
+      child: MaterialApp(
         title: 'CamPah',
         debugShowCheckedModeBanner: false,
         theme: campahTheme(),
+        darkTheme: campahTheme(dark: true),
+        themeMode: themeMode,
         home: Builder(
             builder: (context) => AnimatedSwitcher(
                   duration: MediaQuery.disableAnimationsOf(context)
@@ -186,7 +207,7 @@ class _WasteAppState extends State<WasteApp> {
                                   user: user!,
                                   onSignOut: signOut),
                 )),
-      );
+      ));
 }
 
 class AuthPage extends StatefulWidget {
@@ -253,26 +274,30 @@ class _AuthPageState extends State<AuthPage> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Row(children: [
-                          CamPahMark(size: 48),
-                          SizedBox(width: 12),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                        Row(children: [
+                          const CamPahMark(size: 48),
+                          const SizedBox(width: 12),
+                          Expanded(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                 Text('CamPah',
                                     style: TextStyle(
                                         fontSize: 21,
                                         fontWeight: FontWeight.w800,
                                         letterSpacing: -.3,
-                                        color: ink)),
-                                SizedBox(height: 3),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface)),
+                                const SizedBox(height: 3),
                                 Text('LEBIH PEDULI BUMI',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 8,
                                         fontWeight: FontWeight.w800,
                                         letterSpacing: 1.3,
                                         color: muted)),
-                              ]),
+                              ])),
+                          const ThemeToggle(),
                         ]),
                         const SizedBox(height: 30),
                         Container(
@@ -318,11 +343,12 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                         const SizedBox(height: 28),
                         Text(register ? 'Buat akun baru' : 'Selamat datang',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 26,
                                 letterSpacing: -.45,
                                 fontWeight: FontWeight.w800,
-                                color: ink)),
+                                color:
+                                    Theme.of(context).colorScheme.onSurface)),
                         const SizedBox(height: 7),
                         Text(
                             register
@@ -554,9 +580,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   letterSpacing: 1.2,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 6),
-          const Text('Dashboard',
+          Text('Dashboard',
               style: TextStyle(
-                  color: ink,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 26,
                   letterSpacing: -.4,
                   fontWeight: FontWeight.w800)),
@@ -740,7 +766,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 SizedBox(
                     width: width,
                     child: Material(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(18),
                         child: InkWell(
                             borderRadius: BorderRadius.circular(18),
@@ -750,7 +776,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(18),
                                     border: Border.all(
-                                        color: const Color(0xFFE9EEE7))),
+                                        color: Theme.of(context).dividerColor)),
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -1157,8 +1183,10 @@ class _FormStep extends StatelessWidget {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(title,
-              style: const TextStyle(
-                  color: ink, fontSize: 14, fontWeight: FontWeight.w800)),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
           Text(subtitle,
               style: const TextStyle(color: muted, fontSize: 10, height: 1.5))
@@ -1220,7 +1248,7 @@ class _HistoryPageState extends State<HistoryPage> {
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) => SafeArea(
@@ -1323,8 +1351,8 @@ class _HistoryPageState extends State<HistoryPage> {
                         selected: selectedStatus == status,
                         showCheckmark: false,
                         selectedColor: forest,
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Color(0xFFE2EBE1)),
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        side: BorderSide(color: Theme.of(context).dividerColor),
                         labelStyle: TextStyle(
                             color:
                                 selectedStatus == status ? Colors.white : muted,
@@ -1388,7 +1416,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 return Padding(
                     padding: const EdgeInsets.only(bottom: 11),
                     child: Material(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(18),
                         child: InkWell(
                             borderRadius: BorderRadius.circular(18),
@@ -1398,7 +1426,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(18),
                                   border: Border.all(
-                                      color: const Color(0xFFE7EEE5))),
+                                      color: Theme.of(context).dividerColor)),
                               child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

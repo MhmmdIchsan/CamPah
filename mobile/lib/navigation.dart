@@ -44,6 +44,7 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
         ])),
       ]),
       actions: [
+        const ThemeToggle(),
         Semantics(
             label: 'Profil $name',
             child: Container(
@@ -67,7 +68,7 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
       ],
       bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(height: 1, color: const Color(0xFFE6ECE3))),
+          child: Container(height: 1, color: Theme.of(context).dividerColor)),
     );
   }
 }
@@ -89,9 +90,9 @@ class CamPahBottomNav extends StatelessWidget {
       child: Container(
         height: 78,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(25),
-          border: Border.all(color: const Color(0xFFE4EDE3)),
+          border: Border.all(color: Theme.of(context).dividerColor),
           boxShadow: const [
             BoxShadow(
                 color: Color(0x140F392A), blurRadius: 24, offset: Offset(0, 6))
@@ -108,7 +109,10 @@ class CamPahBottomNav extends StatelessWidget {
                         child: Container(
                             width: (constraints.maxWidth - 12) / 3,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFF0F7E9),
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? const Color(0xFF304B3C)
+                                    : const Color(0xFFF0F7E9),
                                 borderRadius: BorderRadius.circular(19))),
                       )),
                   Row(children: [
@@ -205,7 +209,7 @@ class _NavItem extends StatelessWidget {
                           color: camera
                               ? Colors.white
                               : selected
-                                  ? forest
+                                  ? Theme.of(context).colorScheme.primary
                                   : const Color(0xFF84988A)),
                     ),
                   ),
@@ -215,7 +219,9 @@ class _NavItem extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: selected ? forest : const Color(0xFF7E9185),
+                        color: selected
+                            ? Theme.of(context).colorScheme.primary
+                            : const Color(0xFF7E9185),
                         fontSize: 10,
                         fontWeight:
                             selected ? FontWeight.w800 : FontWeight.w700)),

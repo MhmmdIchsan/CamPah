@@ -7,31 +7,66 @@ const canvas = Color(0xFFF5F6F0);
 const lime = Color(0xFFD3F47D);
 const muted = Color(0xFF72857A);
 
-ThemeData campahTheme() {
-  final scheme = ColorScheme.fromSeed(seedColor: forest).copyWith(
-    primary: forest,
+class ThemeControl extends InheritedWidget {
+  const ThemeControl({super.key, required this.toggle, required super.child});
+  final VoidCallback toggle;
+  static ThemeControl? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<ThemeControl>();
+  @override
+  bool updateShouldNotify(ThemeControl oldWidget) => toggle != oldWidget.toggle;
+}
+
+class ThemeToggle extends StatelessWidget {
+  const ThemeToggle({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final control = ThemeControl.maybeOf(context);
+    if (control == null) return const SizedBox.shrink();
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return IconButton(
+      tooltip: dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap',
+      onPressed: control.toggle,
+      icon: AnimatedSwitcher(
+          duration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : const Duration(milliseconds: 250),
+          child: Icon(
+              dark ? Icons.light_mode_rounded : Icons.dark_mode_outlined,
+              key: ValueKey(dark),
+              size: 21)),
+    );
+  }
+}
+
+ThemeData campahTheme({bool dark = false}) {
+  final scheme = ColorScheme.fromSeed(
+          seedColor: forest,
+          brightness: dark ? Brightness.dark : Brightness.light)
+      .copyWith(
+    primary: dark ? lime : forest,
     secondary: const Color(0xFF7BA75B),
-    surface: Colors.white,
-    onSurface: ink,
+    surface: dark ? const Color(0xFF1C3029) : Colors.white,
+    onSurface: dark ? const Color(0xFFE3EFE5) : ink,
   );
   final border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
-    borderSide: const BorderSide(color: Color(0xFFDCE7DC)),
+    borderSide: BorderSide(
+        color: dark ? const Color(0xFF385248) : const Color(0xFFDCE7DC)),
   );
   return ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
     fontFamily: 'PlusJakartaSans',
-    scaffoldBackgroundColor: canvas,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: canvas,
+    scaffoldBackgroundColor: dark ? const Color(0xFF101F1A) : canvas,
+    appBarTheme: AppBarTheme(
+      backgroundColor: dark ? const Color(0xFF101F1A) : canvas,
       surfaceTintColor: Colors.transparent,
-      foregroundColor: ink,
+      foregroundColor: dark ? const Color(0xFFE3EFE5) : ink,
       elevation: 0,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: const Color(0xFFFAFCF8),
+      fillColor: dark ? const Color(0xFF223A30) : const Color(0xFFFAFCF8),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
       border: border,
       enabledBorder: border,
@@ -41,8 +76,8 @@ ThemeData campahTheme() {
     ),
     filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-      backgroundColor: forest,
-      foregroundColor: Colors.white,
+      backgroundColor: dark ? lime : forest,
+      foregroundColor: dark ? forest : Colors.white,
       minimumSize: const Size(0, 52),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       textStyle: const TextStyle(
@@ -52,7 +87,7 @@ ThemeData campahTheme() {
     )),
     outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-      foregroundColor: forest,
+      foregroundColor: dark ? lime : forest,
       minimumSize: const Size(0, 48),
       side: const BorderSide(color: Color(0xFFD3E1D4)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -93,17 +128,20 @@ class SoftPanel extends StatelessWidget {
       {super.key,
       required this.child,
       this.padding = const EdgeInsets.all(20),
-      this.color = Colors.white});
+      this.color});
   final Widget child;
   final EdgeInsetsGeometry padding;
-  final Color color;
+  final Color? color;
   @override
   Widget build(BuildContext context) => Container(
         padding: padding,
         decoration: BoxDecoration(
-          color: color,
+          color: color ?? Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFE6EDE4)),
+          border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF385248)
+                  : const Color(0xFFE6EDE4)),
           boxShadow: const [
             BoxShadow(
                 color: Color(0x080F392A), blurRadius: 24, offset: Offset(0, 6))
@@ -135,8 +173,8 @@ class SectionTitle extends StatelessWidget {
                         letterSpacing: 1.2)),
                 const SizedBox(height: 5),
                 Text(title,
-                    style: const TextStyle(
-                        color: ink,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 19,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -.6)),
