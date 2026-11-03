@@ -16,7 +16,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app import main
-from app.database import Base, ReportStatusHistory, User, get_db
+from app.database import Base, Report, ReportStatusHistory, User, get_db, utc_now
+from datetime import timedelta
 
 REAL_PREDICT_IMAGE = main.predict_image
 
@@ -262,6 +263,20 @@ def test_report_filters_and_safe_admin_export(system):
     exported = client.get('/reports-export?category=Plastic%20Waste', headers=auth(admin))
     assert exported.status_code == 200
     assert "'=SUM(1,2) suspicious entry" in exported.text
+
+
+def test_admin_attention_counts_old_work(system):
+    client, sessions = system
+    owner = signup(client)
+    admin = admin_account(client, sessions)
+    report_id = create_report(client, owner).json()['id']
+    assert client.get('/dashboard', headers=auth(admin)).json()['attention']['pending'] == 1
+    assert client.patch(f'/reports/{report_id}/status', headers=auth(admin), json={'status':'In Progress', 'expected_status':'Pending', 'note':'Diproses petugas'}).status_code == 200
+    with sessions() as db:
+        db.get(Report, report_id).updated_at = utc_now() - timedelta(days=4)
+        db.commit()
+    assert client.get('/dashboard', headers=auth(admin)).json()['attention']['overdue_in_progress'] == 1
+    assert 'attention' not in client.get('/dashboard', headers=auth(owner)).json()
 
 
 def test_real_model_prediction_and_report(system, monkeypatch):

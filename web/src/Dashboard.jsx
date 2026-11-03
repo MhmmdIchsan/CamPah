@@ -65,6 +65,28 @@ export default function Dashboard({
 
   return (
     <section className="dashboard" aria-label="Ringkasan dashboard">
+      {isAdmin && stats?.attention && (
+        <div className="card attention-card">
+          <div>
+            <span className="eyebrow">PERLU PERHATIAN</span>
+            <h2>Antrean penanganan</h2>
+          </div>
+          <button
+            className="attention-link"
+            onClick={() => onSelectStatus("Pending")}
+          >
+            <strong>{stats.attention.pending}</strong>
+            <span>laporan menunggu</span>
+          </button>
+          <button
+            className="attention-link"
+            onClick={() => onSelectStatus("In Progress")}
+          >
+            <strong>{stats.attention.overdue_in_progress}</strong>
+            <span>penanganan tanpa pembaruan lebih dari 3 hari</span>
+          </button>
+        </div>
+      )}
       <div className="welcome-grid">
         <div className="welcome-card">
           <div className="welcome-content">

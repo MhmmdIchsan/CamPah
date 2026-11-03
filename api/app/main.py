@@ -600,7 +600,13 @@ def dashboard(db: Annotated[Session, Depends(get_db)], user: Annotated[User, Dep
     by_status.update(dict(status_rows))
     by_category = {name: 0 for name in CATEGORIES}
     by_category.update(dict(category_rows))
-    return {"total": sum(by_status.values()), "by_status": by_status, "by_category": by_category}
+    result = {"total": sum(by_status.values()), "by_status": by_status, "by_category": by_category}
+    if user.role == 'admin':
+        result['attention'] = {
+            'pending': by_status['Pending'],
+            'overdue_in_progress': db.scalar(select(func.count(Report.id)).where(Report.deleted_at.is_(None), Report.status == 'In Progress', Report.updated_at < utc_now() - timedelta(days=3))) or 0,
+        }
+    return result
 
 
 @app.get("/users", response_model=list[UserOut])
