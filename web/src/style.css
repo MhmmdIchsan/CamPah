@@ -1677,6 +1677,38 @@ main {
   align-items: center;
   gap: 12px;
 }
+.notification-button {
+  position: relative;
+}
+.notification-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  background: #e46c4d;
+  border-radius: 50%;
+}
+.notice-item {
+  display: grid;
+  text-align: left;
+  width: 100%;
+  gap: 6px;
+  padding: 14px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.notice-item strong {
+  color: var(--muted);
+  font-size: 11px;
+}
+@media (max-width: 480px) {
+  .topbar { flex-wrap: wrap; gap: 12px; }
+  .topbar-actions { margin-left: auto; }
+}
 .theme-toggle {
   display: inline-grid;
   place-items: center;

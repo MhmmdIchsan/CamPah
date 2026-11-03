@@ -117,6 +117,11 @@ def test_report_access_status_and_dashboard(system):
     assert len(history) == 4
     assert history[0]["note"] == "Catatan tindak lanjut"
     assert history[2]["is_correction"] is True
+    notices = client.get('/notifications', headers=auth(alice)).json()
+    assert len(notices) == 4 and not notices[0]['is_read']
+    notice_id = notices[0]['id']
+    assert client.patch(f'/notifications/{notice_id}/read', headers=auth(bob)).status_code == 404
+    assert client.patch(f'/notifications/{notice_id}/read', headers=auth(alice)).json()['is_read'] is True
     assert client.get("/reports?q=Edited&status=Pending", headers=auth(alice)).json()["total"] == 1
     assert client.get("/reports?q=Missing", headers=auth(alice)).json()["total"] == 0
     assert client.delete(f"/reports/{report_id}", headers=auth(alice)).status_code == 204

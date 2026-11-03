@@ -20,6 +20,8 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | DELETE | `/reports/{id}` | Soft delete; respons 204 | Pemilik saat Pending/Admin |
 | PATCH | `/reports/{id}/status` | JSON `status`, `expected_status`, `note`, `is_correction` | Admin |
 | GET | `/reports/{id}/history` | Riwayat status dan catatan publik | Pemilik/Admin |
+| GET | `/notifications` | Maksimal 100 notifikasi terbaru milik akun | Login |
+| PATCH | `/notifications/{id}/read` | Tandai notifikasi sebagai dibaca | Pemilik |
 | GET | `/dashboard` | `total`, `by_status`, `by_category` | Login; sesuai cakupan role |
 | GET | `/users` | Daftar akun tanpa password hash | Admin |
 | POST | `/users` | JSON `name`, `email`, `password`, `role` | Admin |

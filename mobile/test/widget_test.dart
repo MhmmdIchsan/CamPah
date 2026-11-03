@@ -144,6 +144,21 @@ void main() {
     final oldClient = api.client;
     api.token = 'test-token';
     api.client = MockClient((request) async {
+      if (request.url.path == '/notifications') {
+        return http.Response(
+            jsonEncode([
+              {
+                'id': 5,
+                'report_id': 7,
+                'message': 'Laporan sedang ditangani',
+                'is_read': false
+              }
+            ]),
+            200);
+      }
+      if (request.url.path == '/notifications/5/read') {
+        return http.Response('{}', 200);
+      }
       if (request.url.path.endsWith('/history')) {
         return http.Response(
             jsonEncode([
@@ -211,6 +226,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Halo, Ari!\nYuk, jaga lingkungan\nbersama.'),
         findsOneWidget);
+    await tester.tap(find.byTooltip('Notifikasi'));
+    await tester.pumpAndSettle();
+    expect(find.text('Laporan sedang ditangani'), findsOneWidget);
+    await tester.tap(find.text('Laporan sedang ditangani'));
+    await tester.pumpAndSettle();
+    Navigator.of(tester.element(find.text('Notifikasi').last)).pop();
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Pending'), 220,
         scrollable: find.byType(Scrollable).first);
     await Scrollable.ensureVisible(tester.element(find.text('Pending')),

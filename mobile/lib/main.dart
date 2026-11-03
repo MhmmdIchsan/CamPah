@@ -452,7 +452,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) => Scaffold(
         appBar: CamPahHeader(
             name: widget.user['name'] ?? 'Pengguna',
-            onSignOut: widget.onSignOut),
+            onSignOut: widget.onSignOut,
+            onNotifications: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                showDragHandle: true,
+                builder: (_) => const _NotificationsSheet())),
         body: AnimatedSwitcher(
           duration: MediaQuery.disableAnimationsOf(context)
               ? Duration.zero
@@ -502,6 +507,94 @@ class _HomePageState extends State<HomePage> {
           }),
         ),
       );
+}
+
+class _NotificationsSheet extends StatefulWidget {
+  const _NotificationsSheet();
+  @override
+  State<_NotificationsSheet> createState() => _NotificationsSheetState();
+}
+
+class _NotificationsSheetState extends State<_NotificationsSheet> {
+  late Future<dynamic> items;
+  @override
+  void initState() {
+    super.initState();
+    items = api.call('/notifications');
+  }
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+      child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: SizedBox(
+              height: MediaQuery.sizeOf(context).height * .65,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Notifikasi',
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 16),
+                    Expanded(
+                        child: FutureBuilder<dynamic>(
+                            future: items,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.done) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: TextButton(
+                                        onPressed: () => setState(() =>
+                                            items = api.call('/notifications')),
+                                        child: const Text(
+                                            'Gagal memuat. Coba lagi')));
+                              }
+                              final notices = snapshot.data as List<dynamic>;
+                              if (notices.isEmpty) {
+                                return const Center(
+                                    child: Text('Belum ada notifikasi.'));
+                              }
+                              return ListView.builder(
+                                  itemCount: notices.length,
+                                  itemBuilder: (context, index) {
+                                    final notice = Map<String, dynamic>.from(
+                                        notices[index]);
+                                    return ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: Icon(notice['is_read'] == true
+                                            ? Icons.notifications_none_rounded
+                                            : Icons
+                                                .notifications_active_rounded),
+                                        title: Text('${notice['message']}',
+                                            style:
+                                                const TextStyle(fontSize: 12)),
+                                        subtitle: Text(notice['is_read'] == true
+                                            ? 'Dibaca'
+                                            : 'Baru'),
+                                        onTap: () async {
+                                          try {
+                                            await api.call(
+                                                '/notifications/${notice['id']}/read',
+                                                method: 'PATCH');
+                                            if (mounted) {
+                                              setState(() => items =
+                                                  api.call('/notifications'));
+                                            }
+                                          } catch (_) {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          'Notifikasi belum dapat diperbarui.')));
+                                            }
+                                          }
+                                        });
+                                  });
+                            }))
+                  ]))));
 }
 
 class DashboardPage extends StatefulWidget {

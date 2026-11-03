@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import {
   ArrowRight,
   ArrowUpRight,
+  Bell,
   Camera,
   CheckCircle2,
   ClipboardList,
@@ -106,6 +107,8 @@ function App() {
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
   const [detail, setDetail] = useState(null);
+  const [notices, setNotices] = useState([]);
+  const [showNotices, setShowNotices] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
   const [recentReports, setRecentReports] = useState(null);
   const [recentError, setRecentError] = useState(false);
@@ -118,6 +121,8 @@ function App() {
     setView("dashboard");
     setEditing(null);
     setDetail(null);
+    setNotices([]);
+    setShowNotices(false);
     setStats(null);
     setRecentReports(null);
     setUsers([]);
@@ -141,6 +146,14 @@ function App() {
       setBusy(false);
     }
   };
+  useEffect(() => {
+    if (!token) return;
+    const controller = new AbortController();
+    request("/notifications", { token, signal: controller.signal })
+      .then(setNotices)
+      .catch(() => {});
+    return () => controller.abort();
+  }, [token, refresh]);
   useEffect(() => {
     if (!token) return;
     const expired = (event) => {
@@ -322,6 +335,17 @@ function App() {
             </h1>
           </div>
           <div className="topbar-actions">
+            <button
+              className="theme-toggle notification-button"
+              aria-label="Notifikasi"
+              title="Notifikasi"
+              onClick={() => setShowNotices(true)}
+            >
+              <Bell size={19} />
+              {notices.some((n) => !n.is_read) && (
+                <span className="notification-dot" />
+              )}
+            </button>
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <button className="text-button" onClick={logout}>
               <LogOut size={17} aria-hidden="true" /> Keluar
@@ -592,6 +616,64 @@ function App() {
             onClose={() => setDetail(null)}
             onUpdated={() => setRefresh((n) => n + 1)}
           />
+        )}
+        {showNotices && (
+          <div className="modal-backdrop">
+            <section
+              className="modal report-detail"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Notifikasi"
+            >
+              <div className="section-head">
+                <h2>Notifikasi</h2>
+                <button
+                  className="icon-button"
+                  aria-label="Tutup notifikasi"
+                  onClick={() => setShowNotices(false)}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              {notices.length === 0 ? (
+                <p>Belum ada notifikasi.</p>
+              ) : (
+                notices.map((n) => (
+                  <button
+                    className="notice-item"
+                    key={n.id}
+                    onClick={async () => {
+                      try {
+                        const report = await request(
+                          `/reports/${n.report_id}`,
+                          { token },
+                        );
+                        await request(`/notifications/${n.id}/read`, {
+                          token,
+                          method: "PATCH",
+                        });
+                        setNotices((items) =>
+                          items.map((item) =>
+                            item.id === n.id
+                              ? { ...item, is_read: true }
+                              : item,
+                          ),
+                        );
+                        setShowNotices(false);
+                        setDetail(report);
+                      } catch (e) {
+                        setShowNotices(false);
+                        setError(e.message);
+                      }
+                    }}
+                  >
+                    <strong>{n.is_read ? "Dibaca" : "Baru"}</strong>
+                    <span>{n.message}</span>
+                  </button>
+                ))
+              )}
+            </section>
+          </div>
         )}
       </main>
     </div>

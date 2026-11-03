@@ -478,6 +478,77 @@
         }
       }
     },
+    "/notifications": {
+      "get": {
+        "summary": "List Notifications",
+        "operationId": "list_notifications_notifications_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Notifications Notifications Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/notifications/{notification_id}/read": {
+      "patch": {
+        "summary": "Read Notification",
+        "operationId": "read_notification_notifications__notification_id__read_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Notification Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/dashboard": {
       "get": {
         "summary": "Dashboard",
@@ -770,6 +841,40 @@
           "password"
         ],
         "title": "LoginIn"
+      },
+      "NotificationOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "report_id": {
+            "type": "integer",
+            "title": "Report Id"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "is_read": {
+            "type": "boolean",
+            "title": "Is Read"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "report_id",
+          "message",
+          "is_read",
+          "created_at"
+        ],
+        "title": "NotificationOut"
       },
       "PredictionOut": {
         "properties": {

@@ -22,7 +22,7 @@ from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from .database import Base, Report, ReportStatusHistory, SessionLocal, User, engine, get_db, utc_now
+from .database import Base, Notification, Report, ReportStatusHistory, SessionLocal, User, engine, get_db, utc_now
 
 STATUSES = ("Pending", "In Progress", "Completed", "Rejected")
 CATEGORIES = ("Organic Waste", "Plastic Waste", "Paper Waste")
@@ -190,6 +190,15 @@ class StatusHistoryOut(BaseModel):
     is_correction: bool
     changed_at: datetime
     admin_name: str
+
+
+class NotificationOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    report_id: int
+    message: str
+    is_read: bool
+    created_at: datetime
 
 
 class PredictionOut(BaseModel):
@@ -423,6 +432,8 @@ def change_status(report_id: int, payload: StatusUpdate, db: Annotated[Session, 
         raise HTTPException(status_code=409, detail="Status laporan telah berubah. Muat ulang laporan.")
     db.add(ReportStatusHistory(report_id=report.id, admin_id=admin.id, old_status=old_status,
                                new_status=payload.status, note=payload.note, is_correction=payload.is_correction))
+    db.add(Notification(user_id=report.user_id, report_id=report.id,
+                        message=f"Laporan #{report.id}: {old_status} → {payload.status}. {payload.note}"))
     db.commit()
     db.refresh(report)
     return report
@@ -438,6 +449,24 @@ def report_history(report_id: int, db: Annotated[Session, Depends(get_db)], user
                              note=item.note, is_correction=item.is_correction,
                              changed_at=item.changed_at if item.changed_at.tzinfo else item.changed_at.replace(tzinfo=timezone.utc),
                              admin_name=name) for item, name in rows]
+
+
+@app.get("/notifications", response_model=list[NotificationOut])
+def list_notifications(db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    return db.scalars(select(Notification).join(Report, Report.id == Notification.report_id)
+                      .where(Notification.user_id == user.id, Report.deleted_at.is_(None))
+                      .order_by(Notification.created_at.desc(), Notification.id.desc()).limit(100)).all()
+
+
+@app.patch("/notifications/{notification_id}/read", response_model=NotificationOut)
+def read_notification(notification_id: int, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    item = db.get(Notification, notification_id)
+    if not item or item.user_id != user.id:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    item.is_read = True
+    db.commit()
+    db.refresh(item)
+    return item
 
 
 @app.get("/dashboard")

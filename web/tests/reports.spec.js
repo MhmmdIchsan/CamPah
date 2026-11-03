@@ -185,6 +185,16 @@ test("user reports, admin status and user management work together", async ({
   await expect(
     page.getByRole("heading", { name: "Dashboard", exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Notifikasi" }).click();
+  const notifications = page.getByRole("dialog", { name: "Notifikasi" });
+  await expect(
+    notifications.getByText(/Sampah telah dibersihkan/),
+  ).toBeVisible();
+  await notifications.getByText(/Sampah telah dibersihkan/).click();
+  await expect(
+    page.getByRole("dialog", { name: /Detail laporan/ }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Tutup detail" }).click();
   await page
     .getByRole("navigation")
     .getByRole("button", { name: "Laporan", exact: true })

@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'design.dart';
 
 class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
-  const CamPahHeader({super.key, required this.name, required this.onSignOut});
+  const CamPahHeader(
+      {super.key,
+      required this.name,
+      required this.onSignOut,
+      required this.onNotifications});
   final String name;
   final Future<void> Function() onSignOut;
+  final VoidCallback onNotifications;
 
   @override
   Size get preferredSize => const Size.fromHeight(72);
@@ -44,6 +49,10 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
         ])),
       ]),
       actions: [
+        IconButton(
+            onPressed: onNotifications,
+            tooltip: 'Notifikasi',
+            icon: const Icon(Icons.notifications_none_rounded, size: 21)),
         const ThemeToggle(),
         Semantics(
             label: 'Profil $name',
