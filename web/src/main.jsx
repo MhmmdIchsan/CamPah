@@ -761,6 +761,25 @@ function ReportDetail({
       setBusy(false);
     }
   }
+  async function uploadEvidence(e) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      setReport(
+        await request(`/reports/${report.id}/completion-photo`, {
+          token,
+          method: "POST",
+          body: new FormData(e.currentTarget),
+        }),
+      );
+      onUpdated();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <div className="modal-backdrop">
       <div
@@ -793,6 +812,16 @@ function ReportDetail({
           </small>
         </div>
         <p className="detail-description">{report.description}</p>
+        {report.completion_image_url && (
+          <div>
+            <h3>Bukti penyelesaian</h3>
+            <img
+              className="detail-photo"
+              src={imageSource(report.completion_image_url)}
+              alt="Foto bukti penyelesaian"
+            />
+          </div>
+        )}
         <p>
           Lokasi: {report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}
           <br />
@@ -817,6 +846,22 @@ function ReportDetail({
         {isAdmin && (
           <div className="followup-actions">
             <h3>Tindak lanjut</h3>
+            {report.status === "Completed" && !report.completion_image_url && (
+              <form onSubmit={uploadEvidence} className="followup-form">
+                <label>
+                  Foto bukti penyelesaian
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/jpeg,image/png,image/webp"
+                    required
+                  />
+                </label>
+                <button className="primary" disabled={busy}>
+                  {busy ? "Mengunggah..." : "Unggah bukti"}
+                </button>
+              </form>
+            )}
             <div className="followup-buttons">
               {actions.map(([value, label]) => (
                 <button

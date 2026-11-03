@@ -138,6 +138,7 @@ class ReportOut(BaseModel):
     latitude: float
     longitude: float
     image_url: str
+    completion_image_url: str | None
     status: str
     ai_category: str | None
     ai_confidence: float | None
@@ -449,6 +450,28 @@ def report_history(report_id: int, db: Annotated[Session, Depends(get_db)], user
                              note=item.note, is_correction=item.is_correction,
                              changed_at=item.changed_at if item.changed_at.tzinfo else item.changed_at.replace(tzinfo=timezone.utc),
                              admin_name=name) for item, name in rows]
+
+
+@app.post("/reports/{report_id}/completion-photo", response_model=ReportOut)
+async def completion_photo(report_id: int, db: Annotated[Session, Depends(get_db)],
+                           admin: Annotated[User, Depends(admin_user)], image: UploadFile = File()):
+    report = visible_report(db, report_id, admin)
+    if report.status != "Completed":
+        raise HTTPException(status_code=422, detail="Bukti hanya dapat ditambahkan pada laporan yang selesai.")
+    if report.completion_image_url:
+        raise HTTPException(status_code=409, detail="Bukti penyelesaian sudah ada.")
+    data = await image_bytes(image)
+    url, _ = await run_in_threadpool(store_image, data)
+    result = db.execute(update(Report).where(Report.id == report_id, Report.status == "Completed",
+                                             Report.completion_image_url.is_(None), Report.deleted_at.is_(None))
+                        .values(completion_image_url=url, updated_at=utc_now()))
+    if result.rowcount != 1:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Laporan telah berubah. Muat ulang.")
+    db.add(Notification(user_id=report.user_id, report_id=report.id, message=f"Bukti penyelesaian laporan #{report.id} telah ditambahkan."))
+    db.commit()
+    db.refresh(report)
+    return report
 
 
 @app.get("/notifications", response_model=list[NotificationOut])

@@ -159,6 +159,25 @@ def test_rejection_requires_public_reason_and_correction_is_audited(system):
     assert [(row['new_status'], row['note'], row['is_correction']) for row in history] == [('Rejected', 'Lokasi belum jelas', False), ('Pending', 'Lokasi sudah diperiksa', True)]
 
 
+def test_completion_evidence_permissions_and_visibility(system):
+    client, sessions = system
+    owner = signup(client)
+    other = signup(client, 'other@example.com')
+    admin = admin_account(client, sessions)
+    report_id = create_report(client, owner).json()['id']
+    url = f'/reports/{report_id}/completion-photo'
+    assert client.post(url, headers=auth(owner), files={'image': photo()}).status_code == 403
+    assert client.post(url, headers=auth(admin), files={'image': photo()}).status_code == 422
+    for before, after in [('Pending', 'In Progress'), ('In Progress', 'Completed')]:
+        assert client.patch(f'/reports/{report_id}/status', headers=auth(admin), json={'status': after, 'expected_status': before, 'note': 'Sudah ditindaklanjuti'}).status_code == 200
+    result = client.post(url, headers=auth(admin), files={'image': photo()})
+    assert result.status_code == 200 and result.json()['completion_image_url'].startswith('/uploads/')
+    assert client.post(url, headers=auth(admin), files={'image': photo()}).status_code == 409
+    assert client.get(f'/reports/{report_id}', headers=auth(owner)).json()['completion_image_url'] == result.json()['completion_image_url']
+    assert client.get(f'/reports/{report_id}', headers=auth(other)).status_code == 404
+    assert 'Bukti penyelesaian' in client.get('/notifications', headers=auth(owner)).json()[0]['message']
+
+
 def test_admin_user_management_and_disabled_tokens(system):
     client, sessions = system
     admin = admin_account(client, sessions)

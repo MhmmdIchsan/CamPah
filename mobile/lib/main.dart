@@ -1386,6 +1386,28 @@ class _HistoryPageState extends State<HistoryPage> {
               Text('${report['description']}',
                   style: const TextStyle(
                       fontSize: 13, height: 1.6, fontWeight: FontWeight.w600)),
+              if (report['completion_image_url'] != null) ...[
+                const SizedBox(height: 18),
+                const Text('BUKTI PENYELESAIAN',
+                    style: TextStyle(
+                        color: muted,
+                        fontSize: 9,
+                        letterSpacing: 1.1,
+                        fontWeight: FontWeight.w800)),
+                const SizedBox(height: 8),
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                        '${report['completion_image_url']}'.startsWith('/')
+                            ? '$apiUrl${report['completion_image_url']}'
+                            : '${report['completion_image_url']}',
+                        width: double.infinity,
+                        height: 180,
+                        fit: BoxFit.cover,
+                        semanticLabel: 'Foto bukti penyelesaian',
+                        errorBuilder: (_, __, ___) =>
+                            const Text('Foto bukti belum dapat dimuat.'))),
+              ],
               const SizedBox(height: 18),
               const Text('HASIL IDENTIFIKASI',
                   style: TextStyle(

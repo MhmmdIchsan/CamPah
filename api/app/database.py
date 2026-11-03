@@ -47,6 +47,7 @@ class Report(Base):
     longitude: Mapped[float] = mapped_column(Float)
     image_url: Mapped[str] = mapped_column(Text)
     image_public_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    completion_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="Pending", index=True)
     ai_category: Mapped[str | None] = mapped_column(String(32), nullable=True)
     ai_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)

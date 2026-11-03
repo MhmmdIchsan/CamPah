@@ -478,6 +478,60 @@
         }
       }
     },
+    "/reports/{report_id}/completion-photo": {
+      "post": {
+        "summary": "Completion Photo",
+        "operationId": "completion_photo_reports__report_id__completion_photo_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_completion_photo_reports__report_id__completion_photo_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/notifications": {
       "get": {
         "summary": "List Notifications",
@@ -760,6 +814,20 @@
         ],
         "title": "AuthOut"
       },
+      "Body_completion_photo_reports__report_id__completion_photo_post": {
+        "properties": {
+          "image": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Image"
+          }
+        },
+        "type": "object",
+        "required": [
+          "image"
+        ],
+        "title": "Body_completion_photo_reports__report_id__completion_photo_post"
+      },
       "Body_create_report_reports_post": {
         "properties": {
           "description": {
@@ -983,6 +1051,17 @@
             "type": "string",
             "title": "Image Url"
           },
+          "completion_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completion Image Url"
+          },
           "status": {
             "type": "string",
             "title": "Status"
@@ -1029,6 +1108,7 @@
           "latitude",
           "longitude",
           "image_url",
+          "completion_image_url",
           "status",
           "ai_category",
           "ai_confidence",

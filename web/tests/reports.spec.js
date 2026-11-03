@@ -140,6 +140,11 @@ test("user reports, admin status and user management work together", async ({
     .fill("Sampah telah dibersihkan.");
   await detail.getByRole("button", { name: "Simpan tindak lanjut" }).click();
   await expect(detail.getByText("Sampah telah dibersihkan.")).toBeVisible();
+  await detail
+    .getByLabel("Foto bukti penyelesaian")
+    .setInputFiles("tests/fixtures/report.png");
+  await detail.getByRole("button", { name: "Unggah bukti" }).click();
+  await expect(detail.getByAltText("Foto bukti penyelesaian")).toBeVisible();
   await detail.getByRole("button", { name: "Tutup detail" }).click();
   await page.setViewportSize({ width: 1280, height: 800 });
   await expect(row.locator(".badge")).toHaveText("Completed");
@@ -206,6 +211,11 @@ test("user reports, admin status and user management work together", async ({
     page
       .getByRole("dialog", { name: /Detail laporan/ })
       .getByText("Sampah telah dibersihkan."),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("dialog", { name: /Detail laporan/ })
+      .getByAltText("Foto bukti penyelesaian"),
   ).toBeVisible();
   await page.getByRole("button", { name: "Tutup detail" }).click();
   await expect(
