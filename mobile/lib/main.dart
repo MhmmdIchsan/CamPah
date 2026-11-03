@@ -218,7 +218,7 @@ class _AuthPageState extends State<AuthPage> {
                                     style: TextStyle(
                                         fontSize: 21,
                                         fontWeight: FontWeight.w800,
-                                        letterSpacing: -.9,
+                                        letterSpacing: -.3,
                                         color: ink)),
                                 SizedBox(height: 3),
                                 Text('LEBIH PEDULI BUMI',
@@ -252,7 +252,7 @@ class _AuthPageState extends State<AuthPage> {
                                       style: TextStyle(
                                           fontSize: 23,
                                           height: 1.25,
-                                          letterSpacing: -.8,
+                                          letterSpacing: -.3,
                                           color: forest,
                                           fontWeight: FontWeight.w800)),
                                   SizedBox(height: 7),
@@ -275,7 +275,7 @@ class _AuthPageState extends State<AuthPage> {
                         Text(register ? 'Buat akun baru' : 'Selamat datang',
                             style: const TextStyle(
                                 fontSize: 26,
-                                letterSpacing: -1.1,
+                                letterSpacing: -.45,
                                 fontWeight: FontWeight.w800,
                                 color: ink)),
                         const SizedBox(height: 7),
@@ -535,7 +535,7 @@ class _DashboardPageState extends State<DashboardPage> {
               style: TextStyle(
                   color: ink,
                   fontSize: 26,
-                  letterSpacing: -1,
+                  letterSpacing: -.4,
                   fontWeight: FontWeight.w800)),
           const SizedBox(height: 19),
           Container(
@@ -583,7 +583,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 color: forest,
                                 fontSize: 25,
                                 height: 1.22,
-                                letterSpacing: -1.1,
+                                letterSpacing: -.45,
                                 fontWeight: FontWeight.w800)),
                         const SizedBox(height: 10),
                         const Text('Satu laporan bisa membawa perubahan.',
