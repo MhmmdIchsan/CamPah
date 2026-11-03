@@ -164,6 +164,7 @@ class ReportOut(BaseModel):
     category_note: str | None
     category_reviewer_id: int | None
     category_reviewed_at: datetime | None
+    assigned_name: str | None
     created_at: datetime
     updated_at: datetime
 
@@ -240,6 +241,15 @@ class CategoryReview(BaseModel):
         if len(value) < 3:
             raise ValueError("Catatan minimal 3 karakter")
         return value
+
+
+class AssignmentUpdate(BaseModel):
+    assigned_name: str | None = Field(default=None, max_length=120)
+
+    @field_validator('assigned_name')
+    @classmethod
+    def trim_name(cls, value: str | None) -> str | None:
+        return value.strip() or None if value is not None else None
 
 
 def read_image(data: bytes) -> None:
@@ -566,6 +576,16 @@ def review_category(report_id: int, payload: CategoryReview, db: Annotated[Sessi
     report.category_note = payload.note
     report.category_reviewer_id = admin.id
     report.category_reviewed_at = utc_now()
+    db.commit()
+    db.refresh(report)
+    return report
+
+
+@app.patch('/reports/{report_id}/assignment', response_model=ReportOut)
+def update_assignment(report_id: int, payload: AssignmentUpdate, db: Annotated[Session, Depends(get_db)],
+                      admin: Annotated[User, Depends(admin_user)]):
+    report = visible_report(db, report_id, admin)
+    report.assigned_name = payload.assigned_name
     db.commit()
     db.refresh(report)
     return report

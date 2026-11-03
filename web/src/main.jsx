@@ -975,6 +975,26 @@ function ReportDetail({
       setBusy(false);
     }
   }
+  async function assignReport(e) {
+    e.preventDefault();
+    const name = new FormData(e.currentTarget).get("assigned_name");
+    setBusy(true);
+    setError("");
+    try {
+      setReport(
+        await request(`/reports/${report.id}/assignment`, {
+          token,
+          method: "PATCH",
+          body: { assigned_name: name },
+        }),
+      );
+      onUpdated();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <div className="modal-backdrop">
       <div
@@ -1007,6 +1027,7 @@ function ReportDetail({
           </small>
         </div>
         <p className="detail-description">{report.description}</p>
+        <p>Petugas / tim: {report.assigned_name || "Belum ditentukan"}</p>
         {report.completion_image_url && (
           <div>
             <h3>Bukti penyelesaian</h3>
@@ -1049,6 +1070,20 @@ function ReportDetail({
         {isAdmin && (
           <div className="followup-actions">
             <h3>Tindak lanjut</h3>
+            <form className="followup-form" onSubmit={assignReport}>
+              <label>
+                Petugas atau tim
+                <input
+                  name="assigned_name"
+                  defaultValue={report.assigned_name || ""}
+                  maxLength="120"
+                  placeholder="Nama petugas atau tim"
+                />
+              </label>
+              <button className="primary" disabled={busy}>
+                Simpan penugasan
+              </button>
+            </form>
             <details>
               <summary>Tinjau kategori AI</summary>
               <form onSubmit={reviewCategory} className="followup-form">

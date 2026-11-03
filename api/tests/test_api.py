@@ -279,6 +279,18 @@ def test_admin_attention_counts_old_work(system):
     assert 'attention' not in client.get('/dashboard', headers=auth(owner)).json()
 
 
+def test_assignment_is_admin_only_and_visible_to_owner(system):
+    client, sessions = system
+    owner = signup(client)
+    admin = admin_account(client, sessions)
+    report_id = create_report(client, owner).json()['id']
+    url = f'/reports/{report_id}/assignment'
+    assert client.patch(url, headers=auth(owner), json={'assigned_name':'Tim A'}).status_code == 403
+    assert client.patch(url, headers=auth(admin), json={'assigned_name':' Tim A '}).json()['assigned_name'] == 'Tim A'
+    assert client.get(f'/reports/{report_id}', headers=auth(owner)).json()['assigned_name'] == 'Tim A'
+    assert client.patch(url, headers=auth(admin), json={'assigned_name':''}).json()['assigned_name'] is None
+
+
 def test_real_model_prediction_and_report(system, monkeypatch):
     torch = pytest.importorskip("torch")
     model_path = Path(__file__).resolve().parents[2] / "ml" / "artifacts" / "best_model.pt"

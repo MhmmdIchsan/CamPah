@@ -1508,6 +1508,10 @@ class _HistoryPageState extends State<HistoryPage> {
               Text('${report['description']}',
                   style: const TextStyle(
                       fontSize: 13, height: 1.6, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              Text(
+                  'Petugas / tim: ${report['assigned_name'] ?? 'Belum ditentukan'}',
+                  style: const TextStyle(fontSize: 11, color: muted)),
               if (report['completion_image_url'] != null) ...[
                 const SizedBox(height: 18),
                 const Text('BUKTI PENYELESAIAN',

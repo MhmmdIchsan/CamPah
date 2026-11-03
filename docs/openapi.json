@@ -786,6 +786,60 @@
         }
       }
     },
+    "/reports/{report_id}/assignment": {
+      "patch": {
+        "summary": "Update Assignment",
+        "operationId": "update_assignment_reports__report_id__assignment_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignmentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/notifications": {
       "get": {
         "summary": "List Notifications",
@@ -1046,6 +1100,24 @@
   },
   "components": {
     "schemas": {
+      "AssignmentUpdate": {
+        "properties": {
+          "assigned_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned Name"
+          }
+        },
+        "type": "object",
+        "title": "AssignmentUpdate"
+      },
       "AuthOut": {
         "properties": {
           "access_token": {
@@ -1452,6 +1524,17 @@
             ],
             "title": "Category Reviewed At"
           },
+          "assigned_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned Name"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -1480,6 +1563,7 @@
           "category_note",
           "category_reviewer_id",
           "category_reviewed_at",
+          "assigned_name",
           "created_at",
           "updated_at"
         ],
