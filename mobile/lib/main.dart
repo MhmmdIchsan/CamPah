@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'design.dart';
 import 'navigation.dart';
@@ -526,6 +527,7 @@ class _HomePageState extends State<HomePage> {
               : index == 1
                   ? CreateReportPage(
                       key: const ValueKey('create'),
+                      userId: widget.user['id'] as int? ?? 0,
                       onCreated: () => setState(() {
                         index = 2;
                         historyStatus = null;
@@ -1122,8 +1124,10 @@ class _DashboardPageState extends State<DashboardPage> {
 }
 
 class CreateReportPage extends StatefulWidget {
-  const CreateReportPage({super.key, required this.onCreated});
+  const CreateReportPage(
+      {super.key, required this.onCreated, required this.userId});
   final VoidCallback onCreated;
+  final int userId;
   @override
   State<CreateReportPage> createState() => _CreateReportPageState();
 }
@@ -1135,6 +1139,72 @@ class _CreateReportPageState extends State<CreateReportPage> {
   bool busy = false;
   bool locating = false;
   String? error;
+  String? draftMessage;
+  String get draftKey => 'report-draft-${widget.userId}';
+
+  Future<void> saveDraft() async {
+    try {
+      String? path;
+      if (photo != null) {
+        final directory = await getApplicationDocumentsDirectory();
+        path =
+            '${directory.path}${Platform.pathSeparator}campah-draft-${widget.userId}.jpg';
+        if (photo!.path != path) await File(photo!.path).copy(path);
+      }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+          draftKey,
+          jsonEncode({
+            'description': description.text,
+            'photo': path,
+            'latitude': position?.latitude,
+            'longitude': position?.longitude
+          }));
+      if (mounted) {
+        setState(() => draftMessage = 'Draf tersimpan di perangkat ini.');
+      }
+    } catch (_) {
+      if (mounted) setState(() => draftMessage = 'Draf belum dapat disimpan.');
+    }
+  }
+
+  Future<void> loadDraft() async {
+    try {
+      final raw = (await SharedPreferences.getInstance()).getString(draftKey);
+      if (raw == null) {
+        if (mounted) setState(() => draftMessage = 'Belum ada draf tersimpan.');
+        return;
+      }
+      final draft = jsonDecode(raw) as Map<String, dynamic>;
+      final path = draft['photo'] as String?;
+      final hasPhoto = path != null && await File(path).exists();
+      final lat = draft['latitude'] as num?;
+      final lng = draft['longitude'] as num?;
+      if (!mounted) return;
+      setState(() {
+        description.text = draft['description'] as String? ?? '';
+        photo = hasPhoto ? XFile(path) : null;
+        position = lat == null || lng == null
+            ? null
+            : Position(
+                latitude: lat.toDouble(),
+                longitude: lng.toDouble(),
+                timestamp: DateTime.now(),
+                accuracy: 0,
+                altitude: 0,
+                altitudeAccuracy: 0,
+                heading: 0,
+                headingAccuracy: 0,
+                speed: 0,
+                speedAccuracy: 0);
+        draftMessage = path != null && !hasPhoto
+            ? 'Foto draf tidak tersedia, pilih ulang.'
+            : 'Draf dimuat. Periksa kembali sebelum mengirim.';
+      });
+    } catch (_) {
+      if (mounted) setState(() => draftMessage = 'Draf belum dapat dimuat.');
+    }
+  }
 
   @override
   void dispose() {
@@ -1217,6 +1287,9 @@ class _CreateReportPageState extends State<CreateReportPage> {
         longitude: position!.longitude,
         photo: photo!,
       );
+      try {
+        await (await SharedPreferences.getInstance()).remove(draftKey);
+      } catch (_) {/* Laporan sudah terkirim. */}
       if (!mounted) return;
       final category = result['ai_category'] ?? 'AI belum tersedia';
       final confidence = result['ai_confidence'];
@@ -1392,6 +1465,17 @@ class _CreateReportPageState extends State<CreateReportPage> {
               onPressed: busy ? null : submit,
               icon: const Icon(Icons.north_east_rounded, size: 18),
               label: Text(busy ? 'Memproses...' : 'Kirim laporan')),
+          Wrap(children: [
+            TextButton(
+                onPressed: busy ? null : saveDraft,
+                child: const Text('Simpan draf')),
+            TextButton(
+                onPressed: busy ? null : loadDraft,
+                child: const Text('Muat draf'))
+          ]),
+          if (draftMessage != null)
+            Text(draftMessage!,
+                style: const TextStyle(fontSize: 12, color: muted)),
         ],
       );
 }

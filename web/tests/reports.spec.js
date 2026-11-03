@@ -94,6 +94,19 @@ test("user reports, admin status and user management work together", async ({
     /openstreetmap\.org/,
   );
   await page.getByRole("button", { name: "Sembunyikan peta" }).click();
+  await page.getByRole("button", { name: "Simpan draf" }).click();
+  await expect(page.getByText("Draf tersimpan di browser ini.")).toBeVisible();
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Dashboard" })
+    .click();
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Buat laporan", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Muat draf" }).click();
+  await expect(page.getByLabel("Deskripsi")).toHaveValue(description);
+  await expect(page.getByAltText("Pratinjau foto laporan")).toBeVisible();
   await page
     .getByRole("button", { name: "Kirim laporan", exact: true })
     .click();

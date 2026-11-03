@@ -595,6 +595,7 @@ function App() {
         )}
         {view === "new" && (
           <ReportForm
+            userId={session.user.id}
             busy={busy}
             onSubmit={(form) =>
               run(async () => {
@@ -1455,11 +1456,52 @@ function Auth({ onLogin, theme, toggleTheme }) {
   );
 }
 
-function ReportForm({ onSubmit, busy }) {
+function draftStore(mode, userId, value) {
+  return new Promise((resolve, reject) => {
+    const open = indexedDB.open("campah-drafts", 1);
+    open.onupgradeneeded = () => open.result.createObjectStore("drafts");
+    open.onerror = () => reject(open.error);
+    open.onsuccess = () => {
+      const db = open.result;
+      const tx = db.transaction(
+        "drafts",
+        mode === "get" ? "readonly" : "readwrite",
+      );
+      const store = tx.objectStore("drafts");
+      const request =
+        mode === "get"
+          ? store.get(userId)
+          : mode === "put"
+            ? store.put(value, userId)
+            : store.delete(userId);
+      let result;
+      request.onsuccess = () => {
+        result = request.result;
+      };
+      tx.oncomplete = () => {
+        db.close();
+        resolve(result);
+      };
+      tx.onerror = () => {
+        db.close();
+        reject(tx.error);
+      };
+      tx.onabort = () => {
+        db.close();
+        reject(tx.error);
+      };
+    };
+  });
+}
+
+function ReportForm({ onSubmit, busy, userId }) {
   const [location, setLocation] = useState(null);
   const [locationError, setLocationError] = useState("");
   const [preview, setPreview] = useState(null);
   const [photoName, setPhotoName] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [description, setDescription] = useState("");
+  const [draftMessage, setDraftMessage] = useState("");
   const [showMap, setShowMap] = useState(false);
   useEffect(
     () => () => {
@@ -1484,10 +1526,40 @@ function ReportForm({ onSubmit, busy }) {
         setLocationError("Izin lokasi ditolak. Isi koordinat secara manual."),
     );
   };
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    onSubmit(new FormData(e.currentTarget));
+    const form = new FormData(e.currentTarget);
+    if (photo) form.set("image", photo, photo.name);
+    if (await onSubmit(form))
+      await draftStore("delete", userId).catch(() => {});
   };
+  async function saveDraft() {
+    try {
+      await draftStore("put", userId, { description, location, photo });
+      setDraftMessage("Draf tersimpan di browser ini.");
+    } catch (_) {
+      setDraftMessage("Draf belum dapat disimpan di browser ini.");
+    }
+  }
+  async function loadDraft() {
+    try {
+      const draft = await draftStore("get", userId);
+      if (!draft) {
+        setDraftMessage("Belum ada draf tersimpan.");
+        return;
+      }
+      setDescription(draft.description || "");
+      setLocation(draft.location || null);
+      setPhoto(draft.photo || null);
+      setPhotoName(draft.photo?.name || "");
+      setPreview(draft.photo ? URL.createObjectURL(draft.photo) : null);
+      setDraftMessage(
+        "Draf berhasil dimuat. Periksa kembali sebelum mengirim.",
+      );
+    } catch (_) {
+      setDraftMessage("Draf belum dapat dimuat.");
+    }
+  }
   return (
     <form className="card form-card" onSubmit={submit}>
       <div className="section-head">
@@ -1501,6 +1573,8 @@ function ReportForm({ onSubmit, busy }) {
         Deskripsi
         <textarea
           name="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           minLength="10"
           maxLength="2000"
           placeholder="Jelaskan kondisi dan lokasi sampah..."
@@ -1536,9 +1610,10 @@ function ReportForm({ onSubmit, busy }) {
                 : "",
             );
             setPhotoName(file?.name || "");
+            setPhoto(file || null);
             setPreview(file ? URL.createObjectURL(file) : null);
           }}
-          required
+          required={!photo}
         />
       </label>
       <div className="location-row">
@@ -1624,6 +1699,15 @@ function ReportForm({ onSubmit, busy }) {
         {busy ? "Mengirim..." : "Kirim laporan"}{" "}
         <ArrowRight size={17} aria-hidden="true" />
       </button>
+      <div className="followup-buttons">
+        <button type="button" className="text-button" onClick={saveDraft}>
+          Simpan draf
+        </button>
+        <button type="button" className="text-button" onClick={loadDraft}>
+          Muat draf
+        </button>
+      </div>
+      {draftMessage && <p aria-live="polite">{draftMessage}</p>}
     </form>
   );
 }

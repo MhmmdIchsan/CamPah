@@ -270,6 +270,24 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Foto sampah'), findsOneWidget);
     expect(find.text('Kamera'), findsOneWidget);
+    SharedPreferences.setMockInitialValues({});
+    final descriptionField = find.byType(TextField);
+    await tester.scrollUntilVisible(descriptionField, 250,
+        scrollable: find.byType(Scrollable).first);
+    await tester.enterText(descriptionField, 'Draf sampah dekat taman');
+    await tester.scrollUntilVisible(find.text('Simpan draf'), 200,
+        scrollable: find.byType(Scrollable).first);
+    await tester.tap(find.text('Simpan draf'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Dashboard'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lapor'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Muat draf'), 250,
+        scrollable: find.byType(Scrollable).first);
+    await tester.tap(find.text('Muat draf'));
+    await tester.pumpAndSettle();
+    expect(find.text('Draf sampah dekat taman'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
