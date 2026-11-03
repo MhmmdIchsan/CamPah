@@ -2,6 +2,17 @@ import { test, expect } from "@playwright/test";
 
 const suffix = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
+test('theme switch is available before login and persists', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Aktifkan mode gelap' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.getByRole('button', { name: 'Aktifkan mode terang' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+});
+
 async function register(page, email) {
   await page.goto("/");
   await page.getByRole("button", { name: "Daftar sekarang" }).click();
@@ -19,6 +30,17 @@ async function register(page, email) {
     page.getByRole("heading", { name: "Dashboard", exact: true }),
   ).toBeVisible();
 }
+
+test('dark theme remains usable in the dashboard and report form', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await register(page, `theme-${suffix()}@example.com`);
+  await page.getByRole('button', { name: 'Aktifkan mode gelap' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('.stat').first()).toHaveCSS('background-color', 'rgb(28, 48, 41)');
+  await page.getByRole('navigation').getByRole('button', { name: 'Buat laporan', exact: true }).click();
+  await expect(page.getByLabel('Deskripsi')).toBeVisible();
+  await expect(page.getByLabel('Deskripsi')).toHaveCSS('color', 'rgb(230, 243, 232)');
+});
 
 test("user reports, admin status and user management work together", async ({
   page,

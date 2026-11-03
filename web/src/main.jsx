@@ -13,9 +13,11 @@ import {
   Leaf,
   LogOut,
   MapPin,
+  Moon,
   Navigation,
   Plus,
   Search,
+  Sun,
   Users as UsersIcon,
   X,
 } from "lucide-react";
@@ -72,6 +74,15 @@ function readSession() {
 }
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('campah-theme');
+    return saved === 'dark' || saved === 'light' ? saved : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('campah-theme', theme);
+  }, [theme]);
+  const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
   const [session, setSession] = useState(readSession);
   const [view, setView] = useState("dashboard");
   const [error, setError] = useState("");
@@ -206,6 +217,7 @@ function App() {
   if (!session)
     return (
       <Auth
+        theme={theme} toggleTheme={toggleTheme}
         onLogin={(value) => {
           localStorage.setItem("campah-session", JSON.stringify(value));
           setSession(value);
@@ -301,9 +313,9 @@ function App() {
                     : "Manajemen pengguna"}
             </h1>
           </div>
-          <button className="text-button" onClick={logout}>
+          <div className="topbar-actions"><ThemeToggle theme={theme} onToggle={toggleTheme} /><button className="text-button" onClick={logout}>
             <LogOut size={17} aria-hidden="true" /> Keluar
-          </button>
+          </button></div>
         </header>
         {error && (
           <div className="alert" role="alert">
@@ -582,7 +594,12 @@ function App() {
   );
 }
 
-function Auth({ onLogin }) {
+function ThemeToggle({ theme, onToggle }) {
+  const dark = theme === 'dark';
+  return <button type="button" className="theme-toggle" onClick={onToggle} aria-label={dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'} title={dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}>{dark ? <Sun size={19} aria-hidden="true" /> : <Moon size={19} aria-hidden="true" />}</button>;
+}
+
+function Auth({ onLogin, theme, toggleTheme }) {
   const [register, setRegister] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -654,6 +671,7 @@ function Auth({ onLogin }) {
         </div>
       </div>
       <form className="auth-form" onSubmit={submit}>
+        <div className="auth-theme"><ThemeToggle theme={theme} onToggle={toggleTheme} /></div>
         <div className="auth-mobile-brand">
           <img src={brandMark} alt="" />
           <strong>CamPah</strong>
