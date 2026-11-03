@@ -11,6 +11,7 @@ CamPah membantu pengguna melaporkan sampah dengan foto dan lokasi, memantau pena
 
 - [PRD dan kriteria penerimaan](docs/PRD.md)
 - [Arsitektur dan ERD](docs/ARCHITECTURE.md)
+- [Identitas visual dan logo](docs/BRAND.md)
 - [Dokumentasi API](docs/API.md) dan [kontrak OpenAPI](docs/openapi.json)
 - [Panduan deployment](docs/DEPLOYMENT.md)
 - [Android: instalasi, pengujian, dan APK](mobile/README.md)
