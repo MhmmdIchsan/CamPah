@@ -157,10 +157,16 @@ function App() {
   useEffect(() => {
     if (!token) return;
     const controller = new AbortController();
-    request("/notifications", { token, signal: controller.signal })
-      .then(setNotices)
-      .catch(() => {});
-    return () => controller.abort();
+    const load = () =>
+      request("/notifications", { token, signal: controller.signal })
+        .then(setNotices)
+        .catch(() => {});
+    load();
+    const interval = setInterval(load, 30000);
+    return () => {
+      clearInterval(interval);
+      controller.abort();
+    };
   }, [token, refresh]);
   useEffect(() => {
     if (!token) return;
