@@ -22,6 +22,7 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | DELETE | `/reports/{id}` | Soft delete; respons 204 | Pemilik saat Pending/Admin |
 | PATCH | `/reports/{id}/status` | JSON `status`, `expected_status`, `note`, `is_correction` | Admin |
 | GET | `/reports/{id}/history` | Riwayat status dan catatan publik | Pemilik/Admin |
+| GET | `/reports/{id}/nearby` | Kandidat laporan dalam 100 meter dan selisih 7 hari; bukan keputusan duplikasi | Admin |
 | POST | `/reports/{id}/completion-photo` | Multipart `image`, sekali pada laporan Completed | Admin |
 | PATCH | `/reports/{id}/category-review` | JSON `category`, `note`; mempertahankan prediksi AI asli | Admin |
 | PATCH | `/reports/{id}/assignment` | JSON `assigned_name`, nama petugas atau tim; string kosong menghapus penugasan | Admin |

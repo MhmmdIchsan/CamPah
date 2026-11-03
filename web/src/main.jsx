@@ -709,12 +709,14 @@ function App() {
         )}
         {detail && (
           <ReportDetail
+            key={detail.id}
             report={detail}
             token={token}
             isAdmin={isAdmin}
             imageSource={imageSource}
             onClose={() => setDetail(null)}
             onUpdated={() => setRefresh((n) => n + 1)}
+            onOpen={setDetail}
           />
         )}
         {showProfile && (
@@ -862,9 +864,11 @@ function ReportDetail({
   imageSource,
   onClose,
   onUpdated,
+  onOpen,
 }) {
   const [report, setReport] = useState(initial);
   const [history, setHistory] = useState(null);
+  const [nearby, setNearby] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [action, setAction] = useState("");
@@ -876,6 +880,19 @@ function ReportDetail({
   useEffect(() => {
     loadHistory().catch((e) => setError(e.message));
   }, [loadHistory]);
+  useEffect(() => {
+    if (!isAdmin) return;
+    const controller = new AbortController();
+    request(`/reports/${initial.id}/nearby`, {
+      token,
+      signal: controller.signal,
+    })
+      .then(setNearby)
+      .catch(() => {
+        if (!controller.signal.aborted) setNearby(false);
+      });
+    return () => controller.abort();
+  }, [initial.id, isAdmin, token]);
   const actions =
     report.status === "Pending"
       ? [
@@ -1070,6 +1087,40 @@ function ReportDetail({
         {isAdmin && (
           <div className="followup-actions">
             <h3>Tindak lanjut</h3>
+            <details>
+              <summary>Kemungkinan laporan serupa</summary>
+              <p>
+                Berjarak hingga 100 meter dan dibuat dalam selisih 7 hari.
+                Periksa isi laporan untuk memastikan.
+              </p>
+              {nearby === null ? (
+                <p>Memuat...</p>
+              ) : nearby === false ? (
+                <p>Laporan terdekat belum dapat dimuat.</p>
+              ) : nearby.length === 0 ? (
+                <p>Tidak ditemukan laporan terdekat.</p>
+              ) : (
+                nearby.map((item) => (
+                  <button
+                    key={item.id}
+                    className="notice-item"
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        onOpen(await request(`/reports/${item.id}`, { token }));
+                      } catch (e) {
+                        setError(e.message);
+                      }
+                    }}
+                  >
+                    <strong>
+                      #{item.id} · {item.distance_m} m · {item.status}
+                    </strong>
+                    <span>{item.description}</span>
+                  </button>
+                ))
+              )}
+            </details>
             <form className="followup-form" onSubmit={assignReport}>
               <label>
                 Petugas atau tim

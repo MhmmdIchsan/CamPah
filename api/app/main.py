@@ -1,6 +1,7 @@
 import io
 import csv
 import logging
+import math
 import os
 import uuid
 from contextlib import asynccontextmanager
@@ -223,6 +224,14 @@ class NotificationOut(BaseModel):
     message: str
     is_read: bool
     created_at: datetime
+
+
+class NearbyReportOut(BaseModel):
+    id: int
+    description: str
+    status: str
+    created_at: datetime
+    distance_m: float
 
 
 class PredictionOut(BaseModel):
@@ -544,6 +553,27 @@ def report_history(report_id: int, db: Annotated[Session, Depends(get_db)], user
                              note=item.note, is_correction=item.is_correction,
                              changed_at=item.changed_at if item.changed_at.tzinfo else item.changed_at.replace(tzinfo=timezone.utc),
                              admin_name=name) for item, name in rows]
+
+
+@app.get('/reports/{report_id}/nearby', response_model=list[NearbyReportOut])
+def nearby_reports(report_id: int, db: Annotated[Session, Depends(get_db)], admin: Annotated[User, Depends(admin_user)]):
+    report = visible_report(db, report_id, admin)
+    # Latitude bounding box reduces candidates; longitude is checked using great-circle distance.
+    candidates = db.scalars(select(Report).where(Report.id != report.id, Report.deleted_at.is_(None),
+        Report.latitude.between(report.latitude - .001, report.latitude + .001),
+        Report.created_at.between(report.created_at - timedelta(days=7), report.created_at + timedelta(days=7)))
+        .order_by(Report.created_at.desc()).limit(500)).all()
+    found = []
+    for other in candidates:
+        lat1, lat2 = math.radians(report.latitude), math.radians(other.latitude)
+        dlat = lat2 - lat1
+        dlon = math.radians(other.longitude - report.longitude)
+        a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+        distance = 12_742_000 * math.asin(math.sqrt(min(1, max(0, a))))
+        if distance <= 100:
+            found.append(NearbyReportOut(id=other.id, description=other.description, status=other.status,
+                                         created_at=other.created_at, distance_m=round(distance, 1)))
+    return sorted(found, key=lambda item: item.distance_m)[:20]
 
 
 @app.post("/reports/{report_id}/completion-photo", response_model=ReportOut)

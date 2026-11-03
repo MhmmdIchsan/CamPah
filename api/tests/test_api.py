@@ -291,6 +291,23 @@ def test_assignment_is_admin_only_and_visible_to_owner(system):
     assert client.patch(url, headers=auth(admin), json={'assigned_name':''}).json()['assigned_name'] is None
 
 
+def test_nearby_reports_are_admin_only_and_distance_filtered(system):
+    client, sessions = system
+    owner = signup(client)
+    admin = admin_account(client, sessions)
+    report_id = create_report(client, owner).json()['id']
+    close = create_report(client, owner).json()['id']
+    far = create_report(client, owner).json()['id']
+    with sessions() as db:
+        db.get(Report, far).longitude += .1
+        db.commit()
+    url = f'/reports/{report_id}/nearby'
+    assert client.get(url, headers=auth(owner)).status_code == 403
+    result = client.get(url, headers=auth(admin)).json()
+    assert [item['id'] for item in result] == [close]
+    assert result[0]['distance_m'] == 0
+
+
 def test_real_model_prediction_and_report(system, monkeypatch):
     torch = pytest.importorskip("torch")
     model_path = Path(__file__).resolve().parents[2] / "ml" / "artifacts" / "best_model.pt"

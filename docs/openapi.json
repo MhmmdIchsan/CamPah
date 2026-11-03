@@ -678,6 +678,54 @@
         }
       }
     },
+    "/reports/{report_id}/nearby": {
+      "get": {
+        "summary": "Nearby Reports",
+        "operationId": "nearby_reports_reports__report_id__nearby_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NearbyReportOut"
+                  },
+                  "title": "Response Nearby Reports Reports  Report Id  Nearby Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reports/{report_id}/completion-photo": {
       "post": {
         "summary": "Completion Photo",
@@ -1260,6 +1308,40 @@
           "password"
         ],
         "title": "LoginIn"
+      },
+      "NearbyReportOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "distance_m": {
+            "type": "number",
+            "title": "Distance M"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "status",
+          "created_at",
+          "distance_m"
+        ],
+        "title": "NearbyReportOut"
       },
       "NotificationOut": {
         "properties": {
