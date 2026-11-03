@@ -96,17 +96,27 @@ def test_report_access_status_and_dashboard(system):
         kwargs = {"json": {"description": "Changed by other user"}} if method == "patch" else {}
         assert getattr(client, method)(f"/reports/{report_id}", headers=auth(bob), **kwargs).status_code == 404
     assert client.get("/reports", headers=auth(bob)).json()["total"] == 0
-    assert client.patch(f"/reports/{report_id}/status", headers=auth(alice), json={"status": "Completed"}).status_code == 403
+    assert client.patch(f"/reports/{report_id}/status", headers=auth(alice), json={"status": "Completed", "expected_status": "Pending", "note": "Sudah selesai"}).status_code == 403
+    assert client.get(f"/reports/{report_id}/history", headers=auth(bob)).status_code == 404
     assert client.patch(f"/reports/{report_id}", headers=auth(alice), json={"description": "Edited report description"}).status_code == 200
+    assert client.patch(f"/reports/{report_id}/status", headers=auth(admin), json={"status": "Completed", "expected_status": "Pending", "note": "Selesai"}).status_code == 422
+    assert client.patch(f"/reports/{report_id}/status", headers=auth(admin), json={"status": "In Progress", "expected_status": "Pending", "note": "  "}).status_code == 422
+    old_status = "Pending"
     for report_status in ["In Progress", "Completed", "Rejected", "Pending"]:
-        response = client.patch(f"/reports/{report_id}/status", headers=auth(admin), json={"status": report_status})
+        response = client.patch(f"/reports/{report_id}/status", headers=auth(admin), json={"status": report_status, "expected_status": old_status, "note": "Catatan tindak lanjut", "is_correction": old_status in ("Completed", "Rejected")})
         assert response.status_code == 200
+        assert client.patch(f"/reports/{report_id}/status", headers=auth(admin), json={"status": report_status, "expected_status": old_status, "note": "Catatan ganda"}).status_code == 409
+        old_status = report_status
         assert client.get("/dashboard", headers=auth(admin)).json()["by_status"][report_status] == 1
         if report_status != "Pending":
             assert client.delete(f"/reports/{report_id}", headers=auth(alice)).status_code == 403
             assert client.patch(f"/reports/{report_id}", headers=auth(alice), json={"description": "A different description"}).status_code == 403
     with sessions() as db:
         assert len(db.scalars(select(ReportStatusHistory)).all()) == 4
+    history = client.get(f"/reports/{report_id}/history", headers=auth(alice)).json()
+    assert len(history) == 4
+    assert history[0]["note"] == "Catatan tindak lanjut"
+    assert history[2]["is_correction"] is True
     assert client.get("/reports?q=Edited&status=Pending", headers=auth(alice)).json()["total"] == 1
     assert client.get("/reports?q=Missing", headers=auth(alice)).json()["total"] == 0
     assert client.delete(f"/reports/{report_id}", headers=auth(alice)).status_code == 204
@@ -128,6 +138,20 @@ def test_invalid_upload_and_model_unavailable(system, monkeypatch):
     assert response.status_code == 201
     assert response.json()["ai_category"] is None
     assert client.post("/predict", headers=auth(account), files={"image": photo()}).status_code == 503
+
+
+def test_rejection_requires_public_reason_and_correction_is_audited(system):
+    client, sessions = system
+    account = signup(client)
+    admin = admin_account(client, sessions)
+    report_id = create_report(client, account).json()['id']
+    url = f'/reports/{report_id}/status'
+    assert client.patch(url, headers=auth(admin), json={'status': 'Rejected', 'expected_status': 'Pending', 'note': ''}).status_code == 422
+    assert client.patch(url, headers=auth(admin), json={'status': 'Rejected', 'expected_status': 'Pending', 'note': 'Lokasi belum jelas'}).status_code == 200
+    assert client.patch(url, headers=auth(admin), json={'status': 'Pending', 'expected_status': 'Rejected', 'note': 'Lokasi sudah diperiksa'}).status_code == 422
+    assert client.patch(url, headers=auth(admin), json={'status': 'Pending', 'expected_status': 'Rejected', 'note': 'Lokasi sudah diperiksa', 'is_correction': True}).status_code == 200
+    history = client.get(f'/reports/{report_id}/history', headers=auth(account)).json()
+    assert [(row['new_status'], row['note'], row['is_correction']) for row in history] == [('Rejected', 'Lokasi belum jelas', False), ('Pending', 'Lokasi sudah diperiksa', True)]
 
 
 def test_admin_user_management_and_disabled_tokens(system):

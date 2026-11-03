@@ -144,6 +144,21 @@ void main() {
     final oldClient = api.client;
     api.token = 'test-token';
     api.client = MockClient((request) async {
+      if (request.url.path.endsWith('/history')) {
+        return http.Response(
+            jsonEncode([
+              {
+                'id': 1,
+                'old_status': 'Pending',
+                'new_status': 'In Progress',
+                'admin_name': 'Admin',
+                'changed_at': '2026-11-03T10:00:00Z',
+                'note': 'Petugas sedang menangani',
+                'is_correction': false
+              }
+            ]),
+            200);
+      }
       if (request.url.path == '/dashboard') {
         return http.Response(
             jsonEncode({
@@ -209,6 +224,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Laporan #7'), findsOneWidget);
     expect(find.text('Plastic Waste (91.0%)'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Petugas sedang menangani'), 150,
+        scrollable: find.byType(Scrollable).last);
+    expect(find.text('Pending → In Progress'), findsOneWidget);
     Navigator.of(tester.element(find.text('Laporan #7'))).pop();
     await tester.pumpAndSettle();
     await tester.tap(find.text('Lapor'));

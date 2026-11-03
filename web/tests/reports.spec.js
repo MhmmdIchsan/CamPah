@@ -2,15 +2,17 @@ import { test, expect } from "@playwright/test";
 
 const suffix = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
-test('theme switch is available before login and persists', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'light' });
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Aktifkan mode gelap' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+test("theme switch is available before login and persists", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Aktifkan mode gelap" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.getByRole('button', { name: 'Aktifkan mode terang' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await page.getByRole("button", { name: "Aktifkan mode terang" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
 
 async function register(page, email) {
@@ -31,15 +33,26 @@ async function register(page, email) {
   ).toBeVisible();
 }
 
-test('dark theme remains usable in the dashboard and report form', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'light' });
+test("dark theme remains usable in the dashboard and report form", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "light" });
   await register(page, `theme-${suffix()}@example.com`);
-  await page.getByRole('button', { name: 'Aktifkan mode gelap' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.locator('.stat').first()).toHaveCSS('background-color', 'rgb(28, 48, 41)');
-  await page.getByRole('navigation').getByRole('button', { name: 'Buat laporan', exact: true }).click();
-  await expect(page.getByLabel('Deskripsi')).toBeVisible();
-  await expect(page.getByLabel('Deskripsi')).toHaveCSS('color', 'rgb(230, 243, 232)');
+  await page.getByRole("button", { name: "Aktifkan mode gelap" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator(".stat").first()).toHaveCSS(
+    "background-color",
+    "rgb(28, 48, 41)",
+  );
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Buat laporan", exact: true })
+    .click();
+  await expect(page.getByLabel("Deskripsi")).toBeVisible();
+  await expect(page.getByLabel("Deskripsi")).toHaveCSS(
+    "color",
+    "rgb(230, 243, 232)",
+  );
 });
 
 test("user reports, admin status and user management work together", async ({
@@ -104,19 +117,53 @@ test("user reports, admin status and user management work together", async ({
   await page.getByRole("textbox", { name: "Cari laporan" }).fill(unique);
   row = page.locator(".report-row").filter({ hasText: unique });
   await expect(row).toHaveCount(1);
-  await row.getByRole("combobox").selectOption("Completed");
+  await page.setViewportSize({ width: 320, height: 800 });
+  await row.getByRole("button", { name: "Lihat detail" }).click();
+  const detail = page.getByRole("dialog", { name: /Detail laporan/ });
+  await expect(detail).toContainText("CamPah Browser Tester");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBeTruthy();
+  await detail.getByRole("button", { name: "Mulai tangani" }).click();
+  await detail
+    .getByLabel("Catatan tindak lanjut")
+    .fill("Laporan diteruskan kepada petugas.");
+  await detail.getByRole("button", { name: "Simpan tindak lanjut" }).click();
+  await expect(
+    detail.getByText("Laporan diteruskan kepada petugas."),
+  ).toBeVisible();
+  await detail.getByRole("button", { name: "Selesaikan laporan" }).click();
+  await detail
+    .getByLabel("Catatan tindak lanjut")
+    .fill("Sampah telah dibersihkan.");
+  await detail.getByRole("button", { name: "Simpan tindak lanjut" }).click();
+  await expect(detail.getByText("Sampah telah dibersihkan.")).toBeVisible();
+  await detail.getByRole("button", { name: "Tutup detail" }).click();
+  await page.setViewportSize({ width: 1280, height: 800 });
   await expect(row.locator(".badge")).toHaveText("Completed");
-  await page.getByRole("navigation").getByRole("button", { name: "Dashboard" }).click();
-  const recent = page.locator('.recent-item').filter({ hasText: unique });
-  await expect(recent.locator('.badge')).toHaveText('Completed');
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Dashboard" })
+    .click();
+  const recent = page.locator(".recent-item").filter({ hasText: unique });
+  await expect(recent.locator(".badge")).toHaveText("Completed");
   for (const width of [1280, 320]) {
     await page.setViewportSize({ width, height: 800 });
-    const card = await page.locator('.recent-item').filter({ hasText: unique }).boundingBox();
-    const badge = await recent.locator('.badge').boundingBox();
-    const title = await recent.locator('.recent-copy strong').boundingBox();
+    const card = await page
+      .locator(".recent-item")
+      .filter({ hasText: unique })
+      .boundingBox();
+    const badge = await recent.locator(".badge").boundingBox();
+    const title = await recent.locator(".recent-copy strong").boundingBox();
     expect(badge.x + badge.width).toBeLessThanOrEqual(card.x + card.width + 1);
     expect(title.x + title.width).toBeLessThanOrEqual(badge.x);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBeTruthy();
   }
   await page.setViewportSize({ width: 1280, height: 800 });
   await page
@@ -144,6 +191,13 @@ test("user reports, admin status and user management work together", async ({
     .click();
   row = page.locator(".report-row").filter({ hasText: unique });
   await expect(row.locator(".badge")).toHaveText("Completed");
+  await row.getByRole("button", { name: "Lihat detail" }).click();
+  await expect(
+    page
+      .getByRole("dialog", { name: /Detail laporan/ })
+      .getByText("Sampah telah dibersihkan."),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Tutup detail" }).click();
   await expect(
     row.getByRole("button", { name: "Ubah", exact: true }),
   ).toHaveCount(0);

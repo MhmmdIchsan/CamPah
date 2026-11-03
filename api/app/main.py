@@ -18,7 +18,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, ImageOps, UnidentifiedImageError
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -133,6 +133,7 @@ class ReportOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     user_id: int
+    owner_name: str
     description: str
     latitude: float
     longitude: float
@@ -168,6 +169,27 @@ class ReportUpdate(BaseModel):
 
 class StatusUpdate(BaseModel):
     status: Literal["Pending", "In Progress", "Completed", "Rejected"]
+    expected_status: Literal["Pending", "In Progress", "Completed", "Rejected"]
+    note: str = Field(min_length=3, max_length=1000)
+    is_correction: bool = False
+
+    @field_validator("note")
+    @classmethod
+    def nonblank_note(cls, value: str) -> str:
+        value = value.strip()
+        if len(value) < 3:
+            raise ValueError("Catatan minimal 3 karakter")
+        return value
+
+
+class StatusHistoryOut(BaseModel):
+    id: int
+    old_status: str
+    new_status: str
+    note: str | None
+    is_correction: bool
+    changed_at: datetime
+    admin_name: str
 
 
 class PredictionOut(BaseModel):
@@ -386,13 +408,36 @@ def delete_report(report_id: int, db: Annotated[Session, Depends(get_db)], user:
 def change_status(report_id: int, payload: StatusUpdate, db: Annotated[Session, Depends(get_db)],
                   admin: Annotated[User, Depends(admin_user)]):
     report = visible_report(db, report_id, admin)
-    if report.status != payload.status:
-        db.add(ReportStatusHistory(report_id=report.id, admin_id=admin.id, old_status=report.status,
-                                   new_status=payload.status))
-        report.status = payload.status
-        db.commit()
-        db.refresh(report)
+    if report.status != payload.expected_status:
+        raise HTTPException(status_code=409, detail="Status laporan telah berubah. Muat ulang laporan.")
+    if report.status == payload.status:
+        raise HTTPException(status_code=409, detail="Status laporan tidak berubah.")
+    allowed = {"Pending": {"In Progress", "Rejected"}, "In Progress": {"Completed", "Rejected"}}
+    if not payload.is_correction and payload.status not in allowed.get(report.status, set()):
+        raise HTTPException(status_code=422, detail="Gunakan tindakan koreksi untuk perubahan status ini.")
+    old_status = report.status
+    result = db.execute(update(Report).where(Report.id == report.id, Report.status == old_status,
+                                             Report.deleted_at.is_(None)).values(status=payload.status, updated_at=utc_now()))
+    if result.rowcount != 1:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Status laporan telah berubah. Muat ulang laporan.")
+    db.add(ReportStatusHistory(report_id=report.id, admin_id=admin.id, old_status=old_status,
+                               new_status=payload.status, note=payload.note, is_correction=payload.is_correction))
+    db.commit()
+    db.refresh(report)
     return report
+
+
+@app.get("/reports/{report_id}/history", response_model=list[StatusHistoryOut])
+def report_history(report_id: int, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    visible_report(db, report_id, user)
+    rows = db.execute(select(ReportStatusHistory, User.name).join(User, User.id == ReportStatusHistory.admin_id)
+                      .where(ReportStatusHistory.report_id == report_id)
+                      .order_by(ReportStatusHistory.changed_at, ReportStatusHistory.id)).all()
+    return [StatusHistoryOut(id=item.id, old_status=item.old_status, new_status=item.new_status,
+                             note=item.note, is_correction=item.is_correction,
+                             changed_at=item.changed_at if item.changed_at.tzinfo else item.changed_at.replace(tzinfo=timezone.utc),
+                             admin_name=name) for item, name in rows]
 
 
 @app.get("/dashboard")

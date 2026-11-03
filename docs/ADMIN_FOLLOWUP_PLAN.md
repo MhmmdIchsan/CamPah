@@ -2,7 +2,7 @@
 
 ## Tujuan
 
-Memberi admin ruang untuk memeriksa dan mencatat tindakan atas laporan, serta memberi pelapor informasi yang jelas tentang perkembangannya. Rencana ini belum diimplementasikan.
+Memberi admin ruang untuk memeriksa dan mencatat tindakan atas laporan, serta memberi pelapor informasi yang jelas tentang perkembangannya. Alur awal, catatan publik, dan riwayat lintas aplikasi telah diimplementasikan; fitur lanjutan tetap di luar cakupan awal.
 
 ## Alur yang diusulkan
 

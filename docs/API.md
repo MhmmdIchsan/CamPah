@@ -18,7 +18,8 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | GET | `/reports/{id}` | Detail laporan | Pemilik/Admin |
 | PATCH | `/reports/{id}` | JSON opsional `description`, `latitude`, `longitude` | Pemilik saat Pending/Admin |
 | DELETE | `/reports/{id}` | Soft delete; respons 204 | Pemilik saat Pending/Admin |
-| PATCH | `/reports/{id}/status` | JSON `status` | Admin |
+| PATCH | `/reports/{id}/status` | JSON `status`, `expected_status`, `note`, `is_correction` | Admin |
+| GET | `/reports/{id}/history` | Riwayat status dan catatan publik | Pemilik/Admin |
 | GET | `/dashboard` | `total`, `by_status`, `by_category` | Login; sesuai cakupan role |
 | GET | `/users` | Daftar akun tanpa password hash | Admin |
 | POST | `/users` | JSON `name`, `email`, `password`, `role` | Admin |
@@ -26,7 +27,7 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | POST | `/predict` | Multipart `image` | Login |
 | GET | `/health` | Status proses | Publik |
 
-Contoh status: `{"status":"In Progress"}`. Nilai yang sah: Pending, In Progress, Completed, Rejected. Kategori AI: Organic Waste, Plastic Waste, Paper Waste. Confidence berada pada rentang 0–1.
+Contoh status: `{"status":"In Progress","expected_status":"Pending","note":"Laporan diteruskan kepada petugas.","is_correction":false}`. Catatan wajib 3–1000 karakter dan dapat dibaca pelapor. Transisi biasa: Pending → In Progress atau Rejected; In Progress → Completed atau Rejected. Perubahan lain memerlukan `is_correction: true` dan alasan. Status yang sudah berubah sejak dibuka menghasilkan 409. Riwayat lama tetap tersedia dengan catatan null. Kategori AI: Organic Waste, Plastic Waste, Paper Waste. Confidence berada pada rentang 0–1.
 
 ## Contoh request
 
@@ -39,7 +40,7 @@ curl -X POST http://localhost:8000/predict -H "Authorization: Bearer TOKEN" -F "
 
 Contoh curl memakai shell Bash; di PowerShell gunakan `curl.exe` dan sesuaikan escaping JSON atau gunakan Swagger UI.
 
-Daftar laporan memberikan `{items, total, page, page_size}`. Setiap item mencakup id, user_id, description, latitude, longitude, image_url, status, ai_category, ai_confidence, created_at, updated_at. `ai_category`/`ai_confidence` dapat null ketika inferensi gagal. URL foto pengembangan berbentuk `/uploads/...`; tambahkan base URL API ketika menampilkannya.
+Daftar laporan memberikan `{items, total, page, page_size}`. Setiap item mencakup id, user_id, owner_name, description, latitude, longitude, image_url, status, ai_category, ai_confidence, created_at, updated_at. `ai_category`/`ai_confidence` dapat null ketika inferensi gagal. URL foto pengembangan berbentuk `/uploads/...`; tambahkan base URL API ketika menampilkannya.
 
 ## Respons kegagalan
 

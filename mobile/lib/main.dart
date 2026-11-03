@@ -1318,6 +1318,8 @@ class _HistoryPageState extends State<HistoryPage> {
               Text('${report['latitude']}, ${report['longitude']}',
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 24),
+              _ReportTimeline(reportId: report['id'] as int),
             ]),
       ))),
     );
@@ -1502,4 +1504,101 @@ class _HistoryPageState extends State<HistoryPage> {
           ],
         ),
       );
+}
+
+class _ReportTimeline extends StatefulWidget {
+  const _ReportTimeline({required this.reportId});
+  final int reportId;
+  @override
+  State<_ReportTimeline> createState() => _ReportTimelineState();
+}
+
+class _ReportTimelineState extends State<_ReportTimeline> {
+  late Future<dynamic> history;
+  @override
+  void initState() {
+    super.initState();
+    history = api.call('/reports/${widget.reportId}/history');
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Riwayat tindak lanjut',
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).colorScheme.onSurface)),
+        const SizedBox(height: 12),
+        FutureBuilder<dynamic>(
+            future: history,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Riwayat belum dapat dimuat.'),
+                      TextButton(
+                          onPressed: () => setState(() => history =
+                              api.call('/reports/${widget.reportId}/history')),
+                          child: const Text('Coba lagi'))
+                    ]);
+              }
+              final items = snapshot.data as List<dynamic>;
+              if (items.isEmpty) {
+                return const Text('Belum ada tindak lanjut.',
+                    style: TextStyle(color: muted, fontSize: 12));
+              }
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final raw in items)
+                      Builder(builder: (context) {
+                        final item = Map<String, dynamic>.from(raw);
+                        final time = DateTime.tryParse('${item['changed_at']}')
+                            ?.toLocal();
+                        final formatted = time == null
+                            ? ''
+                            : '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')}/${time.year} ${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+                        return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.circle,
+                                      size: 10,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                        Text(
+                                            '${item['is_correction'] == true ? 'Koreksi: ' : ''}${item['old_status']} → ${item['new_status']}',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 12)),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                            '${item['admin_name']} · $formatted',
+                                            style: const TextStyle(
+                                                color: muted, fontSize: 10)),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                            item['note'] ??
+                                                'Tidak ada catatan untuk perubahan sebelumnya.',
+                                            style: const TextStyle(
+                                                fontSize: 12, height: 1.5))
+                                      ]))
+                                ]));
+                      })
+                  ]);
+            }),
+      ]);
 }

@@ -75,14 +75,19 @@ function readSession() {
 
 function App() {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('campah-theme');
-    return saved === 'dark' || saved === 'light' ? saved : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const saved = localStorage.getItem("campah-theme");
+    return saved === "dark" || saved === "light"
+      ? saved
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
   });
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem('campah-theme', theme);
+    localStorage.setItem("campah-theme", theme);
   }, [theme]);
-  const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
+  const toggleTheme = () =>
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
   const [session, setSession] = useState(readSession);
   const [view, setView] = useState("dashboard");
   const [error, setError] = useState("");
@@ -100,6 +105,7 @@ function App() {
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
+  const [detail, setDetail] = useState(null);
   const [loadingReports, setLoadingReports] = useState(false);
   const [recentReports, setRecentReports] = useState(null);
   const [recentError, setRecentError] = useState(false);
@@ -111,6 +117,7 @@ function App() {
     setSession(null);
     setView("dashboard");
     setEditing(null);
+    setDetail(null);
     setStats(null);
     setRecentReports(null);
     setUsers([]);
@@ -217,7 +224,8 @@ function App() {
   if (!session)
     return (
       <Auth
-        theme={theme} toggleTheme={toggleTheme}
+        theme={theme}
+        toggleTheme={toggleTheme}
         onLogin={(value) => {
           localStorage.setItem("campah-session", JSON.stringify(value));
           setSession(value);
@@ -313,9 +321,12 @@ function App() {
                     : "Manajemen pengguna"}
             </h1>
           </div>
-          <div className="topbar-actions"><ThemeToggle theme={theme} onToggle={toggleTheme} /><button className="text-button" onClick={logout}>
-            <LogOut size={17} aria-hidden="true" /> Keluar
-          </button></div>
+          <div className="topbar-actions">
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
+            <button className="text-button" onClick={logout}>
+              <LogOut size={17} aria-hidden="true" /> Keluar
+            </button>
+          </div>
         </header>
         {error && (
           <div className="alert" role="alert">
@@ -408,6 +419,9 @@ function App() {
                       {isAdmin ? `· User #${report.user_id}` : ""}
                     </small>
                     <div className="actions">
+                      <button onClick={() => setDetail(report)}>
+                        Lihat detail
+                      </button>
                       {(isAdmin || report.status === "Pending") && (
                         <>
                           <button
@@ -431,26 +445,6 @@ function App() {
                             Hapus
                           </button>
                         </>
-                      )}
-                      {isAdmin && (
-                        <select
-                          disabled={busy}
-                          aria-label={`Status laporan ${report.id}`}
-                          value={report.status}
-                          onChange={(e) =>
-                            run(() =>
-                              request(`/reports/${report.id}/status`, {
-                                token,
-                                method: "PATCH",
-                                body: { status: e.target.value },
-                              }),
-                            )
-                          }
-                        >
-                          {statuses.map((s) => (
-                            <option key={s}>{s}</option>
-                          ))}
-                        </select>
                       )}
                     </div>
                   </div>
@@ -589,14 +583,274 @@ function App() {
             </form>
           </div>
         )}
+        {detail && (
+          <ReportDetail
+            report={detail}
+            token={token}
+            isAdmin={isAdmin}
+            imageSource={imageSource}
+            onClose={() => setDetail(null)}
+            onUpdated={() => setRefresh((n) => n + 1)}
+          />
+        )}
       </main>
     </div>
   );
 }
 
+function ReportDetail({
+  report: initial,
+  token,
+  isAdmin,
+  imageSource,
+  onClose,
+  onUpdated,
+}) {
+  const [report, setReport] = useState(initial);
+  const [history, setHistory] = useState(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [action, setAction] = useState("");
+  const [correction, setCorrection] = useState(false);
+  const loadHistory = useCallback(async () => {
+    const items = await request(`/reports/${initial.id}/history`, { token });
+    setHistory(items);
+  }, [initial.id, token]);
+  useEffect(() => {
+    loadHistory().catch((e) => setError(e.message));
+  }, [loadHistory]);
+  const actions =
+    report.status === "Pending"
+      ? [
+          ["In Progress", "Mulai tangani"],
+          ["Rejected", "Tolak laporan"],
+        ]
+      : report.status === "In Progress"
+        ? [
+            ["Completed", "Selesaikan laporan"],
+            ["Rejected", "Tolak laporan"],
+          ]
+        : [];
+  async function submit(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const note = new FormData(form).get("note").trim();
+    if (note.length < 3) {
+      setError("Catatan minimal 3 karakter.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const updated = await request(`/reports/${report.id}/status`, {
+        token,
+        method: "PATCH",
+        body: {
+          status: action,
+          expected_status: report.status,
+          note,
+          is_correction: correction,
+        },
+      });
+      setReport(updated);
+      setAction("");
+      setCorrection(false);
+      form.reset();
+      onUpdated();
+      await loadHistory();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function reloadDetail() {
+    setBusy(true);
+    try {
+      setReport(await request(`/reports/${report.id}`, { token }));
+      await loadHistory();
+      setAction("");
+      setCorrection(false);
+      setError("");
+      onUpdated();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="modal-backdrop">
+      <div
+        className="modal report-detail"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Detail laporan ${report.id}`}
+      >
+        <div className="section-head">
+          <h2>Laporan #{report.id}</h2>
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Tutup detail"
+            onClick={onClose}
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <img
+          className="detail-photo"
+          src={imageSource(report.image_url)}
+          alt="Foto laporan sampah"
+        />
+        <div className="detail-status">
+          <Status value={report.status} />
+          <small>
+            {new Date(report.created_at).toLocaleString("id-ID")}
+            {isAdmin ? ` · ${report.owner_name} (#${report.user_id})` : ""}
+          </small>
+        </div>
+        <p className="detail-description">{report.description}</p>
+        <p>
+          Lokasi: {report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}
+          <br />
+          AI: {report.ai_category || "Belum terdeteksi"}
+          {report.ai_confidence != null
+            ? ` (${Math.round(report.ai_confidence * 100)}%)`
+            : ""}
+        </p>
+        {error && (
+          <div className="alert" role="alert">
+            {error}
+            <button
+              type="button"
+              className="text-button"
+              disabled={busy}
+              onClick={reloadDetail}
+            >
+              Muat ulang detail
+            </button>
+          </div>
+        )}
+        {isAdmin && (
+          <div className="followup-actions">
+            <h3>Tindak lanjut</h3>
+            <div className="followup-buttons">
+              {actions.map(([value, label]) => (
+                <button
+                  type="button"
+                  className="primary"
+                  key={value}
+                  onClick={() => {
+                    setAction(value);
+                    setCorrection(false);
+                    setError("");
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => {
+                  setCorrection(true);
+                  setAction("");
+                  setError("");
+                }}
+              >
+                Koreksi status
+              </button>
+            </div>
+            {(action || correction) && (
+              <form onSubmit={submit} className="followup-form">
+                {correction && (
+                  <label>
+                    Status koreksi
+                    <select
+                      aria-label="Status koreksi"
+                      value={action}
+                      required
+                      onChange={(e) => setAction(e.target.value)}
+                    >
+                      <option value="">Pilih status</option>
+                      {statuses
+                        .filter((s) => s !== report.status)
+                        .map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                    </select>
+                  </label>
+                )}
+                <label>
+                  {correction
+                    ? "Alasan koreksi"
+                    : action === "Rejected"
+                      ? "Alasan penolakan"
+                      : "Catatan tindak lanjut"}
+                  <textarea
+                    name="note"
+                    minLength="3"
+                    maxLength="1000"
+                    required
+                    placeholder="Catatan ini dapat dilihat pelapor"
+                  />
+                </label>
+                <button className="primary" disabled={busy || !action}>
+                  {busy ? "Menyimpan..." : "Simpan tindak lanjut"}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
+        <h3>Riwayat tindak lanjut</h3>
+        {history === null ? (
+          <p role="status">Memuat riwayat...</p>
+        ) : history.length === 0 ? (
+          <p>Belum ada tindak lanjut.</p>
+        ) : (
+          <ol className="timeline">
+            {history.map((item) => (
+              <li key={item.id}>
+                <strong>
+                  {item.is_correction ? "Koreksi: " : ""}
+                  {item.old_status} → {item.new_status}
+                </strong>
+                <small>
+                  {item.admin_name} ·{" "}
+                  {new Date(item.changed_at).toLocaleString("id-ID")}
+                </small>
+                <p>
+                  {item.note || "Tidak ada catatan untuk perubahan sebelumnya."}
+                </p>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ThemeToggle({ theme, onToggle }) {
-  const dark = theme === 'dark';
-  return <button type="button" className="theme-toggle" onClick={onToggle} aria-label={dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'} title={dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}>{dark ? <Sun size={19} aria-hidden="true" /> : <Moon size={19} aria-hidden="true" />}</button>;
+  const dark = theme === "dark";
+  return (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={onToggle}
+      aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+      title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+    >
+      {dark ? (
+        <Sun size={19} aria-hidden="true" />
+      ) : (
+        <Moon size={19} aria-hidden="true" />
+      )}
+    </button>
+  );
 }
 
 function Auth({ onLogin, theme, toggleTheme }) {
@@ -671,7 +925,9 @@ function Auth({ onLogin, theme, toggleTheme }) {
         </div>
       </div>
       <form className="auth-form" onSubmit={submit}>
-        <div className="auth-theme"><ThemeToggle theme={theme} onToggle={toggleTheme} /></div>
+        <div className="auth-theme">
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        </div>
         <div className="auth-mobile-brand">
           <img src={brandMark} alt="" />
           <strong>CamPah</strong>

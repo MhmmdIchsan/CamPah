@@ -1,8 +1,13 @@
 import { defineConfig } from "@playwright/test";
 import path from "node:path";
+import os from "node:os";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const testDatabase = path
+  .join(os.tmpdir(), `campah-e2e-${randomUUID()}.db`)
+  .replaceAll("\\", "/");
 
 export default defineConfig({
   testDir: "./tests",
@@ -20,7 +25,7 @@ export default defineConfig({
       url: "http://127.0.0.1:8001/health",
       reuseExistingServer: false,
       env: {
-        DATABASE_URL: "sqlite:///./campah_e2e.db",
+        DATABASE_URL: `sqlite:///${testDatabase}`,
         APP_ENV: "development",
         JWT_SECRET: "test-only-secret-for-browser-integration",
         ADMIN_EMAIL: "admin@example.com",

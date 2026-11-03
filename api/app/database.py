@@ -55,6 +55,10 @@ class Report(Base):
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     owner: Mapped[User] = relationship(back_populates="reports")
 
+    @property
+    def owner_name(self) -> str:
+        return self.owner.name
+
 
 class ReportStatusHistory(Base):
     __tablename__ = "report_status_history"
@@ -64,6 +68,8 @@ class ReportStatusHistory(Base):
     admin_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     old_status: Mapped[str] = mapped_column(String(20))
     new_status: Mapped[str] = mapped_column(String(20))
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    is_correction: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
