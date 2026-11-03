@@ -21,6 +21,7 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | PATCH | `/reports/{id}/status` | JSON `status`, `expected_status`, `note`, `is_correction` | Admin |
 | GET | `/reports/{id}/history` | Riwayat status dan catatan publik | Pemilik/Admin |
 | POST | `/reports/{id}/completion-photo` | Multipart `image`, sekali pada laporan Completed | Admin |
+| PATCH | `/reports/{id}/category-review` | JSON `category`, `note`; mempertahankan prediksi AI asli | Admin |
 | GET | `/notifications` | Maksimal 100 notifikasi terbaru milik akun | Login |
 | PATCH | `/notifications/{id}/read` | Tandai notifikasi sebagai dibaca | Pemilik |
 | GET | `/dashboard` | `total`, `by_status`, `by_category` | Login; sesuai cakupan role |

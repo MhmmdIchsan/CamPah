@@ -1422,6 +1422,14 @@ class _HistoryPageState extends State<HistoryPage> {
                       : '${report['ai_category']}${report['ai_confidence'] is num ? ' (${(report['ai_confidence'] * 100).toStringAsFixed(1)}%)' : ''}',
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w700)),
+              if (report['corrected_category'] != null) ...[
+                const SizedBox(height: 8),
+                Text('Hasil tinjauan admin: ${report['corrected_category']}',
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w700)),
+                Text('${report['category_note']}',
+                    style: const TextStyle(fontSize: 11, color: muted)),
+              ],
               const SizedBox(height: 18),
               const Text('KOORDINAT',
                   style: TextStyle(

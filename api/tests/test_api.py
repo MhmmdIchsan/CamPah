@@ -178,6 +178,24 @@ def test_completion_evidence_permissions_and_visibility(system):
     assert 'Bukti penyelesaian' in client.get('/notifications', headers=auth(owner)).json()[0]['message']
 
 
+def test_category_review_preserves_prediction_and_requires_admin(system):
+    client, sessions = system
+    owner = signup(client)
+    admin = admin_account(client, sessions)
+    report_id = create_report(client, owner).json()['id']
+    url = f'/reports/{report_id}/category-review'
+    payload = {'category': 'Paper Waste', 'note': 'Terlihat kertas pada foto'}
+    assert client.patch(url, headers=auth(owner), json=payload).status_code == 403
+    assert client.patch(url, headers=auth(admin), json={'category': 'Metal', 'note': 'Logam'}).status_code == 422
+    result = client.patch(url, headers=auth(admin), json=payload)
+    assert result.status_code == 200
+    assert result.json()['ai_category'] == 'Plastic Waste'
+    assert result.json()['ai_confidence'] == .91
+    assert result.json()['corrected_category'] == 'Paper Waste'
+    assert result.json()['category_reviewer_id'] == admin['user']['id']
+    assert client.get(f'/reports/{report_id}', headers=auth(owner)).json()['category_note'] == payload['note']
+
+
 def test_admin_user_management_and_disabled_tokens(system):
     client, sessions = system
     admin = admin_account(client, sessions)

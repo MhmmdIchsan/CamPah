@@ -780,6 +780,26 @@ function ReportDetail({
       setBusy(false);
     }
   }
+  async function reviewCategory(e) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    setBusy(true);
+    setError("");
+    try {
+      setReport(
+        await request(`/reports/${report.id}/category-review`, {
+          token,
+          method: "PATCH",
+          body: { category: form.get("category"), note: form.get("note") },
+        }),
+      );
+      onUpdated();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <div className="modal-backdrop">
       <div
@@ -830,6 +850,14 @@ function ReportDetail({
             ? ` (${Math.round(report.ai_confidence * 100)}%)`
             : ""}
         </p>
+        {report.corrected_category && (
+          <p>
+            Kategori hasil tinjauan:{" "}
+            <strong>{report.corrected_category}</strong>
+            <br />
+            Catatan: {report.category_note}
+          </p>
+        )}
         {error && (
           <div className="alert" role="alert">
             {error}
@@ -846,6 +874,37 @@ function ReportDetail({
         {isAdmin && (
           <div className="followup-actions">
             <h3>Tindak lanjut</h3>
+            <details>
+              <summary>Tinjau kategori AI</summary>
+              <form onSubmit={reviewCategory} className="followup-form">
+                <label>
+                  Kategori hasil tinjauan
+                  <select
+                    name="category"
+                    defaultValue={report.corrected_category || ""}
+                    required
+                  >
+                    <option value="">Pilih kategori</option>
+                    <option>Organic Waste</option>
+                    <option>Plastic Waste</option>
+                    <option>Paper Waste</option>
+                  </select>
+                </label>
+                <label>
+                  Alasan peninjauan
+                  <textarea
+                    name="note"
+                    minLength="3"
+                    maxLength="1000"
+                    required
+                    defaultValue={report.category_note || ""}
+                  />
+                </label>
+                <button className="primary" disabled={busy}>
+                  Simpan tinjauan
+                </button>
+              </form>
+            </details>
             {report.status === "Completed" && !report.completion_image_url && (
               <form onSubmit={uploadEvidence} className="followup-form">
                 <label>

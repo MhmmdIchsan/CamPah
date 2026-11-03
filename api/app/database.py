@@ -34,7 +34,7 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(10), default="user")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
-    reports: Mapped[list["Report"]] = relationship(back_populates="owner")
+    reports: Mapped[list["Report"]] = relationship(back_populates="owner", foreign_keys="Report.user_id")
 
 
 class Report(Base):
@@ -51,6 +51,10 @@ class Report(Base):
     status: Mapped[str] = mapped_column(String(20), default="Pending", index=True)
     ai_category: Mapped[str | None] = mapped_column(String(32), nullable=True)
     ai_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
+    corrected_category: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    category_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    category_reviewer_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    category_reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

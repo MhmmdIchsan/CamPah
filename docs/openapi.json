@@ -532,6 +532,60 @@
         }
       }
     },
+    "/reports/{report_id}/category-review": {
+      "patch": {
+        "summary": "Review Category",
+        "operationId": "review_category_reports__report_id__category_review_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryReview"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/notifications": {
       "get": {
         "summary": "List Notifications",
@@ -877,6 +931,31 @@
         ],
         "title": "Body_predict_endpoint_predict_post"
       },
+      "CategoryReview": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "Organic Waste",
+              "Plastic Waste",
+              "Paper Waste"
+            ],
+            "title": "Category"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 3,
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "note"
+        ],
+        "title": "CategoryReview"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -1088,6 +1167,51 @@
             ],
             "title": "Ai Confidence"
           },
+          "corrected_category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Corrected Category"
+          },
+          "category_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Note"
+          },
+          "category_reviewer_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Reviewer Id"
+          },
+          "category_reviewed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Reviewed At"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -1112,6 +1236,10 @@
           "status",
           "ai_category",
           "ai_confidence",
+          "corrected_category",
+          "category_note",
+          "category_reviewer_id",
+          "category_reviewed_at",
           "created_at",
           "updated_at"
         ],

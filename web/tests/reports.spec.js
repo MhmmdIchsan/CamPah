@@ -121,6 +121,17 @@ test("user reports, admin status and user management work together", async ({
   await row.getByRole("button", { name: "Lihat detail" }).click();
   const detail = page.getByRole("dialog", { name: /Detail laporan/ });
   await expect(detail).toContainText("CamPah Browser Tester");
+  await detail.getByText("Tinjau kategori AI").click();
+  await detail
+    .getByLabel("Kategori hasil tinjauan")
+    .selectOption("Paper Waste");
+  await detail
+    .getByLabel("Alasan peninjauan")
+    .fill("Terlihat kertas pada foto");
+  await detail.getByRole("button", { name: "Simpan tinjauan" }).click();
+  await expect(
+    detail.getByText("Kategori hasil tinjauan:", { exact: false }),
+  ).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

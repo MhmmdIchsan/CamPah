@@ -142,6 +142,10 @@ class ReportOut(BaseModel):
     status: str
     ai_category: str | None
     ai_confidence: float | None
+    corrected_category: str | None
+    category_note: str | None
+    category_reviewer_id: int | None
+    category_reviewed_at: datetime | None
     created_at: datetime
     updated_at: datetime
 
@@ -205,6 +209,19 @@ class NotificationOut(BaseModel):
 class PredictionOut(BaseModel):
     category: str
     confidence: float
+
+
+class CategoryReview(BaseModel):
+    category: Literal["Organic Waste", "Plastic Waste", "Paper Waste"]
+    note: str = Field(min_length=3, max_length=1000)
+
+    @field_validator("note")
+    @classmethod
+    def trim_note(cls, value: str) -> str:
+        value = value.strip()
+        if len(value) < 3:
+            raise ValueError("Catatan minimal 3 karakter")
+        return value
 
 
 def read_image(data: bytes) -> None:
@@ -469,6 +486,19 @@ async def completion_photo(report_id: int, db: Annotated[Session, Depends(get_db
         db.rollback()
         raise HTTPException(status_code=409, detail="Laporan telah berubah. Muat ulang.")
     db.add(Notification(user_id=report.user_id, report_id=report.id, message=f"Bukti penyelesaian laporan #{report.id} telah ditambahkan."))
+    db.commit()
+    db.refresh(report)
+    return report
+
+
+@app.patch("/reports/{report_id}/category-review", response_model=ReportOut)
+def review_category(report_id: int, payload: CategoryReview, db: Annotated[Session, Depends(get_db)],
+                    admin: Annotated[User, Depends(admin_user)]):
+    report = visible_report(db, report_id, admin)
+    report.corrected_category = payload.category
+    report.category_note = payload.note
+    report.category_reviewer_id = admin.id
+    report.category_reviewed_at = utc_now()
     db.commit()
     db.refresh(report)
     return report
