@@ -1703,7 +1703,6 @@ main {
 
 .welcome-card,
 .overview-card,
-.auth-form,
 .dashboard-bottom .card {
   animation: campah-rise 420ms ease-out both;
 }

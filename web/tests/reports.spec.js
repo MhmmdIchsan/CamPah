@@ -2,6 +2,45 @@ import { test, expect } from "@playwright/test";
 
 const suffix = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
+test("landing introduces CamPah and connects to login on desktop and mobile", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 850 });
+    await page.goto("/");
+    await expect(
+      page.getByRole("heading", { name: /Peduli dimulai/ }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Tiga langkah kecil/ }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBeTruthy();
+    if (width === 1440)
+      await page.screenshot({
+        path: "../artifacts/landing-desktop.png",
+        fullPage: true,
+      });
+    if (width === 390)
+      await page.screenshot({
+        path: "../artifacts/landing-mobile.png",
+        fullPage: true,
+      });
+    await page.getByRole("button", { name: "Masuk", exact: true }).click();
+    await expect(
+      page.getByRole("heading", { name: "Masuk ke akun Anda" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "← Kembali ke beranda" }).click();
+    await expect(
+      page.getByRole("heading", { name: /Peduli dimulai/ }),
+    ).toBeVisible();
+  }
+});
+
 test("theme switch is available before login and persists", async ({
   page,
 }) => {
@@ -17,7 +56,7 @@ test("theme switch is available before login and persists", async ({
 
 async function register(page, email) {
   await page.goto("/");
-  await page.getByRole("button", { name: "Daftar sekarang" }).click();
+  await page.getByRole("button", { name: "Mulai laporkan" }).click();
   await page.getByLabel("Nama lengkap").fill("CamPah Browser Tester");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Kata sandi", { exact: true }).fill("TestPassword123");

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import brandMark from "./assets/campah-mark.svg";
 import Dashboard from "./Dashboard.jsx";
+import Landing from "./Landing.jsx";
 import "./style.css";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -90,6 +91,8 @@ function App() {
   const toggleTheme = () =>
     setTheme((current) => (current === "dark" ? "light" : "dark"));
   const [session, setSession] = useState(readSession);
+  const [entry, setEntry] = useState("landing");
+  const [initialRegister, setInitialRegister] = useState(false);
   const [view, setView] = useState("dashboard");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -122,6 +125,8 @@ function App() {
   const logout = useCallback(() => {
     localStorage.removeItem("campah-session");
     setSession(null);
+    setEntry("auth");
+    setInitialRegister(false);
     setView("dashboard");
     setEditing(null);
     setDetail(null);
@@ -261,9 +266,27 @@ function App() {
     return () => controller.abort();
   }, [token, view, refresh]);
 
-  if (!session)
+  if (!session) {
+    if (entry === "landing")
+      return (
+        <Landing
+          themeToggle={<ThemeToggle theme={theme} onToggle={toggleTheme} />}
+          onLogin={() => {
+            setInitialRegister(false);
+            setEntry("auth");
+            window.scrollTo(0, 0);
+          }}
+          onRegister={() => {
+            setInitialRegister(true);
+            setEntry("auth");
+            window.scrollTo(0, 0);
+          }}
+        />
+      );
     return (
       <Auth
+        initialRegister={initialRegister}
+        onBack={() => setEntry("landing")}
         theme={theme}
         toggleTheme={toggleTheme}
         onLogin={(value) => {
@@ -273,6 +296,7 @@ function App() {
         }}
       />
     );
+  }
   const switchView = (value) => {
     setView(value);
     setEditing(null);
@@ -1318,8 +1342,14 @@ function ThemeToggle({ theme, onToggle }) {
   );
 }
 
-function Auth({ onLogin, theme, toggleTheme }) {
-  const [register, setRegister] = useState(false);
+function Auth({
+  onLogin,
+  theme,
+  toggleTheme,
+  initialRegister = false,
+  onBack,
+}) {
+  const [register, setRegister] = useState(initialRegister);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -1390,6 +1420,9 @@ function Auth({ onLogin, theme, toggleTheme }) {
         </div>
       </div>
       <form className="auth-form" onSubmit={submit}>
+        <button type="button" className="lp-back-link" onClick={onBack}>
+          ← Kembali ke beranda
+        </button>
         <div className="auth-theme">
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </div>
