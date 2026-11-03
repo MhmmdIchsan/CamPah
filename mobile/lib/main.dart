@@ -1660,6 +1660,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 Text('${report['category_note']}',
                     style: const TextStyle(fontSize: 11, color: muted)),
               ],
+              const SizedBox(height: 6),
+              const Text(
+                  'Hasil AI perlu diperiksa. Confidence bukan jaminan ketepatan; foto di luar tiga kategori tetap dapat diberi label.',
+                  style: TextStyle(fontSize: 10, color: muted, height: 1.5)),
               const SizedBox(height: 18),
               const Text('KOORDINAT',
                   style: TextStyle(

@@ -41,3 +41,5 @@ python ml/train.py
 Training writes `ml/artifacts/best_model.pt`, `metrics.json`, `classification_report.txt`, `confusion_matrix.png`, `history.json`, and exact split/source manifests. `environment.json` records the versions used for the submitted run. The checkpoint is included in Git and is loaded by the API; set `MODEL_PATH` to select another checkpoint and restart the API after replacing it.
 
 `ml/examples/` contains three attributed, resized photographs selected from the held out split for integration demos. Their original paths and URLs are recorded in `ml/examples/attribution.json`. The API integration test loads the trained checkpoint and verifies that `/predict`, report creation, and dashboard counts use the same result. These example images are not a separate accuracy benchmark.
+
+For independent field photos and out-of-scope images, see [FIELD_EVALUATION.md](FIELD_EVALUATION.md). No calibrated rejection threshold or evaluated out-of-distribution detector is included yet.

@@ -1079,6 +1079,10 @@ function ReportDetail({
             Catatan: {report.category_note}
           </p>
         )}
+        <p className="hint">
+          Hasil AI perlu diperiksa; confidence bukan jaminan ketepatan dan foto
+          di luar tiga kategori tetap dapat diberi label.
+        </p>
         {error && (
           <div className="alert" role="alert">
             {error}
