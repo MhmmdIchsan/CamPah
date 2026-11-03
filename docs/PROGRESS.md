@@ -1,6 +1,14 @@
 # Progres CamPah
 
-Pembaruan: **2 November 2026 (Asia/Jakarta)**. Repository: https://github.com/MhmmdIchsan/CamPah. Perubahan fitur/perbaikan dicatat dengan Conventional Commits dan file terkait.
+Pembaruan: **3 November 2026 (Asia/Jakarta)**. Repository: https://github.com/MhmmdIchsan/CamPah. Perubahan fitur/perbaikan dicatat dengan Conventional Commits dan file terkait.
+
+## Pembaruan tampilan 3 November
+
+- Logo vektor kamera dan daun, palet hijau-lime, serta tipografi Plus Jakarta Sans diterapkan pada web, Flutter, dan ikon Android. Berkas logo dan lisensi font dijelaskan di `docs/BRAND.md`.
+- Dashboard web menampilkan progres, kategori, dan laporan terbaru dari API. Kartu status membuka laporan dengan filter yang sesuai; formulir menampilkan pratinjau foto dan login menyediakan kontrol visibilitas kata sandi.
+- Android memiliki tampilan dan navigasi baru, filter riwayat berdasarkan status, detail laporan, dan tampilan foto/lokasi yang lebih jelas.
+- Verifikasi lokal: build web berhasil; **4 pengujian browser** lulus termasuk layar 320 piksel; `flutter analyze` bersih dan **3 pengujian Flutter** lulus termasuk layar sempit dengan teks diperbesar.
+- [Build APK untuk perubahan visual](https://github.com/MhmmdIchsan/CamPah/actions/runs/41574493778) dibuat melalui workflow Android. Gunakan artifact dari run yang sudah berhasil untuk memperoleh APK dengan tampilan terbaru.
 
 ## Implementasi tersedia
 
@@ -15,10 +23,10 @@ Pembaruan: **2 November 2026 (Asia/Jakarta)**. Repository: https://github.com/Mh
 | Pemeriksaan | Hasil |
 | --- | --- |
 | API dan migrasi SQLite | **9 passed**, termasuk akses lintas pengguna, status, soft delete, input, foto kamera, dan model asli |
-| Browser Playwright | **3 passed**: alur User/Admin, sesi rusak/kedaluwarsa, dan layout ponsel |
+| Browser Playwright | **4 passed**: alur User/Admin, filter status, pratinjau foto, sesi, dan layout ponsel |
 | Build web | Berhasil dengan Vite 8; audit dependensi **0 vulnerabilities** |
 | Flutter analyze | **No issues found** |
-| Flutter test | **2 passed**: formulir registrasi dan sesi API kedaluwarsa |
+| Flutter test | **3 passed**: formulir registrasi, sesi API, serta filter/detail pada layar sempit |
 | GitHub Checks | **Success** untuk commit `26c3cb0`; mencakup PostgreSQL 16, model, API, dan web |
 | Android APK | Build debug berhasil pada [run 41415610323](https://github.com/MhmmdIchsan/CamPah/actions/runs/41415610323); artifact `campah-apk` |
 | Paket pengumpulan lokal | Arsip dataset berisi 600 foto terverifikasi; arsip model berisi checkpoint, source training, evaluasi, dan atribusi; integritas ZIP diperiksa |
