@@ -8,7 +8,7 @@ Pembaruan: **3 November 2026 (Asia/Jakarta)**. Repository: https://github.com/Mh
 - Dashboard web menampilkan progres, kategori, dan laporan terbaru dari API. Kartu status membuka laporan dengan filter yang sesuai; formulir menampilkan pratinjau foto dan login menyediakan kontrol visibilitas kata sandi.
 - Android memiliki tampilan dan navigasi baru, filter riwayat berdasarkan status, detail laporan, dan tampilan foto/lokasi yang lebih jelas.
 - Verifikasi lokal: build web berhasil; **4 pengujian browser** lulus termasuk layar 320 piksel; `flutter analyze` bersih dan **3 pengujian Flutter** lulus termasuk layar sempit dengan teks diperbesar.
-- [Build APK untuk perubahan visual](https://github.com/MhmmdIchsan/CamPah/actions/runs/41574493778) dibuat melalui workflow Android. Gunakan artifact dari run yang sudah berhasil untuk memperoleh APK dengan tampilan terbaru.
+- [Build APK untuk perubahan visual](https://github.com/MhmmdIchsan/CamPah/actions/runs/41574493778) berhasil melalui workflow Android. Artifact `campah-apk` berisi APK debug dengan tampilan terbaru.
 
 ## Implementasi tersedia
 
@@ -27,8 +27,8 @@ Pembaruan: **3 November 2026 (Asia/Jakarta)**. Repository: https://github.com/Mh
 | Build web | Berhasil dengan Vite 8; audit dependensi **0 vulnerabilities** |
 | Flutter analyze | **No issues found** |
 | Flutter test | **3 passed**: formulir registrasi, sesi API, serta filter/detail pada layar sempit |
-| GitHub Checks | **Success** untuk commit `26c3cb0`; mencakup PostgreSQL 16, model, API, dan web |
-| Android APK | Build debug berhasil pada [run 41415610323](https://github.com/MhmmdIchsan/CamPah/actions/runs/41415610323); artifact `campah-apk` |
+| GitHub Checks | **Success** untuk commit `9b9a6b0`; mencakup PostgreSQL 16, model, API, dan web |
+| Android APK | Build debug terbaru berhasil pada [run 41574493778](https://github.com/MhmmdIchsan/CamPah/actions/runs/41574493778); artifact `campah-apk` |
 | Paket pengumpulan lokal | Arsip dataset berisi 600 foto terverifikasi; arsip model berisi checkpoint, source training, evaluasi, dan atribusi; integritas ZIP diperiksa |
 
 Model dilatih pada 600 foto, masing-masing 200 per kategori, dengan split 420 train / 90 validation / 90 test. Checkpoint terbaik dipilih berdasarkan validation set; akurasi test **96,67% (87/90)**. Hasil lengkap ada di `ml/artifacts/`. Dataset awal Mendeley diganti karena kelas Plastic hanya menyediakan dua file; lihat `ml/DATASET.md`.
