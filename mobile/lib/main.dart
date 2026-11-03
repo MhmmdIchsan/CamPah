@@ -6,24 +6,25 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'design.dart';
 
 const apiUrl = String.fromEnvironment(
   'API_URL',
   defaultValue: 'http://10.0.2.2:8000',
 );
-const forest = Color(0xFF195C38);
 
 void main() => runApp(const WasteApp());
 
 class Api {
   String? token;
   Future<void> Function()? onUnauthorized;
+  http.Client client = http.Client();
 
   Uri uri(String path) => Uri.parse('$apiUrl$path');
   Map<String, String> get headers => {
-    'Content-Type': 'application/json',
-    if (token != null) 'Authorization': 'Bearer $token',
-  };
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
 
   Future<dynamic> call(
     String path, {
@@ -34,7 +35,7 @@ class Api {
     request.headers.addAll(headers);
     if (body != null) request.body = jsonEncode(body);
     final response = await http.Response.fromStream(
-      await request.send().timeout(const Duration(seconds: 75)),
+      await client.send(request).timeout(const Duration(seconds: 75)),
     ).timeout(const Duration(seconds: 75));
     return decode(response);
   }
@@ -76,7 +77,7 @@ class Api {
     });
     request.files.add(await http.MultipartFile.fromPath('image', photo.path));
     final response = await http.Response.fromStream(
-      await request.send().timeout(const Duration(seconds: 90)),
+      await client.send(request).timeout(const Duration(seconds: 90)),
     ).timeout(const Duration(seconds: 90));
     return Map<String, dynamic>.from(await decode(response));
   }
@@ -132,19 +133,15 @@ class _WasteAppState extends State<WasteApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'CamPah',
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: forest),
-      useMaterial3: true,
-      scaffoldBackgroundColor: const Color(0xFFF5F7F3),
-    ),
-    home: loading
-        ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-        : user == null
-        ? AuthPage(onSignedIn: signedIn)
-        : HomePage(user: user!, onSignOut: signOut),
-  );
+        title: 'CamPah',
+        debugShowCheckedModeBanner: false,
+        theme: campahTheme(),
+        home: loading
+            ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+            : user == null
+                ? AuthPage(onSignedIn: signedIn)
+                : HomePage(user: user!, onSignOut: signOut),
+      );
 }
 
 class AuthPage extends StatefulWidget {
@@ -160,6 +157,7 @@ class _AuthPageState extends State<AuthPage> {
   final email = TextEditingController();
   final password = TextEditingController();
   bool register = false;
+  bool showPassword = false;
   bool busy = false;
   String? error;
 
@@ -199,105 +197,172 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Icon(Icons.recycling, size: 70, color: forest),
-                    const SizedBox(height: 20),
-                    Text(
-                      register ? 'Buat akun baru' : 'Selamat datang',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Laporkan sampah, pantau tindak lanjutnya.',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    if (register)
-                      TextFormField(
-                        controller: name,
-                        decoration: const InputDecoration(
-                          labelText: 'Nama lengkap',
-                          border: OutlineInputBorder(),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 440),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Row(children: [
+                          CamPahMark(size: 48),
+                          SizedBox(width: 12),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('CamPah',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: -.9,
+                                        color: ink)),
+                                SizedBox(height: 3),
+                                Text('LEBIH PEDULI BUMI',
+                                    style: TextStyle(
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 1.3,
+                                        color: muted)),
+                              ]),
+                        ]),
+                        const SizedBox(height: 30),
+                        Container(
+                          padding: const EdgeInsets.all(22),
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFE1F0DF),
+                              borderRadius: BorderRadius.circular(22)),
+                          child: Row(children: [
+                            const Expanded(
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                  Text('SATU LANGKAH LEBIH PEDULI',
+                                      style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w800,
+                                          letterSpacing: 1.0,
+                                          color: Color(0xFF6C9472))),
+                                  SizedBox(height: 9),
+                                  Text('Langkah kecil.\nDampak besar.',
+                                      style: TextStyle(
+                                          fontSize: 23,
+                                          height: 1.25,
+                                          letterSpacing: -.8,
+                                          color: forest,
+                                          fontWeight: FontWeight.w800)),
+                                  SizedBox(height: 7),
+                                  Text('Bersama jaga lingkungan sekitar.',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: Color(0xFF66816D))),
+                                ])),
+                            Container(
+                                width: 58,
+                                height: 58,
+                                decoration: BoxDecoration(
+                                    color: const Color(0xFFCFE9C4),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: const Icon(Icons.eco_outlined,
+                                    size: 29, color: Color(0xFF588F5D))),
+                          ]),
                         ),
-                        validator: (v) => (v?.trim().length ?? 0) < 2
-                            ? 'Minimal 2 karakter'
-                            : null,
-                      ),
-                    if (register) const SizedBox(height: 14),
-                    TextFormField(
-                      controller: email,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (v) => v == null || !v.contains('@')
-                          ? 'Email tidak valid'
-                          : null,
-                    ),
-                    const SizedBox(height: 14),
-                    TextFormField(
-                      controller: password,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Kata sandi',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (v) =>
-                          (v?.length ?? 0) < 8 ? 'Minimal 8 karakter' : null,
-                    ),
-                    if (error != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Text(
-                          error!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    const SizedBox(height: 22),
-                    FilledButton(
-                      onPressed: busy ? null : submit,
-                      child: Text(
-                        busy
-                            ? 'Memproses...'
-                            : register
-                            ? 'Daftar'
-                            : 'Masuk',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => setState(() {
-                        register = !register;
-                        error = null;
-                      }),
-                      child: Text(
-                        register
-                            ? 'Sudah punya akun? Masuk'
-                            : 'Belum punya akun? Daftar',
-                      ),
-                    ),
-                  ],
+                        const SizedBox(height: 28),
+                        Text(register ? 'Buat akun baru' : 'Selamat datang',
+                            style: const TextStyle(
+                                fontSize: 26,
+                                letterSpacing: -1.1,
+                                fontWeight: FontWeight.w800,
+                                color: ink)),
+                        const SizedBox(height: 7),
+                        Text(
+                            register
+                                ? 'Mulai laporkan dan pantau lingkunganmu.'
+                                : 'Masuk untuk melihat dan membuat laporan.',
+                            style: const TextStyle(
+                                fontSize: 12, height: 1.5, color: muted)),
+                        const SizedBox(height: 23),
+                        if (register) ...[
+                          TextFormField(
+                              controller: name,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: const InputDecoration(
+                                  labelText: 'Nama lengkap',
+                                  prefixIcon:
+                                      Icon(Icons.person_outline_rounded)),
+                              validator: (v) => (v?.trim().length ?? 0) < 2
+                                  ? 'Minimal 2 karakter'
+                                  : null),
+                          const SizedBox(height: 13),
+                        ],
+                        TextFormField(
+                            controller: email,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(
+                                labelText: 'Email',
+                                prefixIcon:
+                                    Icon(Icons.alternate_email_rounded)),
+                            validator: (v) => v == null || !v.contains('@')
+                                ? 'Email tidak valid'
+                                : null),
+                        const SizedBox(height: 13),
+                        TextFormField(
+                            controller: password,
+                            obscureText: !showPassword,
+                            decoration: InputDecoration(
+                                labelText: 'Kata sandi',
+                                prefixIcon:
+                                    const Icon(Icons.lock_outline_rounded),
+                                suffixIcon: IconButton(
+                                    tooltip: showPassword
+                                        ? 'Sembunyikan kata sandi'
+                                        : 'Tampilkan kata sandi',
+                                    onPressed: () => setState(
+                                        () => showPassword = !showPassword),
+                                    icon: Icon(showPassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined))),
+                            validator: (v) => (v?.length ?? 0) < 8
+                                ? 'Minimal 8 karakter'
+                                : null),
+                        if (error != null)
+                          Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(error!,
+                                  style: const TextStyle(
+                                      color: Color(0xFFB25447), fontSize: 12))),
+                        const SizedBox(height: 20),
+                        FilledButton(
+                            onPressed: busy ? null : submit,
+                            child: Text(busy
+                                ? 'Memproses...'
+                                : register
+                                    ? 'Daftar'
+                                    : 'Masuk')),
+                        const SizedBox(height: 6),
+                        TextButton(
+                            onPressed: () => setState(() {
+                                  register = !register;
+                                  error = null;
+                                }),
+                            child: Text(
+                                register
+                                    ? 'Sudah punya akun? Masuk'
+                                    : 'Belum punya akun? Daftar',
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700))),
+                      ]),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 class HomePage extends StatefulWidget {
@@ -311,51 +376,81 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 0;
   int revision = 0;
+  String? historyStatus;
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('CamPah'),
-      actions: [
-        IconButton(
-          onPressed: widget.onSignOut,
-          icon: const Icon(Icons.logout),
-          tooltip: 'Keluar',
+        appBar: AppBar(
+          title: const Row(children: [
+            CamPahMark(size: 38),
+            SizedBox(width: 10),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('CamPah',
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -.6)),
+              Text('LEBIH PEDULI BUMI',
+                  style: TextStyle(
+                      fontSize: 7,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1,
+                      color: muted)),
+            ]),
+          ]),
+          actions: [
+            IconButton(
+              onPressed: widget.onSignOut,
+              icon: const Icon(Icons.logout_rounded, size: 21),
+              tooltip: 'Keluar',
+            ),
+          ],
         ),
-      ],
-    ),
-    body: index == 0
-        ? DashboardPage(
-            key: ValueKey(revision),
-            name: widget.user['name'] ?? 'Pengguna',
-            openReport: () => setState(() => index = 1),
-          )
-        : index == 1
-        ? CreateReportPage(
-            onCreated: () => setState(() {
-              index = 2;
-              revision++;
-            }),
-          )
-        : HistoryPage(key: ValueKey(revision)),
-    bottomNavigationBar: NavigationBar(
-      selectedIndex: index,
-      onDestinationSelected: (value) => setState(() {
-        index = value;
-        revision++;
-      }),
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.dashboard_outlined),
-          label: 'Dashboard',
+        body: index == 0
+            ? DashboardPage(
+                key: ValueKey(revision),
+                name: widget.user['name'] ?? 'Pengguna',
+                openReport: () => setState(() => index = 1),
+                openHistory: (status) => setState(() {
+                  historyStatus = status;
+                  index = 2;
+                  revision++;
+                }),
+              )
+            : index == 1
+                ? CreateReportPage(
+                    onCreated: () => setState(() {
+                      index = 2;
+                      historyStatus = null;
+                      revision++;
+                    }),
+                  )
+                : HistoryPage(
+                    key: ValueKey(revision), initialStatus: historyStatus),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: index,
+          onDestinationSelected: (value) => setState(() {
+            index = value;
+            if (value == 2) historyStatus = null;
+            revision++;
+          }),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.grid_view_rounded),
+              selectedIcon: Icon(Icons.dashboard_rounded),
+              label: 'Dashboard',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.add_a_photo_outlined),
+              selectedIcon: Icon(Icons.add_a_photo_rounded),
+              label: 'Lapor',
+            ),
+            NavigationDestination(
+                icon: Icon(Icons.article_outlined),
+                selectedIcon: Icon(Icons.article_rounded),
+                label: 'Riwayat'),
+          ],
         ),
-        NavigationDestination(
-          icon: Icon(Icons.add_circle_outline),
-          label: 'Lapor',
-        ),
-        NavigationDestination(icon: Icon(Icons.history), label: 'Riwayat'),
-      ],
-    ),
-  );
+      );
 }
 
 class DashboardPage extends StatefulWidget {
@@ -363,9 +458,11 @@ class DashboardPage extends StatefulWidget {
     super.key,
     required this.name,
     required this.openReport,
+    required this.openHistory,
   });
   final String name;
   final VoidCallback openReport;
+  final void Function(String?) openHistory;
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
@@ -396,85 +493,350 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator(
-    onRefresh: load,
-    child: ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Card(
-          color: forest,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Halo, ${widget.name}!',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Bantu lingkungan lebih bersih dengan satu laporan.',
-                  style: TextStyle(color: Colors.white70),
-                ),
-                const SizedBox(height: 20),
-                FilledButton.tonal(
-                  onPressed: widget.openReport,
-                  child: const Text('Buat laporan'),
-                ),
-              ],
-            ),
+  Widget build(BuildContext context) {
+    final total = (stats?['total'] as num?)?.toInt();
+    final byStatus = (stats?['by_status'] as Map?) ?? {};
+    final byCategory = (stats?['by_category'] as Map?) ?? {};
+    final completed = (byStatus['Completed'] as num?)?.toInt() ?? 0;
+    final progress = total != null && total > 0 ? completed / total : 0.0;
+    final categories = [
+      ('Organic Waste', 'Organik', Icons.eco_outlined, const Color(0xFF79AA7E)),
+      (
+        'Plastic Waste',
+        'Plastik',
+        Icons.auto_awesome_outlined,
+        const Color(0xFF8FB2C7)
+      ),
+      (
+        'Paper Waste',
+        'Kertas',
+        Icons.description_outlined,
+        const Color(0xFFD0AB79)
+      ),
+    ];
+    final classified = categories.fold<int>(
+        0,
+        (sum, category) =>
+            sum + ((byCategory[category.$1] as num?)?.toInt() ?? 0));
+    return RefreshIndicator(
+      onRefresh: load,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+        children: [
+          const Text('RUANG KERJA / PENGGUNA',
+              style: TextStyle(
+                  color: muted,
+                  fontSize: 9,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 6),
+          const Text('Dashboard',
+              style: TextStyle(
+                  color: ink,
+                  fontSize: 26,
+                  letterSpacing: -1,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 19),
+          Container(
+            decoration: BoxDecoration(
+                color: const Color(0xFFE1F0DF),
+                borderRadius: BorderRadius.circular(22)),
+            clipBehavior: Clip.antiAlias,
+            child: Stack(children: [
+              Positioned(
+                  right: -20,
+                  top: -22,
+                  child: IgnorePointer(
+                      child: Container(
+                          width: 175,
+                          height: 175,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: const Color(0xFFBDDCC0))),
+                          child: Center(
+                              child: Container(
+                                  width: 123,
+                                  height: 123,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: const Color(0xFFBDDCC0))),
+                                  child: const Icon(Icons.add_a_photo_outlined,
+                                      color: Color(0xFF9BC6A3), size: 47)))))),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(22, 23, 22, 22),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('SATU LANGKAH LEBIH PEDULI',
+                            style: TextStyle(
+                                color: Color(0xFF729578),
+                                fontSize: 9,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 16),
+                        Text(
+                            'Halo, ${widget.name.split(' ').first}!\nYuk, jaga lingkungan\nbersama.',
+                            style: const TextStyle(
+                                color: forest,
+                                fontSize: 25,
+                                height: 1.22,
+                                letterSpacing: -1.1,
+                                fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 10),
+                        const Text('Satu laporan bisa membawa perubahan.',
+                            style: TextStyle(
+                                color: Color(0xFF678571), fontSize: 11)),
+                        const SizedBox(height: 19),
+                        FilledButton.icon(
+                            onPressed: widget.openReport,
+                            icon: const Icon(Icons.add_rounded, size: 19),
+                            label: const Text('Buat laporan')),
+                      ])),
+            ]),
           ),
-        ),
-        const SizedBox(height: 20),
-        if (error != null)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+          const SizedBox(height: 14),
+          Container(
+            padding: const EdgeInsets.all(19),
+            decoration: BoxDecoration(
+                color: forest, borderRadius: BorderRadius.circular(20)),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('RINGKASAN LAPORAN',
+                  style: TextStyle(
+                      color: Color(0xFFADCCB8),
+                      fontSize: 9,
+                      letterSpacing: 1.1,
+                      fontWeight: FontWeight.w800)),
+              const SizedBox(height: 16),
+              Row(children: [
+                Text(total?.toString() ?? '-',
+                    style: const TextStyle(
+                        color: lime,
+                        fontSize: 43,
+                        height: 1,
+                        letterSpacing: -2,
+                        fontWeight: FontWeight.w800)),
+                const SizedBox(width: 13),
+                const Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      Text('Total laporan',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800)),
+                      SizedBox(height: 4),
+                      Text('Laporan yang dapat kamu lihat',
+                          style:
+                              TextStyle(color: Color(0xFFB6CFBE), fontSize: 10))
+                    ])),
+                Semantics(
+                    label: '${(progress * 100).round()} persen laporan selesai',
+                    child: SizedBox(
+                        width: 46,
+                        height: 46,
+                        child: Stack(alignment: Alignment.center, children: [
+                          CircularProgressIndicator(
+                              value: total == null ? null : progress,
+                              strokeWidth: 4,
+                              color: lime,
+                              backgroundColor: const Color(0xFF456A56)),
+                          Text(
+                              total == null
+                                  ? '-'
+                                  : '${(progress * 100).round()}%',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w800))
+                        ]))),
+              ]),
+            ]),
+          ),
+          if (error != null) ...[
+            const SizedBox(height: 12),
+            SoftPanel(
+                child: Column(children: [
+              Text(error!,
+                  style:
+                      const TextStyle(color: Color(0xFFB25447), fontSize: 12)),
+              TextButton(onPressed: load, child: const Text('Coba lagi'))
+            ])),
+          ],
+          const SizedBox(height: 26),
+          SectionTitle(
+              eyebrow: 'PANTAU PROGRES',
+              title: 'Status laporan',
+              trailing: TextButton(
+                  onPressed: () => widget.openHistory(null),
+                  child: const Text('Lihat semua',
+                      style: TextStyle(
+                          fontSize: 11, fontWeight: FontWeight.w800)))),
+          const SizedBox(height: 13),
+          LayoutBuilder(builder: (context, constraints) {
+            final columns = constraints.maxWidth >= 600 ? 4 : 2;
+            final width = (constraints.maxWidth - (columns - 1) * 10) / columns;
+            const items = [
+              (
+                'Pending',
+                'Menunggu ditinjau',
+                Icons.schedule_rounded,
+                Color(0xFFFFF1D5),
+                Color(0xFFB98520)
+              ),
+              (
+                'In Progress',
+                'Sedang ditangani',
+                Icons.north_east_rounded,
+                Color(0xFFE6F2F8),
+                Color(0xFF578BA7)
+              ),
+              (
+                'Completed',
+                'Sudah diselesaikan',
+                Icons.check_circle_outline_rounded,
+                Color(0xFFE7F3E5),
+                Color(0xFF5A9666)
+              ),
+              (
+                'Rejected',
+                'Tidak dapat diproses',
+                Icons.remove_circle_outline_rounded,
+                Color(0xFFFBEAE5),
+                Color(0xFFC4786A)
+              ),
+            ];
+            return Wrap(spacing: 10, runSpacing: 10, children: [
+              for (final item in items)
+                SizedBox(
+                    width: width,
+                    child: Material(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        child: InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () => widget.openHistory(item.$1),
+                            child: Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    border: Border.all(
+                                        color: const Color(0xFFE9EEE7))),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                                width: 38,
+                                                height: 38,
+                                                decoration: BoxDecoration(
+                                                    color: item.$4,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                child: Icon(item.$3,
+                                                    color: item.$5, size: 20)),
+                                            const Icon(Icons.north_east_rounded,
+                                                size: 15,
+                                                color: Color(0xFFB3C3B3))
+                                          ]),
+                                      const SizedBox(height: 13),
+                                      Text(
+                                          stats == null
+                                              ? '-'
+                                              : '${byStatus[item.$1] ?? 0}',
+                                          style: const TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w800,
+                                              height: 1)),
+                                      const SizedBox(height: 8),
+                                      Text(item.$1,
+                                          style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w800)),
+                                      const SizedBox(height: 3),
+                                      Text(item.$2,
+                                          style: const TextStyle(
+                                              fontSize: 10, color: muted)),
+                                    ])))))
+            ]);
+          }),
+          const SizedBox(height: 24),
+          const SectionTitle(
+              eyebrow: 'PENGENALAN GAMBAR', title: 'Kategori sampah'),
+          const SizedBox(height: 13),
+          SoftPanel(
               child: Column(
-                children: [
-                  Text(error!, style: const TextStyle(color: Colors.red)),
-                  TextButton(onPressed: load, child: const Text('Coba lagi')),
-                ],
-              ),
-            ),
-          ),
-        Text(
-          'Ringkasan laporan',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 10),
-        Card(
-          child: ListTile(
-            leading: const Icon(Icons.assessment_outlined),
-            title: const Text('Total laporan'),
-            trailing: Text(
-              '${stats?['total'] ?? '—'}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        for (final status in [
-          'Pending',
-          'In Progress',
-          'Completed',
-          'Rejected',
-        ])
-          Card(
-            child: ListTile(
-              title: Text(status),
-              trailing: Text(
-                '${(stats?['by_status'] as Map?)?[status] ?? '—'}',
-              ),
-            ),
-          ),
-      ],
-    ),
-  );
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const Text('Hasil identifikasi dari foto laporan.',
+                    style: TextStyle(fontSize: 11, color: muted)),
+                const SizedBox(height: 17),
+                for (final category in categories)
+                  Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Row(children: [
+                        Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                                color: category.$4.withValues(alpha: .14),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Icon(category.$3,
+                                color: category.$4, size: 19)),
+                        const SizedBox(width: 11),
+                        Expanded(
+                            child: Column(children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(category.$2,
+                                    style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800)),
+                                Text(
+                                    stats == null
+                                        ? '-'
+                                        : '${byCategory[category.$1] ?? 0}',
+                                    style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800))
+                              ]),
+                          const SizedBox(height: 7),
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: LinearProgressIndicator(
+                                  value: classified == 0
+                                      ? 0
+                                      : ((byCategory[category.$1] as num?) ??
+                                              0) /
+                                          classified,
+                                  minHeight: 5,
+                                  color: category.$4,
+                                  backgroundColor: const Color(0xFFEDF2EA)))
+                        ])),
+                      ])),
+                Text(
+                    stats == null
+                        ? 'Memuat data...'
+                        : '$classified foto teridentifikasi',
+                    style: const TextStyle(
+                        color: muted,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600)),
+              ])),
+        ],
+      ),
+    );
+  }
 }
 
 class CreateReportPage extends StatefulWidget {
@@ -489,6 +851,7 @@ class _CreateReportPageState extends State<CreateReportPage> {
   XFile? photo;
   Position? position;
   bool busy = false;
+  bool locating = false;
   String? error;
 
   @override
@@ -515,6 +878,7 @@ class _CreateReportPageState extends State<CreateReportPage> {
   Future<void> locate() async {
     setState(() {
       busy = true;
+      locating = true;
       error = null;
     });
     try {
@@ -541,7 +905,12 @@ class _CreateReportPageState extends State<CreateReportPage> {
         setState(() => error = e.toString().replaceFirst('Exception: ', ''));
       }
     } finally {
-      if (mounted) setState(() => busy = false);
+      if (mounted) {
+        setState(() {
+          busy = false;
+          locating = false;
+        });
+      }
     }
   }
 
@@ -587,71 +956,194 @@ class _CreateReportPageState extends State<CreateReportPage> {
 
   @override
   Widget build(BuildContext context) => ListView(
-    padding: const EdgeInsets.all(20),
-    children: [
-      Text(
-        'Buat laporan sampah',
-        style: Theme.of(context).textTheme.headlineSmall
-            ?.copyWith(fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 20),
-      TextField(
-        controller: description,
-        maxLines: 4,
-        maxLength: 2000,
-        decoration: const InputDecoration(
-          labelText: 'Deskripsi (minimal 10 karakter)',
-          border: OutlineInputBorder(),
-          alignLabelWithHint: true,
-        ),
-      ),
-      const SizedBox(height: 12),
-      if (photo != null)
-        ClipRRect(
-          borderRadius: BorderRadius.circular(14),
-          child: Image.file(File(photo!.path), height: 190, fit: BoxFit.cover),
-        ),
-      Wrap(
-        spacing: 10,
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
         children: [
-          OutlinedButton.icon(
-            onPressed: () => pick(ImageSource.camera),
-            icon: const Icon(Icons.camera_alt),
-            label: const Text('Kamera'),
-          ),
-          OutlinedButton.icon(
-            onPressed: () => pick(ImageSource.gallery),
-            icon: const Icon(Icons.photo_library),
-            label: const Text('Galeri'),
-          ),
+          const SectionTitle(
+              eyebrow: 'SATU LANGKAH LEBIH PEDULI', title: 'Buat laporan'),
+          const SizedBox(height: 8),
+          const Text('Bantu kami memahami kondisi di lokasimu.',
+              style: TextStyle(color: muted, fontSize: 12, height: 1.6)),
+          const SizedBox(height: 20),
+          SoftPanel(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const _FormStep(
+                    number: '01',
+                    title: 'Foto sampah',
+                    subtitle: 'Ambil foto yang jelas agar mudah dikenali.'),
+                const SizedBox(height: 15),
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: photo == null
+                        ? Container(
+                            height: 155,
+                            width: double.infinity,
+                            color: const Color(0xFFF0F7ED),
+                            child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add_a_photo_outlined,
+                                      color: Color(0xFF73A37B), size: 32),
+                                  SizedBox(height: 10),
+                                  Text('Belum ada foto',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w800,
+                                          color: forest)),
+                                  SizedBox(height: 4),
+                                  Text('Pilih kamera atau galeri',
+                                      style:
+                                          TextStyle(fontSize: 10, color: muted))
+                                ]))
+                        : Image.file(File(photo!.path),
+                            height: 190,
+                            width: double.infinity,
+                            fit: BoxFit.cover)),
+                const SizedBox(height: 13),
+                Row(children: [
+                  Expanded(
+                      child: OutlinedButton.icon(
+                          onPressed:
+                              busy ? null : () => pick(ImageSource.camera),
+                          icon: const Icon(Icons.camera_alt_outlined, size: 18),
+                          label: const Text('Kamera'))),
+                  const SizedBox(width: 10),
+                  Expanded(
+                      child: OutlinedButton.icon(
+                          onPressed:
+                              busy ? null : () => pick(ImageSource.gallery),
+                          icon: const Icon(Icons.photo_library_outlined,
+                              size: 18),
+                          label: const Text('Galeri'))),
+                ]),
+              ])),
+          const SizedBox(height: 13),
+          SoftPanel(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const _FormStep(
+                    number: '02',
+                    title: 'Lokasi GPS',
+                    subtitle: 'Lokasi membantu laporan ditindaklanjuti.'),
+                const SizedBox(height: 15),
+                Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF5F8F2),
+                        borderRadius: BorderRadius.circular(14)),
+                    child: Row(children: [
+                      Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFE1EFDC),
+                              borderRadius: BorderRadius.circular(11)),
+                          child: const Icon(Icons.location_on_outlined,
+                              color: Color(0xFF5D9666), size: 20)),
+                      const SizedBox(width: 11),
+                      Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                            Text(
+                                position == null
+                                    ? 'Lokasi belum diambil'
+                                    : 'Lokasi berhasil diambil',
+                                style: const TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.w800)),
+                            const SizedBox(height: 4),
+                            Text(
+                                position == null
+                                    ? 'Pastikan layanan lokasi aktif'
+                                    : '${position!.latitude.toStringAsFixed(5)}, ${position!.longitude.toStringAsFixed(5)}',
+                                style:
+                                    const TextStyle(color: muted, fontSize: 10))
+                          ])),
+                    ])),
+                const SizedBox(height: 11),
+                SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                        onPressed: busy ? null : locate,
+                        icon: const Icon(Icons.my_location_rounded, size: 17),
+                        label: Text(locating
+                            ? 'Mencari lokasi...'
+                            : position == null
+                                ? 'Ambil lokasi GPS'
+                                : 'Perbarui lokasi'))),
+              ])),
+          const SizedBox(height: 13),
+          SoftPanel(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const _FormStep(
+                    number: '03',
+                    title: 'Deskripsi',
+                    subtitle: 'Ceritakan kondisi sampah yang ditemukan.'),
+                const SizedBox(height: 15),
+                TextField(
+                    controller: description,
+                    maxLines: 4,
+                    maxLength: 2000,
+                    decoration: const InputDecoration(
+                        labelText: 'Deskripsi (minimal 10 karakter)',
+                        hintText: 'Contoh: sampah plastik di tepi jalan...',
+                        alignLabelWithHint: true)),
+              ])),
+          if (error != null)
+            Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: Text(error!,
+                    style: const TextStyle(
+                        color: Color(0xFFB25447), fontSize: 12))),
+          const SizedBox(height: 20),
+          FilledButton.icon(
+              onPressed: busy ? null : submit,
+              icon: const Icon(Icons.north_east_rounded, size: 18),
+              label: Text(busy ? 'Memproses...' : 'Kirim laporan')),
         ],
-      ),
-      const SizedBox(height: 12),
-      OutlinedButton.icon(
-        onPressed: busy ? null : locate,
-        icon: const Icon(Icons.my_location),
-        label: Text(
-          position == null
-              ? 'Ambil lokasi GPS'
-              : '${position!.latitude.toStringAsFixed(5)}, ${position!.longitude.toStringAsFixed(5)}',
-        ),
-      ),
-      if (error != null)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(error!, style: const TextStyle(color: Colors.red)),
-        ),
-      const SizedBox(height: 20),
-      FilledButton(
-        onPressed: busy ? null : submit,
-        child: Text(busy ? 'Mengirim...' : 'Kirim laporan'),
-      ),
-    ],
-  );
+      );
+}
+
+class _FormStep extends StatelessWidget {
+  const _FormStep(
+      {required this.number, required this.title, required this.subtitle});
+  final String number;
+  final String title;
+  final String subtitle;
+  @override
+  Widget build(BuildContext context) =>
+      Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+            width: 37,
+            height: 37,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: const Color(0xFFE7F3E2),
+                borderRadius: BorderRadius.circular(11)),
+            child: Text(number,
+                style: const TextStyle(
+                    color: forest, fontSize: 11, fontWeight: FontWeight.w800))),
+        const SizedBox(width: 12),
+        Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(title,
+              style: const TextStyle(
+                  color: ink, fontSize: 14, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(subtitle,
+              style: const TextStyle(color: muted, fontSize: 10, height: 1.5))
+        ])),
+      ]);
 }
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  const HistoryPage({super.key, this.initialStatus});
+  final String? initialStatus;
   @override
   State<HistoryPage> createState() => _HistoryPageState();
 }
@@ -662,9 +1154,11 @@ class _HistoryPageState extends State<HistoryPage> {
   int page = 1;
   int total = 0;
   bool busy = false;
+  String? selectedStatus;
   @override
   void initState() {
     super.initState();
+    selectedStatus = widget.initialStatus;
     load();
   }
 
@@ -673,7 +1167,11 @@ class _HistoryPageState extends State<HistoryPage> {
     setState(() => busy = true);
     try {
       final nextPage = append ? page + 1 : 1;
-      final data = await api.call('/reports?page_size=20&page=$nextPage');
+      final status = selectedStatus == null
+          ? ''
+          : '&status=${Uri.encodeQueryComponent(selectedStatus!)}';
+      final data =
+          await api.call('/reports?page_size=20&page=$nextPage$status');
       if (mounted) {
         setState(() {
           reports = append ? [...reports, ...data['items']] : data['items'];
@@ -689,93 +1187,264 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
+  void showReport(Map<String, dynamic> report) {
+    final imageUrl = '${report['image_url']}'.startsWith('/')
+        ? '$apiUrl${report['image_url']}'
+        : '${report['image_url']}';
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (context) => SafeArea(
+          child: SingleChildScrollView(
+              child: Padding(
+        padding: const EdgeInsets.fromLTRB(22, 0, 22, 28),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(children: [
+                Expanded(
+                    child: Text('Laporan #${report['id']}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w800))),
+                StatusPill(status: '${report['status']}')
+              ]),
+              const SizedBox(height: 16),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(imageUrl,
+                      width: double.infinity,
+                      height: 210,
+                      fit: BoxFit.cover,
+                      semanticLabel: 'Foto laporan sampah',
+                      errorBuilder: (_, __, ___) => Container(
+                          height: 120,
+                          color: const Color(0xFFF1F6EF),
+                          child: const Center(
+                              child: Icon(Icons.broken_image_outlined,
+                                  color: muted))))),
+              const SizedBox(height: 18),
+              const Text('DESKRIPSI',
+                  style: TextStyle(
+                      color: muted,
+                      fontSize: 9,
+                      letterSpacing: 1.1,
+                      fontWeight: FontWeight.w800)),
+              const SizedBox(height: 8),
+              Text('${report['description']}',
+                  style: const TextStyle(
+                      fontSize: 13, height: 1.6, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 18),
+              const Text('HASIL IDENTIFIKASI',
+                  style: TextStyle(
+                      color: muted,
+                      fontSize: 9,
+                      letterSpacing: 1.1,
+                      fontWeight: FontWeight.w800)),
+              const SizedBox(height: 8),
+              Text(
+                  report['ai_category'] == null
+                      ? 'Belum terdeteksi'
+                      : '${report['ai_category']}${report['ai_confidence'] is num ? ' (${(report['ai_confidence'] * 100).toStringAsFixed(1)}%)' : ''}',
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 18),
+              const Text('KOORDINAT',
+                  style: TextStyle(
+                      color: muted,
+                      fontSize: 9,
+                      letterSpacing: 1.1,
+                      fontWeight: FontWeight.w800)),
+              const SizedBox(height: 8),
+              Text('${report['latitude']}, ${report['longitude']}',
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w700)),
+            ]),
+      ))),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => RefreshIndicator(
-    onRefresh: load,
-    child: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text(
-          'Riwayat laporan',
-          style: Theme.of(context).textTheme.headlineSmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        if (error != null)
-          Text(error!, style: const TextStyle(color: Colors.red)),
-        if (reports.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(40),
-            child: Center(
-              child: Text(
-                'Belum ada laporan. Tarik ke bawah untuk memperbarui.',
-              ),
-            ),
-          ),
-        for (final report in reports)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(9),
-                    child: Image.network(
-                      '${report['image_url']}'.startsWith('/')
-                          ? '$apiUrl${report['image_url']}'
-                          : report['image_url'],
-                      width: 76,
-                      height: 76,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const SizedBox(
-                        width: 76,
-                        height: 76,
-                        child: Icon(Icons.image_not_supported),
+        onRefresh: load,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          children: [
+            const SectionTitle(
+                eyebrow: 'PANTAU PERKEMBANGAN', title: 'Riwayat laporan'),
+            const SizedBox(height: 8),
+            const Text('Lihat progres dan detail laporanmu di sini.',
+                style: TextStyle(color: muted, fontSize: 12, height: 1.6)),
+            const SizedBox(height: 18),
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  for (final status in <String?>[
+                    null,
+                    'Pending',
+                    'In Progress',
+                    'Completed',
+                    'Rejected'
+                  ])
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(status ?? 'Semua'),
+                        selected: selectedStatus == status,
+                        showCheckmark: false,
+                        selectedColor: forest,
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Color(0xFFE2EBE1)),
+                        labelStyle: TextStyle(
+                            color:
+                                selectedStatus == status ? Colors.white : muted,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800),
+                        onSelected: busy
+                            ? null
+                            : (_) {
+                                setState(() {
+                                  selectedStatus = status;
+                                  reports = [];
+                                  total = 0;
+                                  page = 1;
+                                });
+                                load();
+                              },
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          report['description'],
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                ])),
+            const SizedBox(height: 16),
+            if (error != null)
+              SoftPanel(
+                  child: Column(children: [
+                Text(error!.replaceFirst('Exception: ', ''),
+                    style: const TextStyle(
+                        color: Color(0xFFB25447), fontSize: 12)),
+                TextButton(onPressed: load, child: const Text('Coba lagi'))
+              ])),
+            if (busy && reports.isEmpty)
+              const Padding(
+                  padding: EdgeInsets.all(40),
+                  child: Center(child: CircularProgressIndicator())),
+            if (!busy && error == null && reports.isEmpty)
+              SoftPanel(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Column(children: [
+                        Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                                color: const Color(0xFFEDF6E9),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: const Icon(Icons.inventory_2_outlined,
+                                color: Color(0xFF6D9E74))),
+                        const SizedBox(height: 14),
+                        const Text('Belum ada laporan',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w800)),
                         const SizedBox(height: 5),
-                        Text(
-                          report['status'],
-                          style: const TextStyle(color: forest),
-                        ),
-                        Text(
-                          report['ai_category'] ?? 'Belum terdeteksi',
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        if (report['ai_confidence'] is num)
-                          Text(
-                            'Confidence ${(report['ai_confidence'] * 100).toStringAsFixed(1)}%',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        Text(
-                          '${report['latitude']}, ${report['longitude']}',
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        if (reports.length < total)
-          OutlinedButton(
-            onPressed: busy ? null : () => load(append: true),
-            child: Text(busy ? 'Memuat...' : 'Muat laporan berikutnya'),
-          ),
-      ],
-    ),
-  );
+                        const Text('Laporan yang sesuai akan muncul di sini.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: muted, fontSize: 11)),
+                      ]))),
+            for (final raw in reports)
+              Builder(builder: (context) {
+                final report = Map<String, dynamic>.from(raw);
+                final imageUrl = '${report['image_url']}'.startsWith('/')
+                    ? '$apiUrl${report['image_url']}'
+                    : '${report['image_url']}';
+                return Padding(
+                    padding: const EdgeInsets.only(bottom: 11),
+                    child: Material(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        child: InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () => showReport(report),
+                            child: Container(
+                              padding: const EdgeInsets.all(13),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(
+                                      color: const Color(0xFFE7EEE5))),
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.network(imageUrl,
+                                            width: 70,
+                                            height: 78,
+                                            fit: BoxFit.cover,
+                                            semanticLabel:
+                                                'Foto laporan sampah',
+                                            errorBuilder: (_, __, ___) =>
+                                                Container(
+                                                    width: 70,
+                                                    height: 78,
+                                                    color:
+                                                        const Color(0xFFF0F5ED),
+                                                    child: const Icon(
+                                                        Icons.image_outlined,
+                                                        color: muted)))),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                          Text('#${report['id']}',
+                                              style: const TextStyle(
+                                                  color: muted,
+                                                  fontSize: 9,
+                                                  fontWeight: FontWeight.w800)),
+                                          const SizedBox(height: 4),
+                                          Text('${report['description']}',
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 12,
+                                                  height: 1.4)),
+                                          const SizedBox(height: 8),
+                                          Wrap(
+                                              spacing: 8,
+                                              runSpacing: 6,
+                                              crossAxisAlignment:
+                                                  WrapCrossAlignment.center,
+                                              children: [
+                                                StatusPill(
+                                                    status:
+                                                        '${report['status']}'),
+                                                Text(
+                                                    report['ai_category'] ??
+                                                        'Belum terdeteksi',
+                                                    style: const TextStyle(
+                                                        fontSize: 9,
+                                                        color: muted))
+                                              ]),
+                                        ])),
+                                    const SizedBox(width: 4),
+                                    const Icon(Icons.north_east_rounded,
+                                        size: 15, color: Color(0xFF9FB0A2)),
+                                  ]),
+                            ))));
+              }),
+            if (reports.length < total)
+              Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: OutlinedButton(
+                      onPressed: busy ? null : () => load(append: true),
+                      child: Text(
+                          busy ? 'Memuat...' : 'Muat laporan berikutnya'))),
+          ],
+        ),
+      );
 }
