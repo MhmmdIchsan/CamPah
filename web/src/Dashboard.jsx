@@ -124,7 +124,11 @@ export default function Dashboard({
               className="completion-ring"
               style={{ "--completion": `${percent}%` }}
               role="img"
-              aria-label={`${percent}% laporan selesai`}
+              aria-label={
+                total == null
+                  ? "Memuat progres laporan"
+                  : `${percent}% laporan selesai`
+              }
             >
               <span>{total == null ? "—" : `${percent}%`}</span>
             </div>
@@ -156,6 +160,7 @@ export default function Dashboard({
             key={status}
             onClick={() => onSelectStatus(status)}
             aria-label={`Lihat laporan ${status}`}
+            aria-describedby={`count-${color}`}
           >
             <span className="stat-top">
               <span className="stat-icon">
@@ -167,7 +172,9 @@ export default function Dashboard({
                 aria-hidden="true"
               />
             </span>
-            <strong>{stats?.by_status?.[status] ?? "—"}</strong>
+            <strong id={`count-${color}`}>
+              {stats?.by_status?.[status] ?? "—"}
+            </strong>
             <span className="stat-label">{status}</span>
             <small>{description}</small>
           </button>

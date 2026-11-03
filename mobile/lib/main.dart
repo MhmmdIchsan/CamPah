@@ -635,7 +635,9 @@ class _DashboardPageState extends State<DashboardPage> {
                               TextStyle(color: Color(0xFFB6CFBE), fontSize: 10))
                     ])),
                 Semantics(
-                    label: '${(progress * 100).round()} persen laporan selesai',
+                    label: total == null
+                        ? 'Memuat progres laporan'
+                        : '${(progress * 100).round()} persen laporan selesai',
                     child: SizedBox(
                         width: 46,
                         height: 46,
