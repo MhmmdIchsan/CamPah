@@ -249,6 +249,21 @@ def test_pagination_invalid_status_and_prediction(system):
     assert prediction.json() == {"category": "Plastic Waste", "confidence": 0.91}
 
 
+def test_report_filters_and_safe_admin_export(system):
+    client, sessions = system
+    owner = signup(client)
+    admin = admin_account(client, sessions)
+    report = create_report(client, owner).json()
+    assert client.patch(f"/reports/{report['id']}", headers=auth(owner), json={'description': '=SUM(1,2) suspicious entry'}).status_code == 200
+    assert client.get('/reports?category=Plastic%20Waste', headers=auth(admin)).json()['total'] == 1
+    assert client.get('/reports?category=Paper%20Waste', headers=auth(admin)).json()['total'] == 0
+    assert client.get('/reports?date_from=2026-02-02&date_to=2026-01-01', headers=auth(admin)).status_code == 422
+    assert client.get('/reports-export', headers=auth(owner)).status_code == 403
+    exported = client.get('/reports-export?category=Plastic%20Waste', headers=auth(admin))
+    assert exported.status_code == 200
+    assert "'=SUM(1,2) suspicious entry" in exported.text
+
+
 def test_real_model_prediction_and_report(system, monkeypatch):
     torch = pytest.importorskip("torch")
     model_path = Path(__file__).resolve().parents[2] / "ml" / "artifacts" / "best_model.pt"

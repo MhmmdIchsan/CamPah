@@ -869,6 +869,16 @@ main {
   margin-bottom: 12px;
   position: relative;
 }
+.admin-filters {
+  flex-wrap: wrap;
+}
+.admin-filters label {
+  margin: 0;
+  flex: 1 1 150px;
+}
+.admin-filters select {
+  flex: 1 1 180px;
+}
 .filters input {
   flex: 1;
   padding-left: 41px;
@@ -1706,8 +1716,13 @@ main {
   font-size: 11px;
 }
 @media (max-width: 480px) {
-  .topbar { flex-wrap: wrap; gap: 12px; }
-  .topbar-actions { margin-left: auto; }
+  .topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .topbar-actions {
+    margin-left: auto;
+  }
 }
 .theme-toggle {
   display: inline-grid;

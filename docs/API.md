@@ -14,7 +14,8 @@ Respons autentikasi berisi `access_token`, `token_type: bearer`, serta `user` de
 | --- | --- | --- | --- |
 | GET | `/auth/me` | Akun saat ini | Login |
 | PATCH | `/auth/me` | JSON `name`; opsional `current_password` dan `new_password` | Login |
-| GET | `/reports` | `q`, `status`, `page` (mulai 1), `page_size` (1–100) | User: sendiri; Admin: semua |
+| GET | `/reports` | `q`, `status`, `category`, `date_from`, `date_to` (UTC), `page`, `page_size` | User: sendiri; Admin: semua |
+| GET | `/reports-export` | Filter `q`, `status`, `category`, `date_from`, `date_to`; CSV maksimal 10.000 laporan | Admin |
 | POST | `/reports` | Multipart `image`, `description`, `latitude`, `longitude` | Login |
 | GET | `/reports/{id}` | Detail laporan | Pemilik/Admin |
 | PATCH | `/reports/{id}` | JSON opsional `description`, `latitude`, `longitude` | Pemilik saat Pending/Admin |

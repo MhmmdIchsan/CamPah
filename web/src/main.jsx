@@ -104,6 +104,9 @@ function App() {
   const [users, setUsers] = useState([]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
   const [detail, setDetail] = useState(null);
@@ -131,6 +134,9 @@ function App() {
     setReports({ items: [], total: 0, page: 1, page_size: 10 });
     setQuery("");
     setFilter("");
+    setCategoryFilter("");
+    setDateFrom("");
+    setDateTo("");
     setPage(1);
     setError("");
   }, []);
@@ -198,6 +204,9 @@ function App() {
       page_size: "10",
     });
     if (filter) params.set("status", filter);
+    if (categoryFilter) params.set("category", categoryFilter);
+    if (dateFrom) params.set("date_from", dateFrom);
+    if (dateTo) params.set("date_to", dateTo);
     const controller = new AbortController();
     setLoadingReports(true);
     request(`/reports?${params}`, { token, signal: controller.signal })
@@ -212,7 +221,17 @@ function App() {
         if (!controller.signal.aborted) setLoadingReports(false);
       });
     return () => controller.abort();
-  }, [token, view, query, filter, page, refresh]);
+  }, [
+    token,
+    view,
+    query,
+    filter,
+    categoryFilter,
+    dateFrom,
+    dateTo,
+    page,
+    refresh,
+  ]);
   useEffect(() => {
     if (!token || !isAdmin || view !== "users") return;
     const controller = new AbortController();
@@ -422,6 +441,79 @@ function App() {
                 ))}
               </select>
             </div>
+            {isAdmin && (
+              <div className="filters admin-filters">
+                <select
+                  aria-label="Filter kategori"
+                  value={categoryFilter}
+                  onChange={(e) => {
+                    setCategoryFilter(e.target.value);
+                    setPage(1);
+                  }}
+                >
+                  <option value="">Semua kategori</option>
+                  <option>Organic Waste</option>
+                  <option>Plastic Waste</option>
+                  <option>Paper Waste</option>
+                </select>
+                <label>
+                  Dari tanggal
+                  <input
+                    aria-label="Dari tanggal"
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => {
+                      setDateFrom(e.target.value);
+                      setPage(1);
+                    }}
+                  />
+                </label>
+                <label>
+                  Sampai tanggal
+                  <input
+                    aria-label="Sampai tanggal"
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => {
+                      setDateTo(e.target.value);
+                      setPage(1);
+                    }}
+                  />
+                </label>
+                <button
+                  className="text-button"
+                  onClick={async () => {
+                    try {
+                      const params = new URLSearchParams();
+                      if (query) params.set("q", query);
+                      if (filter) params.set("status", filter);
+                      if (categoryFilter)
+                        params.set("category", categoryFilter);
+                      if (dateFrom) params.set("date_from", dateFrom);
+                      if (dateTo) params.set("date_to", dateTo);
+                      const response = await fetch(
+                        `${API}/reports-export?${params}`,
+                        { headers: { Authorization: `Bearer ${token}` } },
+                      );
+                      if (!response.ok)
+                        throw new Error(
+                          "Ekspor gagal. Periksa filter dan coba lagi.",
+                        );
+                      const url = URL.createObjectURL(await response.blob());
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = "campah-laporan.csv";
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    } catch (e) {
+                      setError(e.message);
+                    }
+                  }}
+                >
+                  Ekspor CSV
+                </button>
+              </div>
+            )}
             <div className="report-list">
               {reports.items.map((report) => (
                 <article className="report-row" key={report.id}>

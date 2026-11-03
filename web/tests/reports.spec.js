@@ -123,6 +123,13 @@ test("user reports, admin status and user management work together", async ({
   await page.getByRole("textbox", { name: "Cari laporan" }).fill(unique);
   row = page.locator(".report-row").filter({ hasText: unique });
   await expect(row).toHaveCount(1);
+  await page.getByLabel("Filter kategori").selectOption("Plastic Waste");
+  await page.getByLabel("Filter kategori").selectOption("");
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Ekspor CSV" }).click();
+  expect((await downloadPromise).suggestedFilename()).toBe(
+    "campah-laporan.csv",
+  );
   await page.setViewportSize({ width: 320, height: 800 });
   await row.getByRole("button", { name: "Lihat detail" }).click();
   const detail = page.getByRole("dialog", { name: /Detail laporan/ });

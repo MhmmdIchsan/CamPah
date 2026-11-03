@@ -1,9 +1,10 @@
 import io
+import csv
 import logging
 import os
 import uuid
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Annotated, Literal
 
@@ -16,6 +17,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import Response
 from PIL import Image, ImageOps, UnidentifiedImageError
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from sqlalchemy import func, or_, select, update
@@ -380,16 +382,29 @@ def list_reports(
     user: Annotated[User, Depends(current_user)],
     q: str = "",
     report_status: str | None = Query(default=None, alias="status"),
+    category: str | None = None,
+    date_from: date | None = None,
+    date_to: date | None = None,
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=10, ge=1, le=100),
 ):
     if report_status and report_status not in STATUSES:
         raise HTTPException(status_code=422, detail="Invalid report status")
+    if category and category not in CATEGORIES:
+        raise HTTPException(status_code=422, detail="Invalid category")
+    if date_from and date_to and date_from > date_to:
+        raise HTTPException(status_code=422, detail="Invalid date range")
     conditions = [Report.deleted_at.is_(None)]
     if user.role != "admin":
         conditions.append(Report.user_id == user.id)
     if report_status:
         conditions.append(Report.status == report_status)
+    if category:
+        conditions.append(func.coalesce(Report.corrected_category, Report.ai_category) == category)
+    if date_from:
+        conditions.append(Report.created_at >= datetime.combine(date_from, time.min, tzinfo=timezone.utc))
+    if date_to:
+        conditions.append(Report.created_at <= datetime.combine(date_to, time.max, tzinfo=timezone.utc))
     if q.strip():
         conditions.append(or_(Report.description.ilike(f"%{q.strip()}%"), Report.ai_category.ilike(f"%{q.strip()}%")))
     total = db.scalar(select(func.count(Report.id)).where(*conditions)) or 0
@@ -397,6 +412,30 @@ def list_reports(
         select(Report).where(*conditions).order_by(Report.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
     ).all()
     return ReportList(items=items, total=total, page=page, page_size=page_size)
+
+
+@app.get('/reports-export')
+def export_reports(db: Annotated[Session, Depends(get_db)], admin: Annotated[User, Depends(admin_user)],
+                   status: str | None = None, category: str | None = None, q: str = '',
+                   date_from: date | None = None, date_to: date | None = None):
+    if status and status not in STATUSES or category and category not in CATEGORIES or date_from and date_to and date_from > date_to:
+        raise HTTPException(status_code=422, detail='Filter tidak valid')
+    conditions = [Report.deleted_at.is_(None)]
+    if status: conditions.append(Report.status == status)
+    if category: conditions.append(func.coalesce(Report.corrected_category, Report.ai_category) == category)
+    if date_from: conditions.append(Report.created_at >= datetime.combine(date_from, time.min, tzinfo=timezone.utc))
+    if date_to: conditions.append(Report.created_at <= datetime.combine(date_to, time.max, tzinfo=timezone.utc))
+    if q.strip(): conditions.append(or_(Report.description.ilike(f"%{q.strip()}%"), Report.ai_category.ilike(f"%{q.strip()}%")))
+    reports = db.scalars(select(Report).where(*conditions).order_by(Report.created_at.desc()).limit(10000)).all()
+    output = io.StringIO(newline='')
+    writer = csv.writer(output)
+    writer.writerow(['id', 'pelapor', 'deskripsi', 'latitude', 'longitude', 'status', 'kategori_ai', 'kategori_tinjauan', 'dibuat'])
+    def safe(value):
+        value = str(value or '')
+        return "'" + value if value.lstrip().startswith(('=', '+', '-', '@', '\t', '\r')) else value
+    for report in reports:
+        writer.writerow([report.id, safe(report.owner_name), safe(report.description), report.latitude, report.longitude, report.status, report.ai_category or '', report.corrected_category or '', report.created_at.isoformat()])
+    return Response(content='\ufeff' + output.getvalue(), media_type='text/csv; charset=utf-8', headers={'Content-Disposition': 'attachment; filename="campah-laporan.csv"'})
 
 
 @app.post("/reports", response_model=ReportOut, status_code=201)
