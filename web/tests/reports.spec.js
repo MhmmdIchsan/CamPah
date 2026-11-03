@@ -8,6 +8,12 @@ async function register(page, email) {
   await page.getByLabel("Nama lengkap").fill("CamPah Browser Tester");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Kata sandi", { exact: true }).fill("TestPassword123");
+  await page.getByRole("button", { name: "Tampilkan kata sandi" }).click();
+  await expect(page.getByLabel("Kata sandi", { exact: true })).toHaveAttribute(
+    "type",
+    "text",
+  );
+  await page.getByRole("button", { name: "Sembunyikan kata sandi" }).click();
   await page.getByRole("button", { name: "Daftar", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Dashboard", exact: true }),
@@ -36,6 +42,7 @@ test("user reports, admin status and user management work together", async ({
   await page
     .getByLabel("Foto sampah")
     .setInputFiles("tests/fixtures/report.png");
+  await expect(page.getByAltText("Pratinjau foto laporan")).toBeVisible();
   await page.getByRole("button", { name: "Gunakan lokasi saya" }).click();
   await expect(page.getByLabel("Latitude", { exact: true })).toHaveValue(
     "-5.55",
@@ -53,6 +60,15 @@ test("user reports, admin status and user management work together", async ({
     .fill(`${description} diperbarui`);
   await page.getByRole("button", { name: "Simpan perubahan" }).click();
   await expect(page.locator(".modal")).toHaveCount(0);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Dashboard" })
+    .click();
+  await page.getByRole("button", { name: "Lihat laporan Pending" }).click();
+  await expect(page.getByLabel("Filter status")).toHaveValue("Pending");
+  await expect(
+    page.locator(".report-row").filter({ hasText: unique }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Keluar" }).click();
   await page.getByLabel("Email", { exact: true }).fill("admin@example.com");
   await page
@@ -99,6 +115,33 @@ test("user reports, admin status and user management work together", async ({
   await expect(
     row.getByRole("button", { name: "Hapus", exact: true }),
   ).toHaveCount(0);
+});
+
+test("new report form remains usable on a narrow screen", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 });
+  await register(page, `narrow-${suffix()}@example.com`);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Buat laporan" })
+    .click();
+  await page
+    .getByLabel("Foto sampah")
+    .setInputFiles("tests/fixtures/report.png");
+  await expect(page.getByAltText("Pratinjau foto laporan")).toBeVisible();
+  await page.getByLabel("Deskripsi").fill("Laporan sampah di sekitar jalan.");
+  await page.getByLabel("Latitude").fill("-5.55");
+  await page.getByLabel("Longitude").fill("95.32");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    ),
+  ).toBe(false);
+  await page.getByRole("button", { name: "Kirim laporan" }).click();
+  await expect(
+    page
+      .locator(".report-row")
+      .filter({ hasText: "Laporan sampah di sekitar jalan." }),
+  ).toBeVisible();
 });
 
 test("corrupt saved session recovers and mobile layout fits the viewport", async ({

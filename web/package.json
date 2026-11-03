@@ -11,6 +11,7 @@
     "format": "prettier --write src tests *.js"
   },
   "dependencies": {
+    "lucide-react": "^1.66.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

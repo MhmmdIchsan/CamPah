@@ -1,5 +1,26 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Camera,
+  CheckCircle2,
+  ClipboardList,
+  Eye,
+  EyeOff,
+  ImagePlus,
+  LayoutDashboard,
+  Leaf,
+  LogOut,
+  MapPin,
+  Navigation,
+  Plus,
+  Search,
+  Users as UsersIcon,
+  X,
+} from "lucide-react";
+import brandMark from "./assets/campah-mark.svg";
+import Dashboard from "./Dashboard.jsx";
 import "./style.css";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -69,6 +90,8 @@ function App() {
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
   const [loadingReports, setLoadingReports] = useState(false);
+  const [recentReports, setRecentReports] = useState(null);
+  const [recentError, setRecentError] = useState(false);
 
   const token = session?.access_token;
   const isAdmin = session?.user?.role === "admin";
@@ -78,6 +101,7 @@ function App() {
     setView("dashboard");
     setEditing(null);
     setStats(null);
+    setRecentReports(null);
     setUsers([]);
     setReports({ items: [], total: 0, page: 1, page_size: 10 });
     setQuery("");
@@ -167,6 +191,18 @@ function App() {
     return () => controller.abort();
   }, [token, isAdmin, view, refresh]);
 
+  useEffect(() => {
+    if (!token || view !== "dashboard") return;
+    const controller = new AbortController();
+    setRecentError(false);
+    request("/reports?page=1&page_size=3", { token, signal: controller.signal })
+      .then((data) => setRecentReports(data.items))
+      .catch(() => {
+        if (!controller.signal.aborted) setRecentError(true);
+      });
+    return () => controller.abort();
+  }, [token, view, refresh]);
+
   if (!session)
     return (
       <Auth
@@ -188,45 +224,58 @@ function App() {
     <div className="shell">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-icon">♻</span>
+          <img className="brand-mark" src={brandMark} alt="" />
           <div>
             <strong>CamPah</strong>
-            <small>Management System</small>
+            <small>LEBIH PEDULI BUMI</small>
           </div>
         </div>
         <nav aria-label="Navigasi utama">
           <button
             aria-label="Dashboard"
+            aria-current={view === "dashboard" ? "page" : undefined}
             className={view === "dashboard" ? "active" : ""}
             onClick={() => switchView("dashboard")}
           >
-            ◫ <span>Dashboard</span>
+            <LayoutDashboard size={19} aria-hidden="true" />{" "}
+            <span>Dashboard</span>
           </button>
           <button
             aria-label="Laporan"
+            aria-current={view === "reports" ? "page" : undefined}
             className={view === "reports" ? "active" : ""}
             onClick={() => switchView("reports")}
           >
-            ▤ <span>Laporan</span>
+            <ClipboardList size={19} aria-hidden="true" /> <span>Laporan</span>
           </button>
           <button
             aria-label="Buat laporan"
+            aria-current={view === "new" ? "page" : undefined}
             className={view === "new" ? "active" : ""}
             onClick={() => switchView("new")}
           >
-            ＋ <span>Buat laporan</span>
+            <Camera size={19} aria-hidden="true" /> <span>Buat laporan</span>
           </button>
           {isAdmin && (
             <button
               aria-label="Pengguna"
+              aria-current={view === "users" ? "page" : undefined}
               className={view === "users" ? "active" : ""}
               onClick={() => switchView("users")}
             >
-              ♙ <span>Pengguna</span>
+              <UsersIcon size={19} aria-hidden="true" /> <span>Pengguna</span>
             </button>
           )}
         </nav>
         <div className="sidebar-bottom">
+          <div className="sidebar-note">
+            <Leaf size={17} aria-hidden="true" />
+            <span>
+              Langkah kecil,
+              <br />
+              dampak yang berarti.
+            </span>
+          </div>
           <div className="avatar">
             {session.user.name.slice(0, 1).toUpperCase()}
           </div>
@@ -239,7 +288,9 @@ function App() {
       <main>
         <header className="topbar">
           <div>
-            <span className="eyebrow">CAMPAH / SMART WASTE</span>
+            <span className="eyebrow">
+              RUANG KERJA / {isAdmin ? "ADMIN" : "PENGGUNA"}
+            </span>
             <h1>
               {view === "dashboard"
                 ? "Dashboard"
@@ -251,7 +302,7 @@ function App() {
             </h1>
           </div>
           <button className="text-button" onClick={logout}>
-            Keluar ↗
+            <LogOut size={17} aria-hidden="true" /> Keluar
           </button>
         </header>
         {error && (
@@ -260,51 +311,25 @@ function App() {
           </div>
         )}
         {view === "dashboard" && (
-          <section>
-            <div className="intro">
-              <div>
-                <span className="eyebrow">RINGKASAN</span>
-                <h2>Pantau lingkungan, tindak lanjuti laporan.</h2>
-                <p>Setiap laporan membantu penanganan sampah lebih terarah.</p>
-              </div>
-              <button className="primary" onClick={() => switchView("new")}>
-                ＋ Buat laporan
-              </button>
-            </div>
-            <div className="stat-grid">
-              <Stat
-                title="Total laporan"
-                number={stats?.total ?? "—"}
-                tone="dark"
-              />
-              {statuses.map((status, i) => (
-                <Stat
-                  key={status}
-                  title={status}
-                  number={stats?.by_status?.[status] ?? "—"}
-                  tone={["amber", "blue", "green", "red"][i]}
-                />
-              ))}
-            </div>
-            <div className="card">
-              <h3>Kategori terdeteksi AI</h3>
-              <div className="category-grid">
-                {["Organic Waste", "Plastic Waste", "Paper Waste"].map(
-                  (name, i) => (
-                    <div className="category" key={name}>
-                      <span className="category-icon">
-                        {["◒", "♳", "▧"][i]}
-                      </span>
-                      <div>
-                        <strong>{stats?.by_category?.[name] ?? "—"}</strong>
-                        <small>{name}</small>
-                      </div>
-                    </div>
-                  ),
-                )}
-              </div>
-            </div>
-          </section>
+          <Dashboard
+            stats={stats}
+            name={session.user.name}
+            isAdmin={isAdmin}
+            recentReports={recentReports}
+            recentError={recentError}
+            imageSource={imageSource}
+            onCreate={() => switchView("new")}
+            onOpenReports={() => {
+              setFilter("");
+              setPage(1);
+              switchView("reports");
+            }}
+            onSelectStatus={(status) => {
+              setFilter(status);
+              setPage(1);
+              switchView("reports");
+            }}
+          />
         )}
         {view === "reports" && (
           <section className="card">
@@ -314,10 +339,11 @@ function App() {
                 <p>{reports.total} laporan ditemukan</p>
               </div>
               <button className="primary" onClick={() => switchView("new")}>
-                ＋ Buat laporan
+                <Plus size={17} aria-hidden="true" /> Buat laporan
               </button>
             </div>
             <div className="filters">
+              <Search className="search-icon" size={18} aria-hidden="true" />
               <input
                 aria-label="Cari laporan"
                 placeholder="Cari deskripsi atau kategori..."
@@ -364,7 +390,8 @@ function App() {
                       {new Date(report.created_at).toLocaleDateString("id-ID")}
                     </p>
                     <small>
-                      📍 {report.latitude.toFixed(5)},{" "}
+                      <MapPin size={13} aria-hidden="true" />{" "}
+                      {report.latitude.toFixed(5)},{" "}
                       {report.longitude.toFixed(5)}{" "}
                       {isAdmin ? `· User #${report.user_id}` : ""}
                     </small>
@@ -500,8 +527,13 @@ function App() {
             >
               <div className="section-head">
                 <h2>Ubah laporan #{editing.id}</h2>
-                <button type="button" onClick={() => setEditing(null)}>
-                  ✕
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label="Tutup"
+                  onClick={() => setEditing(null)}
+                >
+                  <X size={18} aria-hidden="true" />
                 </button>
               </div>
               <label>
@@ -552,6 +584,7 @@ function App() {
 
 function Auth({ onLogin }) {
   const [register, setRegister] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const submit = async (e) => {
@@ -575,13 +608,56 @@ function Auth({ onLogin }) {
   return (
     <div className="auth-page">
       <div className="auth-side">
-        <span className="brand-icon">♻</span>
-        <span className="eyebrow">CAMPAH ? SMART WASTE</span>
-        <h1>Lingkungan bersih dimulai dari satu laporan.</h1>
-        <p>Laporkan, pantau, dan bantu tindak lanjut sampah di sekitar Anda.</p>
-        <div className="auth-art">♻</div>
+        <div className="auth-brand">
+          <img src={brandMark} alt="" />
+          <div>
+            <strong>CamPah</strong>
+            <small>LEBIH PEDULI BUMI</small>
+          </div>
+        </div>
+        <div className="auth-message">
+          <span className="welcome-kicker">
+            <span className="kicker-dot" /> BERSAMA UNTUK LINGKUNGAN
+          </span>
+          <h1>
+            Langkah kecil.
+            <br />
+            <em>Dampak besar.</em>
+          </h1>
+          <p>
+            Lingkungan yang lebih bersih dimulai dari kepedulian kita bersama.
+          </p>
+          <div className="auth-steps">
+            <span>
+              <Camera size={17} aria-hidden="true" /> Foto temuanmu
+            </span>
+            <i />
+            <span>
+              <MapPin size={17} aria-hidden="true" /> Tandai lokasinya
+            </span>
+            <i />
+            <span>
+              <CheckCircle2 size={17} aria-hidden="true" /> Pantau progresnya
+            </span>
+          </div>
+        </div>
+        <div className="auth-decoration" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="auth-footer">
+          <span>CAMPAH / SMART WASTE</span>
+          <span>
+            UNTUK BUMI YANG LEBIH BAIK <ArrowUpRight size={15} />
+          </span>
+        </div>
       </div>
       <form className="auth-form" onSubmit={submit}>
+        <div className="auth-mobile-brand">
+          <img src={brandMark} alt="" />
+          <strong>CamPah</strong>
+        </div>
         <span className="eyebrow">SELAMAT DATANG</span>
         <h2>{register ? "Buat akun baru" : "Masuk ke akun Anda"}</h2>
         <p>
@@ -604,12 +680,35 @@ function Auth({ onLogin }) {
           Email
           <input type="email" name="email" required />
         </label>
-        <label>
-          Kata sandi
-          <input type="password" name="password" minLength="8" required />
-        </label>
+        <div className="field">
+          <label htmlFor="auth-password">Kata sandi</label>
+          <div className="password-field">
+            <input
+              id="auth-password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              minLength="8"
+              autoComplete={register ? "new-password" : "current-password"}
+              required
+            />
+            <button
+              type="button"
+              aria-label={
+                showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
+              }
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <EyeOff size={18} aria-hidden="true" />
+              ) : (
+                <Eye size={18} aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
         <button className="primary full" disabled={busy}>
-          {busy ? "Memproses..." : register ? "Daftar" : "Masuk"}
+          {busy ? "Memproses..." : register ? "Daftar" : "Masuk"}{" "}
+          <ArrowRight size={17} aria-hidden="true" />
         </button>
         <p className="switch">
           {register ? "Sudah punya akun?" : "Belum punya akun?"}{" "}
@@ -631,6 +730,14 @@ function Auth({ onLogin }) {
 function ReportForm({ onSubmit, busy }) {
   const [location, setLocation] = useState(null);
   const [locationError, setLocationError] = useState("");
+  const [preview, setPreview] = useState(null);
+  const [photoName, setPhotoName] = useState("");
+  useEffect(
+    () => () => {
+      if (preview) URL.revokeObjectURL(preview);
+    },
+    [preview],
+  );
   const locate = () => {
     if (!navigator.geolocation) {
       setLocationError("GPS tidak tersedia di browser ini.");
@@ -656,6 +763,7 @@ function ReportForm({ onSubmit, busy }) {
     <form className="card form-card" onSubmit={submit}>
       <div className="section-head">
         <div>
+          <span className="eyebrow">LAPORAN BARU</span>
           <h2>Detail laporan</h2>
           <p>Lengkapi informasi lokasi dan foto sampah.</p>
         </div>
@@ -670,20 +778,44 @@ function ReportForm({ onSubmit, busy }) {
           required
         />
       </label>
-      <label>
-        Foto sampah
+      <label className="upload-label">
+        <span>Foto sampah</span>
+        <span className={`upload-zone ${preview ? "has-preview" : ""}`}>
+          {preview ? (
+            <img src={preview} alt="Pratinjau foto laporan" />
+          ) : (
+            <span className="upload-icon">
+              <ImagePlus size={23} aria-hidden="true" />
+            </span>
+          )}
+          <span>
+            <strong>{photoName || "Pilih foto sampah"}</strong>
+            <small>JPEG, PNG, atau WEBP · maksimal 8 MB</small>
+          </span>
+        </span>
         <input
+          className="file-input"
+          aria-label="Foto sampah"
           name="image"
           type="file"
           accept="image/jpeg,image/png,image/webp"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.setCustomValidity(
+              file && file.size > 8 * 1024 * 1024
+                ? "Ukuran foto maksimal 8 MB."
+                : "",
+            );
+            setPhotoName(file?.name || "");
+            setPreview(file ? URL.createObjectURL(file) : null);
+          }}
           required
         />
-        <small>JPEG, PNG, atau WEBP; maksimal 8 MB.</small>
       </label>
       <div className="location-row">
         <strong>Lokasi GPS</strong>
         <button type="button" onClick={locate}>
-          ◎ Gunakan lokasi saya
+          <Navigation size={15} aria-hidden="true" /> Gunakan lokasi saya
         </button>
       </div>
       {locationError && <p className="hint">{locationError}</p>}
@@ -720,7 +852,8 @@ function ReportForm({ onSubmit, busy }) {
         </label>
       </div>
       <button className="primary" disabled={busy}>
-        {busy ? "Mengirim..." : "Kirim laporan"}
+        {busy ? "Mengirim..." : "Kirim laporan"}{" "}
+        <ArrowRight size={17} aria-hidden="true" />
       </button>
     </form>
   );
@@ -838,14 +971,4 @@ function Status({ value }) {
     </span>
   );
 }
-function Stat({ title, number, tone }) {
-  return (
-    <div className={`stat ${tone}`}>
-      <small>{title}</small>
-      <strong>{number}</strong>
-      <span>laporan</span>
-    </div>
-  );
-}
-
 createRoot(document.getElementById("root")).render(<App />);
