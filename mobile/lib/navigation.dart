@@ -81,68 +81,150 @@ class CamPahBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 280);
+    final surface = Theme.of(context).colorScheme.surface;
     return SafeArea(
       top: false,
       minimum: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-      child: Container(
-        height: 78,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(color: Theme.of(context).dividerColor),
-          boxShadow: const [
-            BoxShadow(
-                color: Color(0x140F392A), blurRadius: 24, offset: Offset(0, 6))
-          ],
-        ),
-        child: LayoutBuilder(
-            builder: (context, constraints) => Stack(children: [
-                  Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: AnimatedAlign(
-                        alignment: Alignment(selectedIndex.toDouble() - 1, 0),
+      child: SizedBox(
+        height: 106,
+        child: Stack(children: [
+          Positioned.fill(
+              top: 27,
+              child: PhysicalShape(
+                clipper: _NavBarClipper(),
+                elevation: 6,
+                shadowColor: const Color(0x330F392A),
+                color: surface,
+                child: Row(children: [
+                  _NavItem(
+                      label: 'Dashboard',
+                      icon: Icons.grid_view_rounded,
+                      selectedIcon: Icons.dashboard_rounded,
+                      selected: selectedIndex == 0,
+                      duration: duration,
+                      onTap: () => onSelected(0)),
+                  const SizedBox(width: 88),
+                  _NavItem(
+                      label: 'Riwayat',
+                      icon: Icons.article_outlined,
+                      selectedIcon: Icons.article_rounded,
+                      selected: selectedIndex == 2,
+                      duration: duration,
+                      onTap: () => onSelected(2)),
+                ]),
+              )),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Semantics(
+                    label: 'Lapor',
+                    button: true,
+                    selected: selectedIndex == 1,
+                    child: ExcludeSemantics(
+                      child: AnimatedScale(
+                        scale: selectedIndex == 1 ? 1.07 : 1,
                         duration: duration,
-                        curve: Curves.easeOutCubic,
-                        child: Container(
-                            width: (constraints.maxWidth - 12) / 3,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? const Color(0xFF304B3C)
-                                    : const Color(0xFFF0F7E9),
-                                borderRadius: BorderRadius.circular(19))),
-                      )),
-                  Row(children: [
-                    _NavItem(
-                        label: 'Dashboard',
-                        icon: Icons.grid_view_rounded,
-                        selectedIcon: Icons.dashboard_rounded,
-                        selected: selectedIndex == 0,
-                        duration: duration,
-                        onTap: () => onSelected(0)),
-                    _NavItem(
-                        label: 'Lapor',
-                        icon: Icons.add_a_photo_outlined,
-                        selectedIcon: Icons.add_a_photo_rounded,
-                        selected: selectedIndex == 1,
-                        duration: duration,
+                        curve: Curves.easeOutBack,
+                        child: Material(
+                          color: Colors.transparent,
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            onTap: () => onSelected(1),
+                            customBorder: const CircleBorder(),
+                            child: Ink(
+                              width: 64,
+                              height: 64,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: dark
+                                        ? const [
+                                            Color(0xFFBCEB7B),
+                                            Color(0xFF79B969)
+                                          ]
+                                        : const [
+                                            Color(0xFF397F58),
+                                            Color(0xFF103D31)
+                                          ]),
+                                border: Border.all(color: surface, width: 4),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: (dark ? lime : forest)
+                                          .withValues(alpha: .28),
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 5))
+                                ],
+                              ),
+                              child: AnimatedSwitcher(
+                                duration: duration,
+                                transitionBuilder: (child, animation) =>
+                                    ScaleTransition(
+                                        scale: animation,
+                                        child: FadeTransition(
+                                            opacity: animation, child: child)),
+                                child: Icon(
+                                    selectedIndex == 1
+                                        ? Icons.add_a_photo_rounded
+                                        : Icons.add_a_photo_outlined,
+                                    key: ValueKey(selectedIndex == 1),
+                                    size: 25,
+                                    color: dark ? forest : Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )),
+                const SizedBox(height: 5),
+                ExcludeSemantics(
+                    child: GestureDetector(
                         onTap: () => onSelected(1),
-                        camera: true),
-                    _NavItem(
-                        label: 'Riwayat',
-                        icon: Icons.article_outlined,
-                        selectedIcon: Icons.article_rounded,
-                        selected: selectedIndex == 2,
-                        duration: duration,
-                        onTap: () => onSelected(2)),
-                  ]),
-                ])),
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 3),
+                            child: Text('Lapor',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    color: selectedIndex == 1
+                                        ? Theme.of(context).colorScheme.primary
+                                        : muted))))),
+              ])),
+        ]),
       ),
     );
   }
+}
+
+class _NavBarClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final center = size.width / 2;
+    return Path()
+      ..moveTo(24, 0)
+      ..lineTo(center - 47, 0)
+      ..cubicTo(center - 38, 0, center - 37, 29, center, 29)
+      ..cubicTo(center + 37, 29, center + 38, 0, center + 47, 0)
+      ..lineTo(size.width - 24, 0)
+      ..quadraticBezierTo(size.width, 0, size.width, 24)
+      ..lineTo(size.width, size.height - 24)
+      ..quadraticBezierTo(size.width, size.height, size.width - 24, size.height)
+      ..lineTo(24, size.height)
+      ..quadraticBezierTo(0, size.height, 0, size.height - 24)
+      ..lineTo(0, 24)
+      ..quadraticBezierTo(0, 0, 24, 0)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
 
 class _NavItem extends StatelessWidget {
@@ -152,13 +234,11 @@ class _NavItem extends StatelessWidget {
       required this.selectedIcon,
       required this.selected,
       required this.duration,
-      required this.onTap,
-      this.camera = false});
+      required this.onTap});
   final String label;
   final IconData icon;
   final IconData selectedIcon;
   final bool selected;
-  final bool camera;
   final Duration duration;
   final VoidCallback onTap;
 
@@ -170,62 +250,46 @@ class _NavItem extends StatelessWidget {
         button: true,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(19),
           child: ExcludeSemantics(
-              child: SizedBox.expand(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                AnimatedScale(
-                  scale: selected ? 1.06 : 1,
-                  duration: duration,
-                  curve: Curves.easeOutBack,
+              child: Center(
                   child: AnimatedContainer(
-                    duration: duration,
-                    width: camera ? 37 : 28,
-                    height: camera ? 37 : 28,
-                    decoration: camera
-                        ? BoxDecoration(
-                            color: selected ? forest : const Color(0xFF2B5E46),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: selected
-                                ? const [
-                                    BoxShadow(
-                                        color: Color(0x30285338),
-                                        blurRadius: 9,
-                                        offset: Offset(0, 3))
-                                  ]
-                                : [])
-                        : null,
-                    child: AnimatedSwitcher(
-                      duration: duration,
-                      transitionBuilder: (child, animation) => FadeTransition(
-                          opacity: animation,
-                          child:
-                              ScaleTransition(scale: animation, child: child)),
-                      child: Icon(selected ? selectedIcon : icon,
-                          key: ValueKey(selected),
-                          size: camera ? 19 : 21,
-                          color: camera
-                              ? Colors.white
-                              : selected
-                                  ? Theme.of(context).colorScheme.primary
-                                  : const Color(0xFF84988A)),
-                    ),
-                  ),
-                ),
-                SizedBox(height: camera ? 2 : 5),
-                Text(label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: selected
-                            ? Theme.of(context).colorScheme.primary
-                            : const Color(0xFF7E9185),
-                        fontSize: 10,
-                        fontWeight:
-                            selected ? FontWeight.w800 : FontWeight.w700)),
-              ]))),
+            duration: duration,
+            curve: Curves.easeOutCubic,
+            width: 100,
+            height: 61,
+            decoration: BoxDecoration(
+                color: selected
+                    ? (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF304B3C)
+                        : const Color(0xFFF0F7E9))
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(19)),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              AnimatedSwitcher(
+                  duration: duration,
+                  transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: ScaleTransition(scale: animation, child: child)),
+                  child: Icon(selected ? selectedIcon : icon,
+                      key: ValueKey(selected),
+                      size: 21,
+                      color: selected
+                          ? Theme.of(context).colorScheme.primary
+                          : const Color(0xFF84988A))),
+              const SizedBox(height: 5),
+              Text(label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: selected
+                          ? Theme.of(context).colorScheme.primary
+                          : const Color(0xFF7E9185),
+                      fontSize: 10,
+                      fontWeight:
+                          selected ? FontWeight.w800 : FontWeight.w700)),
+            ]),
+          ))),
         ),
       ));
 }

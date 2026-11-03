@@ -456,12 +456,14 @@ class _HomePageState extends State<HomePage> {
         body: AnimatedSwitcher(
           duration: MediaQuery.disableAnimationsOf(context)
               ? Duration.zero
-              : const Duration(milliseconds: 240),
+              : const Duration(milliseconds: 300),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
           transitionBuilder: (child, animation) => FadeTransition(
               opacity: animation,
               child: SlideTransition(
                   position: Tween<Offset>(
-                          begin: const Offset(0, .025), end: Offset.zero)
+                          begin: const Offset(.025, 0), end: Offset.zero)
                       .animate(animation),
                   child: child)),
           layoutBuilder: (current, previous) => Stack(children: [

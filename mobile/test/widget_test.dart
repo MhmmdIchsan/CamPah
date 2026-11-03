@@ -6,8 +6,46 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campah_mobile/main.dart';
 import 'package:campah_mobile/splash.dart';
+import 'package:campah_mobile/design.dart';
+import 'package:campah_mobile/navigation.dart';
 
 void main() {
+  testWidgets(
+      'center camera navigation works on a narrow screen in both themes',
+      (tester) async {
+    tester.view.physicalSize = const Size(320, 720);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    var selected = 0;
+    for (final dark in [false, true]) {
+      await tester.pumpWidget(MaterialApp(
+          theme: campahTheme(dark: dark),
+          home: Scaffold(
+              bottomNavigationBar: StatefulBuilder(
+                  builder: (context, setState) => CamPahBottomNav(
+                      selectedIndex: selected,
+                      onSelected: (value) =>
+                          setState(() => selected = value))))));
+      await tester.pumpAndSettle();
+      final camera = find.byIcon(selected == 1
+          ? Icons.add_a_photo_rounded
+          : Icons.add_a_photo_outlined);
+      expect(tester.getCenter(camera).dx, closeTo(160, 1));
+      expect(tester.getTopLeft(camera).dy,
+          lessThan(tester.getTopLeft(find.text('Dashboard')).dy));
+      await tester.tap(camera);
+      await tester.pumpAndSettle();
+      expect(selected, 1);
+      await tester.tap(find.text('Riwayat'));
+      await tester.pumpAndSettle();
+      expect(selected, 2);
+      await tester.tap(find.text('Dashboard'));
+      await tester.pumpAndSettle();
+      expect(selected, 0);
+      expect(tester.takeException(), isNull);
+    }
+  });
   testWidgets('theme can be changed and persists after restart',
       (tester) async {
     SharedPreferences.setMockInitialValues({});
