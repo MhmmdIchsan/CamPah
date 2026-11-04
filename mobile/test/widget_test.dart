@@ -86,11 +86,20 @@ void main() {
     await tester.pumpWidget(const WasteApp());
     await tester.pump();
     expect(find.byKey(const ValueKey('splash')), findsOneWidget);
-    await tester.pump(const Duration(milliseconds: 940));
+    await tester.pump(const Duration(milliseconds: 1020));
+    final shutter =
+        tester.widget<Opacity>(find.byKey(const ValueKey('splash-shutter')));
+    expect(shutter.opacity, greaterThan(.8));
+    expect(
+        tester
+            .widget<Opacity>(find.byKey(const ValueKey('splash-flash')))
+            .opacity,
+        lessThan(.1));
+    await tester.pump(const Duration(milliseconds: 65));
     final flash =
         tester.widget<Opacity>(find.byKey(const ValueKey('splash-flash')));
     expect(flash.opacity, greaterThan(0));
-    expect(flash.opacity, lessThanOrEqualTo(.16));
+    expect(flash.opacity, lessThanOrEqualTo(.20));
     await tester.pumpAndSettle();
     expect(find.text('Selamat datang'), findsOneWidget);
   });

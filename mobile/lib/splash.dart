@@ -23,7 +23,7 @@ class _CamPahSplashState extends State<CamPahSplash>
   void initState() {
     super.initState();
     controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1600));
+        vsync: this, duration: const Duration(milliseconds: 1900));
   }
 
   @override
@@ -60,91 +60,102 @@ class _CamPahSplashState extends State<CamPahSplash>
             animation: controller,
             builder: (context, child) {
               final t = controller.value;
+              // The first Flutter frame matches the native launch icon, then
+              // the lens closes, flashes, and opens before the tagline appears.
               final entrance =
-                  Curves.easeOutCubic.transform((t / .35).clamp(0, 1));
-              final shutter = t < .43 || t > .72
+                  Curves.easeOutCubic.transform(((t - .04) / .32).clamp(0, 1));
+              final shutter = t < .38 || t > .70
                   ? 0.0
-                  : t < .56
-                      ? (t - .43) / .13
-                      : (.72 - t) / .16;
-              final flash = t < .54 || t > .68
+                  : t < .54
+                      ? (t - .38) / .16
+                      : (.70 - t) / .16;
+              final flash = t < .52 || t > .66
                   ? 0.0
-                  : t < .59
-                      ? (t - .54) / .05
-                      : (.68 - t) / .09;
+                  : t < .57
+                      ? (t - .52) / .05
+                      : (.66 - t) / .09;
               final text =
-                  Curves.easeOut.transform(((t - .2) / .38).clamp(0, 1));
-              final scale = .88 + .12 * entrance - .025 * shutter;
+                  Curves.easeOut.transform(((t - .60) / .28).clamp(0, 1));
+              final scale = .75 + .25 * entrance - .025 * shutter;
               return Stack(fit: StackFit.expand, children: [
-                const _SplashBackdrop(),
+                Opacity(opacity: entrance, child: const _SplashBackdrop()),
                 Center(
-                    child: SingleChildScrollView(
-                        child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    Opacity(
-                        opacity: entrance,
-                        child: Transform.scale(
-                            scale: scale,
-                            child: SizedBox(
-                                width: 144,
-                                height: 144,
-                                child: Stack(children: [
-                                  const CamPahMark(size: 144),
-                                  Positioned(
-                                      left: 49.5,
-                                      top: 58.5,
-                                      child: IgnorePointer(
-                                          child: Opacity(
-                                        opacity: shutter.clamp(0, 1),
-                                        child: CustomPaint(
-                                            size: const Size(45, 45),
-                                            painter: _ShutterPainter(shutter)),
-                                      ))),
-                                ])))),
-                    const SizedBox(height: 20),
-                    Opacity(
-                        opacity: text,
-                        child: Transform.translate(
-                            offset: Offset(0, 10 * (1 - text)),
-                            child: const Column(children: [
-                              Text('CamPah',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: -.8)),
-                              SizedBox(height: 8),
-                              Text('SATU FOTO, LANGKAH BERARTI',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Color(0xFFBDDBC3),
-                                      fontSize: 9,
-                                      letterSpacing: 1.7,
-                                      fontWeight: FontWeight.w800)),
-                            ]))),
-                  ]),
-                ))),
+                  child: Transform.translate(
+                    offset: Offset(0, -42 * entrance),
+                    child: Transform.scale(
+                      scale: scale,
+                      child: SizedBox(
+                        key: const ValueKey('splash-logo'),
+                        width: 144,
+                        height: 144,
+                        child: Stack(children: [
+                          const CamPahMark(size: 144),
+                          Positioned(
+                            left: 49.5,
+                            top: 58.5,
+                            child: IgnorePointer(
+                              child: Opacity(
+                                key: const ValueKey('splash-shutter'),
+                                opacity: shutter.clamp(0, 1),
+                                child: CustomPaint(
+                                    size: const Size(45, 45),
+                                    painter: _ShutterPainter(shutter)),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Transform.translate(
+                    offset: Offset(0, 94 + 10 * (1 - text)),
+                    child: Opacity(
+                      opacity: text,
+                      child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('CamPah',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -.8)),
+                            SizedBox(height: 8),
+                            Text('SATU FOTO, LANGKAH BERARTI',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Color(0xFFBDDBC3),
+                                    fontSize: 9,
+                                    letterSpacing: 1.7,
+                                    fontWeight: FontWeight.w800)),
+                          ]),
+                    ),
+                  ),
+                ),
                 Positioned.fill(
                     child: IgnorePointer(
                         child: Opacity(
                   key: const ValueKey('splash-flash'),
-                  opacity: (.16 * flash).clamp(0, 1),
+                  opacity: (.20 * flash).clamp(0, 1),
                   child: const ColoredBox(color: Color(0xFFF2FFD8)),
                 ))),
-                const Positioned(
+                Positioned(
                     bottom: 42,
                     left: 20,
                     right: 20,
-                    child: SafeArea(
-                        top: false,
-                        child: Text('BERSAMA JAGA LINGKUNGAN',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Color(0xFF8DB29B),
-                                fontSize: 9,
-                                letterSpacing: 1.3,
-                                fontWeight: FontWeight.w700)))),
+                    child: Opacity(
+                        opacity: text,
+                        child: const SafeArea(
+                            top: false,
+                            child: Text('BERSAMA JAGA LINGKUNGAN',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Color(0xFF8DB29B),
+                                    fontSize: 9,
+                                    letterSpacing: 1.3,
+                                    fontWeight: FontWeight.w700))))),
               ]);
             },
           )),
