@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'design.dart';
 import 'navigation.dart';
 import 'splash.dart';
@@ -88,19 +87,6 @@ class Api {
 }
 
 final api = Api();
-
-Future<void> openLocationMap(
-    BuildContext context, double latitude, double longitude) async {
-  final uri = Uri.parse(
-      'https://www.openstreetmap.org/?mlat=$latitude&mlon=$longitude#map=18/$latitude/$longitude');
-  try {
-    if (await launchUrl(uri, mode: LaunchMode.externalApplication)) return;
-  } catch (_) {}
-  if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Peta belum dapat dibuka.')));
-  }
-}
 
 class WasteApp extends StatefulWidget {
   const WasteApp({super.key});
@@ -1449,12 +1435,6 @@ class _CreateReportPageState extends State<CreateReportPage> {
                             : position == null
                                 ? 'Ambil lokasi GPS'
                                 : 'Perbarui lokasi'))),
-                if (position != null)
-                  TextButton.icon(
-                      onPressed: () => openLocationMap(
-                          context, position!.latitude, position!.longitude),
-                      icon: const Icon(Icons.map_outlined),
-                      label: const Text('Periksa di OpenStreetMap')),
               ])),
           const SizedBox(height: 13),
           SoftPanel(
@@ -1696,13 +1676,6 @@ class _HistoryPageState extends State<HistoryPage> {
               Text('${report['latitude']}, ${report['longitude']}',
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w700)),
-              TextButton.icon(
-                  onPressed: () => openLocationMap(
-                      context,
-                      (report['latitude'] as num).toDouble(),
-                      (report['longitude'] as num).toDouble()),
-                  icon: const Icon(Icons.map_outlined),
-                  label: const Text('Lihat di OpenStreetMap')),
               const SizedBox(height: 24),
               _ReportTimeline(reportId: report['id'] as int),
             ]),

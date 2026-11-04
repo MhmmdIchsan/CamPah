@@ -127,12 +127,7 @@ test("user reports, admin status and user management work together", async ({
   await expect(page.getByLabel("Latitude", { exact: true })).toHaveValue(
     "-5.55",
   );
-  await page.getByRole("button", { name: "Periksa lokasi di peta" }).click();
-  await expect(page.getByTitle("Peta lokasi laporan")).toHaveAttribute(
-    "src",
-    /openstreetmap\.org/,
-  );
-  await page.getByRole("button", { name: "Sembunyikan peta" }).click();
+  await expect(page.getByTitle("Peta lokasi laporan")).toHaveCount(0);
   await page.getByRole("button", { name: "Simpan draf" }).click();
   await expect(page.getByText("Draf tersimpan di browser ini.")).toBeVisible();
   await page

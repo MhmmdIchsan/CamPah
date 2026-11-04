@@ -1087,14 +1087,7 @@ function ReportDetail({
           </div>
         )}
         <p>
-          Lokasi: {report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}{" "}
-          <a
-            href={`https://www.openstreetmap.org/?mlat=${report.latitude}&mlon=${report.longitude}#map=18/${report.latitude}/${report.longitude}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Lihat di OpenStreetMap
-          </a>
+          Lokasi: {report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}
           <br />
           AI: {report.ai_category || "Belum terdeteksi"}
           {report.ai_confidence != null
@@ -1545,7 +1538,6 @@ function ReportForm({ onSubmit, busy, userId }) {
   const [photo, setPhoto] = useState(null);
   const [description, setDescription] = useState("");
   const [draftMessage, setDraftMessage] = useState("");
-  const [showMap, setShowMap] = useState(false);
   useEffect(
     () => () => {
       if (preview) URL.revokeObjectURL(preview);
@@ -1698,46 +1690,6 @@ function ReportForm({ onSubmit, busy, userId }) {
           />
         </label>
       </div>
-      {location?.latitude !== "" &&
-        location?.latitude != null &&
-        location?.longitude !== "" &&
-        location?.longitude != null &&
-        Number.isFinite(Number(location.latitude)) &&
-        Number.isFinite(Number(location.longitude)) &&
-        Math.abs(Number(location.latitude)) <= 90 &&
-        Math.abs(Number(location.longitude)) <= 180 && (
-          <div>
-            <button
-              type="button"
-              className="text-button"
-              onClick={() => setShowMap((value) => !value)}
-            >
-              {showMap ? "Sembunyikan peta" : "Periksa lokasi di peta"}
-            </button>
-            {showMap && (
-              <>
-                <p className="hint">
-                  Peta dimuat dari OpenStreetMap dan menerima koordinat ini.
-                </p>
-                <iframe
-                  title="Peta lokasi laporan"
-                  className="location-map"
-                  loading="lazy"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(`${Number(location.longitude) - 0.005},${Number(location.latitude) - 0.003},${Number(location.longitude) + 0.005},${Number(location.latitude) + 0.003}`)}&layer=mapnik&marker=${encodeURIComponent(`${location.latitude},${location.longitude}`)}`}
-                />
-                <p>
-                  <a
-                    href={`https://www.openstreetmap.org/?mlat=${location.latitude}&mlon=${location.longitude}#map=18/${location.latitude}/${location.longitude}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Buka peta lebih besar
-                  </a>
-                </p>
-              </>
-            )}
-          </div>
-        )}
       <button className="primary" disabled={busy}>
         {busy ? "Mengirim..." : "Kirim laporan"}{" "}
         <ArrowRight size={17} aria-hidden="true" />
