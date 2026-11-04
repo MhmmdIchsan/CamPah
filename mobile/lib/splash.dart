@@ -202,9 +202,9 @@ class _ShutterPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
-    final outer = size.width * .48;
+    final outer = size.width * .39;
     final inner = outer * (1 - .9 * amount);
-    final paint = Paint()..color = const Color(0xFF103D31);
+    final paint = Paint()..color = const Color(0xFFBDDDBE);
     for (var i = 0; i < 6; i++) {
       final a = i * math.pi / 3;
       final b = (i + 1) * math.pi / 3;
