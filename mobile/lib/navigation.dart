@@ -6,11 +6,9 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
   const CamPahHeader(
       {super.key,
       required this.name,
-      required this.onSignOut,
       required this.onNotifications,
       required this.onProfile});
   final String name;
-  final Future<void> Function() onSignOut;
   final VoidCallback onNotifications;
   final VoidCallback onProfile;
 
@@ -55,7 +53,6 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onNotifications,
             tooltip: 'Notifikasi',
             icon: const Icon(Icons.notifications_none_rounded, size: 21)),
-        const ThemeToggle(),
         InkWell(
             key: const ValueKey('profile-button'),
             onTap: onProfile,
@@ -74,12 +71,7 @@ class CamPahHeader extends StatelessWidget implements PreferredSizeWidget {
                             color: forest,
                             fontSize: 13,
                             fontWeight: FontWeight.w800))))),
-        const SizedBox(width: 4),
-        IconButton(
-            onPressed: onSignOut,
-            icon: const Icon(Icons.logout_rounded, size: 21),
-            tooltip: 'Keluar'),
-        const SizedBox(width: 8),
+        const SizedBox(width: 16),
       ],
       bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -144,56 +136,64 @@ class CamPahBottomNav extends StatelessWidget {
                         scale: selectedIndex == 1 ? 1.07 : 1,
                         duration: duration,
                         curve: Curves.easeOutBack,
-                        child: Material(
-                          color: Colors.transparent,
-                          shape: const CircleBorder(),
-                          child: InkWell(
-                            onTap: () => onSelected(1),
-                            customBorder: const CircleBorder(),
-                            child: Ink(
-                              width: 64,
-                              height: 64,
-                              decoration: BoxDecoration(
+                        child: DecoratedBox(
+                            decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: dark
-                                        ? const [
-                                            Color(0xFFBCEB7B),
-                                            Color(0xFF79B969)
-                                          ]
-                                        : const [
-                                            Color(0xFF397F58),
-                                            Color(0xFF103D31)
-                                          ]),
-                                border: Border.all(color: surface, width: 4),
                                 boxShadow: [
                                   BoxShadow(
                                       color: (dark ? lime : forest)
                                           .withValues(alpha: .28),
                                       blurRadius: 15,
                                       offset: const Offset(0, 5))
-                                ],
+                                ]),
+                            child: Material(
+                              color: Colors.transparent,
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => onSelected(1),
+                                customBorder: const CircleBorder(),
+                                overlayColor: WidgetStatePropertyAll(
+                                    Colors.black.withValues(alpha: .08)),
+                                child: Ink(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: dark
+                                            ? const [
+                                                Color(0xFFBCEB7B),
+                                                Color(0xFF79B969)
+                                              ]
+                                            : const [
+                                                Color(0xFF397F58),
+                                                Color(0xFF103D31)
+                                              ]),
+                                    border:
+                                        Border.all(color: surface, width: 4),
+                                  ),
+                                  child: AnimatedSwitcher(
+                                    duration: duration,
+                                    transitionBuilder: (child, animation) =>
+                                        ScaleTransition(
+                                            scale: animation,
+                                            child: FadeTransition(
+                                                opacity: animation,
+                                                child: child)),
+                                    child: Icon(
+                                        selectedIndex == 1
+                                            ? Icons.add_a_photo_rounded
+                                            : Icons.add_a_photo_outlined,
+                                        key: ValueKey(selectedIndex == 1),
+                                        size: 25,
+                                        color: dark ? forest : Colors.white),
+                                  ),
+                                ),
                               ),
-                              child: AnimatedSwitcher(
-                                duration: duration,
-                                transitionBuilder: (child, animation) =>
-                                    ScaleTransition(
-                                        scale: animation,
-                                        child: FadeTransition(
-                                            opacity: animation, child: child)),
-                                child: Icon(
-                                    selectedIndex == 1
-                                        ? Icons.add_a_photo_rounded
-                                        : Icons.add_a_photo_outlined,
-                                    key: ValueKey(selectedIndex == 1),
-                                    size: 25,
-                                    color: dark ? forest : Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
+                            )),
                       ),
                     )),
                 const SizedBox(height: 5),
@@ -263,48 +263,61 @@ class _NavItem extends StatelessWidget {
         label: label,
         selected: selected,
         button: true,
-        child: InkWell(
-          onTap: onTap,
-          child: ExcludeSemantics(
-              child: Center(
-                  child: AnimatedContainer(
-            duration: duration,
-            curve: Curves.easeOutCubic,
-            width: 100,
-            height: 61,
-            decoration: BoxDecoration(
-                color: selected
-                    ? (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF304B3C)
-                        : const Color(0xFFF0F7E9))
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(19)),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              AnimatedSwitcher(
-                  duration: duration,
-                  transitionBuilder: (child, animation) => FadeTransition(
-                      opacity: animation,
-                      child: ScaleTransition(scale: animation, child: child)),
-                  child: Icon(selected ? selectedIcon : icon,
-                      key: ValueKey(selected),
-                      size: 21,
-                      color: selected
-                          ? Theme.of(context).colorScheme.primary
-                          : const Color(0xFF84988A))),
-              const SizedBox(height: 5),
-              Text(label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: selected
-                          ? Theme.of(context).colorScheme.primary
-                          : const Color(0xFF7E9185),
-                      fontSize: 10,
-                      fontWeight:
-                          selected ? FontWeight.w800 : FontWeight.w700)),
-            ]),
-          ))),
-        ),
+        child: Center(
+            child: Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(19),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(19),
+                  overlayColor: WidgetStatePropertyAll(Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: .08)),
+                  child: ExcludeSemantics(
+                      child: AnimatedContainer(
+                    duration: duration,
+                    curve: Curves.easeOutCubic,
+                    width: 100,
+                    height: 61,
+                    decoration: BoxDecoration(
+                        color: selected
+                            ? (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF304B3C)
+                                : const Color(0xFFF0F7E9))
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(19)),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedSwitcher(
+                              duration: duration,
+                              transitionBuilder: (child, animation) =>
+                                  FadeTransition(
+                                      opacity: animation,
+                                      child: ScaleTransition(
+                                          scale: animation, child: child)),
+                              child: Icon(selected ? selectedIcon : icon,
+                                  key: ValueKey(selected),
+                                  size: 21,
+                                  color: selected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : const Color(0xFF84988A))),
+                          const SizedBox(height: 5),
+                          Text(label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: selected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : const Color(0xFF7E9185),
+                                  fontSize: 10,
+                                  fontWeight: selected
+                                      ? FontWeight.w800
+                                      : FontWeight.w700)),
+                        ]),
+                  )),
+                ))),
       ));
 }

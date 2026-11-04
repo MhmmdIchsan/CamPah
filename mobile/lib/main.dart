@@ -472,25 +472,30 @@ class _HomePageState extends State<HomePage> {
   String? profileName;
   String? historyStatus;
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => PopScope(
+      canPop: index == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && index != 0) setState(() => index = 0);
+      },
+      child: Scaffold(
         appBar: CamPahHeader(
             name: profileName ?? widget.user['name'] ?? 'Pengguna',
-            onSignOut: widget.onSignOut,
             onProfile: () => showModalBottomSheet<void>(
                 context: context,
                 isScrollControlled: true,
                 showDragHandle: true,
                 builder: (_) => _ProfileSheet(
-                        user: {
-                          ...widget.user,
-                          'name': profileName ?? widget.user['name']
-                        },
-                        onUpdated: (value) {
-                          widget.onProfileUpdated?.call(value);
-                          setState(() {
-                            profileName = value['name'];
-                          });
-                        })),
+                    onSignOut: widget.onSignOut,
+                    user: {
+                      ...widget.user,
+                      'name': profileName ?? widget.user['name']
+                    },
+                    onUpdated: (value) {
+                      widget.onProfileUpdated?.call(value);
+                      setState(() {
+                        profileName = value['name'];
+                      });
+                    })),
             onNotifications: () => showModalBottomSheet<void>(
                 context: context,
                 isScrollControlled: true,
@@ -545,13 +550,15 @@ class _HomePageState extends State<HomePage> {
             revision++;
           }),
         ),
-      );
+      ));
 }
 
 class _ProfileSheet extends StatefulWidget {
-  const _ProfileSheet({required this.user, required this.onUpdated});
+  const _ProfileSheet(
+      {required this.user, required this.onUpdated, required this.onSignOut});
   final Map<String, dynamic> user;
   final ValueChanged<Map<String, dynamic>> onUpdated;
+  final Future<void> Function() onSignOut;
   @override
   State<_ProfileSheet> createState() => _ProfileSheetState();
 }
@@ -644,6 +651,20 @@ class _ProfileSheetState extends State<_ProfileSheet> {
                     FilledButton(
                         onPressed: busy ? null : submit,
                         child: Text(busy ? 'Menyimpan...' : 'Simpan profil')),
+                    const SizedBox(height: 12),
+                    Row(children: [
+                      const Expanded(child: Text('Tema aplikasi')),
+                      const ThemeToggle()
+                    ]),
+                    TextButton.icon(
+                        onPressed: busy
+                            ? null
+                            : () async {
+                                Navigator.pop(context);
+                                await widget.onSignOut();
+                              },
+                        icon: const Icon(Icons.logout_rounded),
+                        label: const Text('Keluar')),
                   ]))));
 }
 

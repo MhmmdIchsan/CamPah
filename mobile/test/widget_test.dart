@@ -34,6 +34,20 @@ void main() {
       expect(tester.getCenter(camera).dx, closeTo(160, 1));
       expect(tester.getTopLeft(camera).dy,
           lessThan(tester.getTopLeft(find.text('Dashboard')).dy));
+      for (final target in [
+        find.text('Dashboard'),
+        camera,
+        find.text('Riwayat')
+      ]) {
+        final material = tester.widget<Material>(
+            find.ancestor(of: target, matching: find.byType(Material)).first);
+        expect(material.clipBehavior, Clip.antiAlias);
+        final press = await tester.startGesture(tester.getCenter(target));
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(selected, 0);
+        await press.cancel();
+        await tester.pumpAndSettle();
+      }
       await tester.tap(camera);
       await tester.pumpAndSettle();
       expect(selected, 1);
@@ -228,6 +242,8 @@ void main() {
             ),
         home: HomePage(user: const {'name': 'Ari'}, onSignOut: () async {})));
     await tester.pumpAndSettle();
+    expect(find.text('CamPah'), findsOneWidget);
+    expect(find.byTooltip('Notifikasi'), findsOneWidget);
     expect(find.text('Halo, Ari!\nYuk, jaga lingkungan\nbersama.'),
         findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('profile-button')));
@@ -288,6 +304,9 @@ void main() {
     await tester.tap(find.text('Muat draf'));
     await tester.pumpAndSettle();
     expect(find.text('Draf sampah dekat taman'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('RUANG KERJA / PENGGUNA'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
