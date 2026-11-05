@@ -507,8 +507,10 @@ class _HomePageState extends State<HomePage> {
           child: index == 0
               ? DashboardPage(
                   key: ValueKey(revision),
+                  isOfficer: widget.user['role'] == 'petugas',
                   name: profileName ?? widget.user['name'] ?? 'Pengguna',
-                  openReport: () => setState(() => index = 1),
+                  openReport: () => setState(
+                      () => index = widget.user['role'] == 'petugas' ? 2 : 1),
                   openHistory: (status) => setState(() {
                     historyStatus = status;
                     index = 2;
@@ -526,16 +528,33 @@ class _HomePageState extends State<HomePage> {
                       }),
                     )
                   : HistoryPage(
-                      key: ValueKey(revision), initialStatus: historyStatus),
+                      key: ValueKey(revision),
+                      initialStatus: historyStatus,
+                      isOfficer: widget.user['role'] == 'petugas'),
         ),
-        bottomNavigationBar: CamPahBottomNav(
-          selectedIndex: index,
-          onSelected: (value) => setState(() {
-            index = value;
-            if (value == 2) historyStatus = null;
-            revision++;
-          }),
-        ),
+        bottomNavigationBar: widget.user['role'] == 'petugas'
+            ? NavigationBar(
+                selectedIndex: index == 0 ? 0 : 1,
+                onDestinationSelected: (value) => setState(() {
+                      index = value == 0 ? 0 : 2;
+                      historyStatus = null;
+                      revision++;
+                    }),
+                destinations: const [
+                    NavigationDestination(
+                        icon: Icon(Icons.dashboard_outlined),
+                        label: 'Dashboard'),
+                    NavigationDestination(
+                        icon: Icon(Icons.assignment_outlined), label: 'Tugas')
+                  ])
+            : CamPahBottomNav(
+                selectedIndex: index,
+                onSelected: (value) => setState(() {
+                  index = value;
+                  if (value == 2) historyStatus = null;
+                  revision++;
+                }),
+              ),
       ));
 }
 
@@ -748,10 +767,12 @@ class DashboardPage extends StatefulWidget {
     required this.name,
     required this.openReport,
     required this.openHistory,
+    this.isOfficer = false,
   });
   final String name;
   final VoidCallback openReport;
   final void Function(String?) openHistory;
+  final bool isOfficer;
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
@@ -813,8 +834,11 @@ class _DashboardPageState extends State<DashboardPage> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
         children: [
-          const Text('RUANG KERJA / PENGGUNA',
-              style: TextStyle(
+          Text(
+              widget.isOfficer
+                  ? 'RUANG KERJA / PETUGAS'
+                  : 'RUANG KERJA / PENGGUNA',
+              style: const TextStyle(
                   color: muted,
                   fontSize: 9,
                   letterSpacing: 1.2,
@@ -875,14 +899,19 @@ class _DashboardPageState extends State<DashboardPage> {
                                 letterSpacing: -.45,
                                 fontWeight: FontWeight.w800)),
                         const SizedBox(height: 10),
-                        const Text('Satu laporan bisa membawa perubahan.',
-                            style: TextStyle(
+                        Text(
+                            widget.isOfficer
+                                ? 'Pantau laporan yang ditugaskan kepadamu.'
+                                : 'Satu laporan bisa membawa perubahan.',
+                            style: const TextStyle(
                                 color: Color(0xFF678571), fontSize: 11)),
                         const SizedBox(height: 19),
                         FilledButton.icon(
                             onPressed: widget.openReport,
                             icon: const Icon(Icons.add_rounded, size: 19),
-                            label: const Text('Buat laporan')),
+                            label: Text(widget.isOfficer
+                                ? 'Lihat tugas'
+                                : 'Buat laporan')),
                       ])),
             ]),
           ),
@@ -1402,14 +1431,17 @@ class _CreateReportPageState extends State<CreateReportPage> {
                           width: 38,
                           height: 38,
                           decoration: BoxDecoration(
-                              color: Theme.of(context).brightness == Brightness.dark
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
                                   ? const Color(0xFF375A43)
                                   : const Color(0xFFE1EFDC),
                               borderRadius: BorderRadius.circular(11)),
                           child: Icon(Icons.location_on_outlined,
-                              color: Theme.of(context).brightness == Brightness.dark
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
                                   ? const Color(0xFFBCE6AA)
-                                  : const Color(0xFF5D9666), size: 20)),
+                                  : const Color(0xFF5D9666),
+                              size: 20)),
                       const SizedBox(width: 11),
                       Expanded(
                           child: Column(
@@ -1523,8 +1555,9 @@ class _FormStep extends StatelessWidget {
 }
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key, this.initialStatus});
+  const HistoryPage({super.key, this.initialStatus, this.isOfficer = false});
   final String? initialStatus;
+  final bool isOfficer;
   @override
   State<HistoryPage> createState() => _HistoryPageState();
 }
@@ -1667,10 +1700,6 @@ class _HistoryPageState extends State<HistoryPage> {
                 Text('${report['category_note']}',
                     style: const TextStyle(fontSize: 11, color: muted)),
               ],
-              const SizedBox(height: 6),
-              const Text(
-                  'Hasil AI perlu diperiksa. Confidence bukan jaminan ketepatan; foto di luar tiga kategori tetap dapat diberi label.',
-                  style: TextStyle(fontSize: 10, color: muted, height: 1.5)),
               const SizedBox(height: 18),
               const Text('KOORDINAT',
                   style: TextStyle(
@@ -1682,11 +1711,71 @@ class _HistoryPageState extends State<HistoryPage> {
               Text('${report['latitude']}, ${report['longitude']}',
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w700)),
+              if (widget.isOfficer &&
+                  (report['status'] == 'Pending' ||
+                      report['status'] == 'In Progress')) ...[
+                const SizedBox(height: 20),
+                Wrap(spacing: 10, runSpacing: 10, children: [
+                  for (final action in (report['status'] == 'Pending'
+                      ? [
+                          ('In Progress', 'Mulai tangani'),
+                          ('Rejected', 'Tolak')
+                        ]
+                      : [('Completed', 'Selesaikan'), ('Rejected', 'Tolak')]))
+                    FilledButton.tonal(
+                        onPressed: () => changeTaskStatus(report, action.$1),
+                        child: Text(action.$2)),
+                ]),
+              ],
               const SizedBox(height: 24),
               _ReportTimeline(reportId: report['id'] as int),
             ]),
       ))),
     );
+  }
+
+  Future<void> changeTaskStatus(
+      Map<String, dynamic> report, String status) async {
+    var noteText = '';
+    final note = await showDialog<String>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+              title: Text('Ubah status menjadi $status'),
+              content: TextField(
+                  onChanged: (value) => noteText = value,
+                  maxLength: 1000,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                      labelText: 'Catatan (minimal 3 karakter)')),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: const Text('Batal')),
+                FilledButton(
+                    onPressed: () {
+                      if (noteText.trim().length >= 3) {
+                        Navigator.pop(dialogContext, noteText.trim());
+                      }
+                    },
+                    child: const Text('Simpan'))
+              ],
+            ));
+    if (note == null || !mounted) return;
+    try {
+      await api.call('/reports/${report['id']}/status', method: 'PATCH', body: {
+        'status': status,
+        'expected_status': report['status'],
+        'note': note
+      });
+      if (!mounted) return;
+      Navigator.pop(context);
+      await load();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', ''))));
+      }
+    }
   }
 
   @override
@@ -1696,11 +1785,16 @@ class _HistoryPageState extends State<HistoryPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
           children: [
-            const SectionTitle(
-                eyebrow: 'PANTAU PERKEMBANGAN', title: 'Riwayat laporan'),
+            SectionTitle(
+                eyebrow: 'PANTAU PERKEMBANGAN',
+                title: widget.isOfficer ? 'Tugas laporan' : 'Riwayat laporan'),
             const SizedBox(height: 8),
-            const Text('Lihat progres dan detail laporanmu di sini.',
-                style: TextStyle(color: muted, fontSize: 12, height: 1.6)),
+            Text(
+                widget.isOfficer
+                    ? 'Lihat laporan yang ditugaskan kepadamu.'
+                    : 'Lihat progres dan detail laporanmu di sini.',
+                style:
+                    const TextStyle(color: muted, fontSize: 12, height: 1.6)),
             const SizedBox(height: 18),
             SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

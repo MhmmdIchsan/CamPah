@@ -318,4 +318,72 @@ void main() {
     expect(find.text('RUANG KERJA / PENGGUNA'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+  testWidgets('officer sees assigned tasks and updates their status',
+      (tester) async {
+    final oldClient = api.client;
+    var updated = false;
+    api.token = 'test-token';
+    api.client = MockClient((request) async {
+      if (request.url.path == '/dashboard') {
+        return http.Response(
+            jsonEncode({
+              'total': 1,
+              'by_status': {'Pending': 1},
+              'by_category': {}
+            }),
+            200);
+      }
+      if (request.url.path.endsWith('/history')) {
+        return http.Response('[]', 200);
+      }
+      if (request.url.path.endsWith('/status')) {
+        final body = jsonDecode(request.body);
+        expect(body['status'], 'In Progress');
+        expect(body['note'], 'Sedang menuju lokasi');
+        updated = true;
+        return http.Response('{}', 200);
+      }
+      return http.Response(
+          jsonEncode({
+            'items': [
+              {
+                'id': 7,
+                'description': 'Tugas sampah di jalan',
+                'image_url': 'https://example.test/report.jpg',
+                'status': 'Pending',
+                'latitude': -5.55,
+                'longitude': 95.32,
+                'ai_category': null
+              }
+            ],
+            'total': 1
+          }),
+          200);
+    });
+    addTearDown(() {
+      api.client.close();
+      api.client = oldClient;
+      api.token = null;
+    });
+    await tester.pumpWidget(MaterialApp(
+        home: HomePage(
+            user: const {'name': 'Petugas', 'role': 'petugas'},
+            onSignOut: () async {})));
+    await tester.pumpAndSettle();
+    expect(find.text('RUANG KERJA / PETUGAS'), findsOneWidget);
+    expect(find.text('Lapor'), findsNothing);
+    await tester.tap(find.text('Tugas'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tugas sampah di jalan'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Mulai tangani'), 180,
+        scrollable: find.byType(Scrollable).last);
+    await tester.tap(find.text('Mulai tangani'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Sedang menuju lokasi');
+    await tester.tap(find.text('Simpan'));
+    await tester.pumpAndSettle();
+    expect(updated, isTrue);
+    expect(tester.takeException(), isNull);
+  });
 }
