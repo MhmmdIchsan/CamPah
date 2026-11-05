@@ -1393,17 +1393,23 @@ class _CreateReportPageState extends State<CreateReportPage> {
                 Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                        color: const Color(0xFFF5F8F2),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF263F34)
+                            : const Color(0xFFF5F8F2),
                         borderRadius: BorderRadius.circular(14)),
                     child: Row(children: [
                       Container(
                           width: 38,
                           height: 38,
                           decoration: BoxDecoration(
-                              color: const Color(0xFFE1EFDC),
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFF375A43)
+                                  : const Color(0xFFE1EFDC),
                               borderRadius: BorderRadius.circular(11)),
-                          child: const Icon(Icons.location_on_outlined,
-                              color: Color(0xFF5D9666), size: 20)),
+                          child: Icon(Icons.location_on_outlined,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFFBCE6AA)
+                                  : const Color(0xFF5D9666), size: 20)),
                       const SizedBox(width: 11),
                       Expanded(
                           child: Column(
