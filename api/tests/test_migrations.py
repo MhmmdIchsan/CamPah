@@ -24,7 +24,7 @@ def test_migration_round_trip(tmp_path):
     assert set(inspector.get_table_names()) == {"users", "reports", "report_status_history", "notifications", "alembic_version"}
     assert {c["name"] for c in inspector.get_columns("reports")} >= {"ai_category", "deleted_at", "latitude", "longitude"}
     with engine.connect() as connection:
-        assert connection.scalar(text("select version_num from alembic_version")) == "006_assignment"
+        assert connection.scalar(text("select version_num from alembic_version")) == "007_officer_assignment"
         old_row = connection.execute(text("select note, is_correction from report_status_history where id = 1")).one()
         assert old_row.note is None and not old_row.is_correction
     assert {c["name"] for c in inspector.get_columns("report_status_history")} >= {"note", "is_correction"}

@@ -283,12 +283,29 @@ def test_assignment_is_admin_only_and_visible_to_owner(system):
     client, sessions = system
     owner = signup(client)
     admin = admin_account(client, sessions)
+    officer = signup(client, 'officer@example.com')
+    other = signup(client, 'other@example.com')
+    with sessions() as db:
+        db.get(User, officer['user']['id']).role = 'petugas'
+        db.get(User, other['user']['id']).role = 'petugas'
+        db.commit()
     report_id = create_report(client, owner).json()['id']
     url = f'/reports/{report_id}/assignment'
-    assert client.patch(url, headers=auth(owner), json={'assigned_name':'Tim A'}).status_code == 403
-    assert client.patch(url, headers=auth(admin), json={'assigned_name':' Tim A '}).json()['assigned_name'] == 'Tim A'
-    assert client.get(f'/reports/{report_id}', headers=auth(owner)).json()['assigned_name'] == 'Tim A'
-    assert client.patch(url, headers=auth(admin), json={'assigned_name':''}).json()['assigned_name'] is None
+    payload = {'assigned_user_id': officer['user']['id']}
+    assert client.patch(url, headers=auth(owner), json=payload).status_code == 403
+    assert client.patch(url, headers=auth(admin), json={'assigned_user_id': owner['user']['id']}).status_code == 422
+    assert client.patch(url, headers=auth(admin), json=payload).json()['assigned_name'] == 'Alice'
+    assert client.get(f'/reports/{report_id}', headers=auth(owner)).json()['assigned_name'] == 'Alice'
+    assert client.get(f'/reports/{report_id}', headers=auth(other)).status_code == 404
+    assert client.get('/dashboard', headers=auth(officer)).json()['total'] == 1
+    assert client.get('/reports', headers=auth(other)).json()['total'] == 0
+    assert client.delete(f'/reports/{report_id}', headers=auth(officer)).status_code == 403
+    assert client.patch(f'/reports/{report_id}/status', headers=auth(officer), json={'status':'In Progress', 'expected_status':'Pending', 'note':'Sedang ditangani'}).status_code == 200
+    assert len(client.get('/notifications', headers=auth(officer)).json()) == 1
+    assert client.patch('/notifications/read-all', headers=auth(officer)).status_code == 204
+    assert client.get('/notifications', headers=auth(officer)).json()[0]['is_read'] is True
+    assert client.patch(url, headers=auth(admin), json={'assigned_user_id': None}).json()['assigned_name'] is None
+    assert client.get(f'/reports/{report_id}', headers=auth(officer)).status_code == 404
 
 
 def test_nearby_reports_are_admin_only_and_distance_filtered(system):

@@ -118,12 +118,12 @@ class AuthOut(BaseModel):
 
 
 class UserCreate(RegisterIn):
-    role: Literal["user", "admin"] = "user"
+    role: Literal["user", "admin", "petugas"] = "user"
 
 
 class UserUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=2, max_length=120)
-    role: Literal["user", "admin"] | None = None
+    role: Literal["user", "admin", "petugas"] | None = None
     is_active: bool | None = None
 
     @field_validator("name")
@@ -166,6 +166,7 @@ class ReportOut(BaseModel):
     category_reviewer_id: int | None
     category_reviewed_at: datetime | None
     assigned_name: str | None
+    assigned_user_id: int | None
     created_at: datetime
     updated_at: datetime
 
@@ -253,12 +254,8 @@ class CategoryReview(BaseModel):
 
 
 class AssignmentUpdate(BaseModel):
-    assigned_name: str | None = Field(default=None, max_length=120)
-
-    @field_validator('assigned_name')
-    @classmethod
-    def trim_name(cls, value: str | None) -> str | None:
-        return value.strip() or None if value is not None else None
+    model_config = ConfigDict(extra="forbid")
+    assigned_user_id: int | None = None
 
 
 def read_image(data: bytes) -> None:
@@ -310,7 +307,8 @@ def predict_image(data: bytes) -> PredictionOut:
 
 def visible_report(db: Session, report_id: int, user: User) -> Report:
     report = db.get(Report, report_id)
-    if not report or report.deleted_at or (user.role != "admin" and report.user_id != user.id):
+    if not report or report.deleted_at or (user.role != "admin" and
+            (report.assigned_user_id != user.id if user.role == "petugas" else report.user_id != user.id)):
         raise HTTPException(status_code=404, detail="Report not found")
     return report
 
@@ -414,7 +412,9 @@ def list_reports(
     if date_from and date_to and date_from > date_to:
         raise HTTPException(status_code=422, detail="Invalid date range")
     conditions = [Report.deleted_at.is_(None)]
-    if user.role != "admin":
+    if user.role == "petugas":
+        conditions.append(Report.assigned_user_id == user.id)
+    elif user.role != "admin":
         conditions.append(Report.user_id == user.id)
     if report_status:
         conditions.append(Report.status == report_status)
@@ -498,6 +498,8 @@ def get_report(report_id: int, db: Annotated[Session, Depends(get_db)], user: An
 def update_report(report_id: int, payload: ReportUpdate, db: Annotated[Session, Depends(get_db)],
                   user: Annotated[User, Depends(current_user)]):
     report = visible_report(db, report_id, user)
+    if user.role == "petugas":
+        raise HTTPException(status_code=403, detail="Petugas tidak dapat mengubah isi laporan")
     if user.role != "admin" and report.status != "Pending":
         raise HTTPException(status_code=403, detail="Only pending reports can be edited")
     changes = payload.model_dump(exclude_unset=True, exclude_none=True)
@@ -511,6 +513,8 @@ def update_report(report_id: int, payload: ReportUpdate, db: Annotated[Session, 
 @app.delete("/reports/{report_id}", status_code=204)
 def delete_report(report_id: int, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
     report = visible_report(db, report_id, user)
+    if user.role == "petugas":
+        raise HTTPException(status_code=403, detail="Petugas tidak dapat menghapus laporan")
     if user.role != "admin" and report.status != "Pending":
         raise HTTPException(status_code=403, detail="Only pending reports can be deleted")
     report.deleted_at = utc_now()
@@ -519,8 +523,12 @@ def delete_report(report_id: int, db: Annotated[Session, Depends(get_db)], user:
 
 @app.patch("/reports/{report_id}/status", response_model=ReportOut)
 def change_status(report_id: int, payload: StatusUpdate, db: Annotated[Session, Depends(get_db)],
-                  admin: Annotated[User, Depends(admin_user)]):
+                  admin: Annotated[User, Depends(current_user)]):
+    if admin.role not in ("admin", "petugas"):
+        raise HTTPException(status_code=403, detail="Akses petugas diperlukan")
     report = visible_report(db, report_id, admin)
+    if admin.role == "petugas" and payload.is_correction:
+        raise HTTPException(status_code=403, detail="Koreksi status hanya untuk admin")
     if report.status != payload.expected_status:
         raise HTTPException(status_code=409, detail="Status laporan telah berubah. Muat ulang laporan.")
     if report.status == payload.status:
@@ -529,8 +537,10 @@ def change_status(report_id: int, payload: StatusUpdate, db: Annotated[Session, 
     if not payload.is_correction and payload.status not in allowed.get(report.status, set()):
         raise HTTPException(status_code=422, detail="Gunakan tindakan koreksi untuk perubahan status ini.")
     old_status = report.status
-    result = db.execute(update(Report).where(Report.id == report.id, Report.status == old_status,
-                                             Report.deleted_at.is_(None)).values(status=payload.status, updated_at=utc_now()))
+    conditions = [Report.id == report.id, Report.status == old_status, Report.deleted_at.is_(None)]
+    if admin.role == "petugas":
+        conditions.append(Report.assigned_user_id == admin.id)
+    result = db.execute(update(Report).where(*conditions).values(status=payload.status, updated_at=utc_now()))
     if result.rowcount != 1:
         db.rollback()
         raise HTTPException(status_code=409, detail="Status laporan telah berubah. Muat ulang laporan.")
@@ -615,7 +625,15 @@ def review_category(report_id: int, payload: CategoryReview, db: Annotated[Sessi
 def update_assignment(report_id: int, payload: AssignmentUpdate, db: Annotated[Session, Depends(get_db)],
                       admin: Annotated[User, Depends(admin_user)]):
     report = visible_report(db, report_id, admin)
-    report.assigned_name = payload.assigned_name
+    assignee = db.get(User, payload.assigned_user_id) if payload.assigned_user_id is not None else None
+    if payload.assigned_user_id is not None and (not assignee or not assignee.is_active or assignee.role != "petugas"):
+        raise HTTPException(status_code=422, detail="Pilih petugas aktif")
+    changed = report.assigned_user_id != payload.assigned_user_id
+    report.assigned_user_id = assignee.id if assignee else None
+    report.assigned_name = assignee.name if assignee else None
+    if changed and assignee:
+        db.add(Notification(user_id=assignee.id, report_id=report.id,
+                            message=f"Anda ditugaskan menangani laporan #{report.id}."))
     db.commit()
     db.refresh(report)
     return report
@@ -626,6 +644,12 @@ def list_notifications(db: Annotated[Session, Depends(get_db)], user: Annotated[
     return db.scalars(select(Notification).join(Report, Report.id == Notification.report_id)
                       .where(Notification.user_id == user.id, Report.deleted_at.is_(None))
                       .order_by(Notification.created_at.desc(), Notification.id.desc()).limit(100)).all()
+
+
+@app.patch("/notifications/read-all", status_code=204)
+def read_all_notifications(db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
+    db.execute(update(Notification).where(Notification.user_id == user.id, Notification.is_read.is_(False)).values(is_read=True))
+    db.commit()
 
 
 @app.patch("/notifications/{notification_id}/read", response_model=NotificationOut)
@@ -642,7 +666,9 @@ def read_notification(notification_id: int, db: Annotated[Session, Depends(get_d
 @app.get("/dashboard")
 def dashboard(db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(current_user)]):
     conditions = [Report.deleted_at.is_(None)]
-    if user.role != "admin":
+    if user.role == "petugas":
+        conditions.append(Report.assigned_user_id == user.id)
+    elif user.role != "admin":
         conditions.append(Report.user_id == user.id)
     status_rows = db.execute(select(Report.status, func.count(Report.id)).where(*conditions).group_by(Report.status)).all()
     category_rows = db.execute(select(Report.ai_category, func.count(Report.id)).where(*conditions, Report.ai_category.is_not(None)).group_by(Report.ai_category)).all()
@@ -680,7 +706,7 @@ def update_user(user_id: int, payload: UserUpdate, db: Annotated[Session, Depend
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     changes = payload.model_dump(exclude_unset=True, exclude_none=True)
-    if admin.id == user.id and (changes.get("is_active") is False or changes.get("role") == "user"):
+    if admin.id == user.id and (changes.get("is_active") is False or ("role" in changes and changes["role"] != "admin")):
         raise HTTPException(status_code=422, detail="Cannot remove your own admin access")
     for key, value in changes.items():
         setattr(user, key, value)

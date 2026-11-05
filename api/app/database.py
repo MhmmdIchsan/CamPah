@@ -56,10 +56,11 @@ class Report(Base):
     category_reviewer_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     category_reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     assigned_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    assigned_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    owner: Mapped[User] = relationship(back_populates="reports")
+    owner: Mapped[User] = relationship(back_populates="reports", foreign_keys=[user_id])
 
     @property
     def owner_name(self) -> str:
