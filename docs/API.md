@@ -53,3 +53,8 @@ Daftar laporan memberikan `{items, total, page, page_size}`. Setiap item mencaku
 ## Respons kegagalan
 
 401: token salah/kedaluwarsa atau akun nonaktif. 403: operasi tidak diizinkan. 404: laporan tidak ditemukan atau berada di luar cakupan pengguna. 409: email sudah terdaftar. 422: isian atau foto tidak valid. 502: penyimpanan Cloudinary gagal. `/predict` memberikan 503 bila model belum tersedia. Kegagalan model ketika membuat laporan tetap menghasilkan 201 dengan kolom AI null.
+### Petugas dan penugasan
+
+Admin dapat membuat atau mengubah akun menjadi role `petugas` melalui `/users`. Admin menugaskan laporan melalui `PATCH /reports/{id}/assignment` dengan `{"assigned_user_id": 123}`; gunakan `null` untuk melepas penugasan. Hanya akun petugas aktif yang dapat dipilih. Nama penugasan lama tetap disimpan tetapi tidak otomatis ditautkan ke akun: admin perlu memilih petugas untuk mengaktifkan aksesnya.
+
+Petugas hanya melihat laporan yang ditugaskan kepadanya pada `/reports`, `/dashboard`, detail dan riwayat. Petugas dapat mengubah status laporan yang ditugaskan beserta catatan, tetapi tidak dapat menghapus atau mengubah isi laporan, mengoreksi status, mengelola akun, atau menugaskan laporan. `PATCH /notifications/read-all` menandai seluruh notifikasi akun yang sedang masuk sebagai dibaca.

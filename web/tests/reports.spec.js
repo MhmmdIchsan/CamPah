@@ -187,17 +187,8 @@ test("user reports, admin status and user management work together", async ({
   await row.getByRole("button", { name: "Lihat detail" }).click();
   const detail = page.getByRole("dialog", { name: /Detail laporan/ });
   await expect(detail).toContainText("CamPah Browser Tester");
-  await detail.getByText("Tinjau kategori AI").click();
-  await detail
-    .getByLabel("Kategori hasil tinjauan")
-    .selectOption("Paper Waste");
-  await detail
-    .getByLabel("Alasan peninjauan")
-    .fill("Terlihat kertas pada foto");
-  await detail.getByRole("button", { name: "Simpan tinjauan" }).click();
-  await expect(
-    detail.getByText("Kategori hasil tinjauan:", { exact: false }),
-  ).toBeVisible();
+  await expect(detail.getByText("Tinjau kategori AI")).toHaveCount(0);
+  await expect(detail).toContainText("-5.55000, 95.32000");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -369,4 +360,53 @@ test("expired authentication clears the session and returns to login", async ({
   await expect
     .poll(() => page.evaluate(() => localStorage.getItem("campah-session")))
     .toBeNull();
+});
+
+test("admin assigns an officer who can handle only assigned reports", async ({ page, request }) => {
+  const unique = suffix();
+  const login = async (email, password) => (await (await request.post('http://127.0.0.1:8001/auth/login', { data: { email, password } })).json());
+  const admin = await login('admin@example.com', 'TestAdminPassword123');
+  const headers = { Authorization: `Bearer ${admin.access_token}` };
+  const officerEmail = `officer-${unique}@example.com`;
+  const created = await request.post('http://127.0.0.1:8001/users', { headers, data: { name: 'Petugas Uji', email: officerEmail, password: 'TestPassword123', role: 'petugas' } });
+  expect(created.status()).toBe(201);
+  const officer = await created.json();
+  await register(page, `owner-${unique}@example.com`);
+  await page.getByRole('navigation').getByRole('button', { name: 'Buat laporan' }).click();
+  await page.getByLabel('Deskripsi').fill(`Temuan untuk petugas ${unique}`);
+  await page.getByLabel('Foto sampah').setInputFiles('tests/fixtures/report.png');
+  await page.getByLabel('Latitude').fill('-5.55');
+  await page.getByLabel('Longitude').fill('95.32');
+  await page.getByRole('button', { name: 'Kirim laporan' }).click();
+  await expect(page.locator('.report-row').filter({ hasText: unique })).toBeVisible();
+  await page.getByRole('button', { name: 'Keluar' }).click();
+  await page.getByLabel('Email', { exact: true }).fill('admin@example.com');
+  await page.getByLabel('Kata sandi', { exact: true }).fill('TestAdminPassword123');
+  await page.getByRole('button', { name: 'Masuk', exact: true }).click();
+  await page.getByRole('navigation').getByRole('button', { name: 'Laporan', exact: true }).click();
+  await page.getByLabel('Cari laporan').fill(unique);
+  await page.locator('.report-row').filter({ hasText: unique }).getByRole('button', { name: 'Lihat detail' }).click();
+  const detail = page.getByRole('dialog', { name: /Detail laporan/ });
+  await expect(detail.getByLabel('Tugaskan ke petugas').locator(`option[value="${officer.id}"]`)).toHaveCount(1);
+  await detail.getByLabel('Tugaskan ke petugas').selectOption(String(officer.id));
+  await detail.getByRole('button', { name: 'Simpan penugasan' }).click();
+  await expect(detail).toContainText('Petugas Uji');
+  await detail.getByRole('button', { name: 'Tutup detail' }).click();
+  await page.getByRole('button', { name: 'Keluar' }).click();
+  await page.getByLabel('Email', { exact: true }).fill(officerEmail);
+  await page.getByLabel('Kata sandi', { exact: true }).fill('TestPassword123');
+  await page.getByRole('button', { name: 'Masuk', exact: true }).click();
+  await expect(page.getByText('RUANG KERJA / PETUGAS')).toBeVisible();
+  await page.getByRole('button', { name: 'Notifikasi' }).click();
+  await expect(page.getByRole('dialog', { name: 'Notifikasi' })).toContainText('Anda ditugaskan');
+  await page.getByRole('button', { name: 'Tandai semua sudah dibaca' }).click();
+  await expect(page.getByRole('button', { name: 'Tandai semua sudah dibaca' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Tutup notifikasi' }).click();
+  await page.getByRole('navigation').getByRole('button', { name: 'Laporan', exact: true }).click();
+  await page.locator('.report-row').filter({ hasText: unique }).getByRole('button', { name: 'Lihat detail' }).click();
+  const task = page.getByRole('dialog', { name: /Detail laporan/ });
+  await task.getByRole('button', { name: 'Mulai tangani' }).click();
+  await task.getByLabel('Catatan tindak lanjut').fill('Petugas menuju lokasi');
+  await task.getByRole('button', { name: 'Simpan tindak lanjut' }).click();
+  await expect(task).toContainText('Petugas menuju lokasi');
 });

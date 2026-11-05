@@ -43,6 +43,7 @@ export default function Dashboard({
   stats,
   name,
   isAdmin,
+  isOfficer,
   recentReports,
   recentError,
   onCreate,
@@ -100,12 +101,14 @@ export default function Dashboard({
               Yuk, jaga lingkungan bersama.
             </h2>
             <p>
-              {isAdmin
+              {isOfficer
+                ? "Pantau dan tindak lanjuti laporan yang ditugaskan kepadamu."
+                : isAdmin
                 ? "Pantau laporan dan bantu setiap aduan sampai ditangani."
                 : "Temukan sampah di sekitarmu? Satu laporan bisa membawa perubahan."}
             </p>
-            <button className="primary hero-button" onClick={onCreate}>
-              <Plus size={18} aria-hidden="true" /> Buat laporan{" "}
+            <button className="primary hero-button" onClick={isOfficer ? onOpenReports : onCreate}>
+              <Plus size={18} aria-hidden="true" /> {isOfficer ? "Lihat tugas" : "Buat laporan"}{" "}
               <ArrowUpRight size={16} aria-hidden="true" />
             </button>
           </div>
@@ -232,10 +235,10 @@ export default function Dashboard({
                 <ClipboardEmpty />
               </span>
               <strong>Belum ada laporan</strong>
-              <p>Laporan yang dibuat akan muncul di sini.</p>
-              <button className="link-button" onClick={onCreate}>
+              <p>{isOfficer ? "Laporan yang ditugaskan akan muncul di sini." : "Laporan yang dibuat akan muncul di sini."}</p>
+              {!isOfficer && <button className="link-button" onClick={onCreate}>
                 Mulai buat laporan <ArrowRight size={15} aria-hidden="true" />
-              </button>
+              </button>}
             </div>
           ) : (
             <div className="recent-list">

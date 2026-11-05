@@ -1904,3 +1904,32 @@ main {
     animation-iteration-count: 1 !important;
   }
 }
+.notifications-panel { width: min(560px, 100%); max-height: calc(100dvh - 40px); overflow-y: auto; }
+.notifications-panel .section-head { align-items: flex-start; margin-bottom: 16px; }
+.notifications-panel .section-head h2 { margin: 5px 0; }
+.notifications-panel .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+.notifications-read-all { margin: 4px 0 14px; }
+.notification-card { grid-template-columns: 42px minmax(0, 1fr) 8px; align-items: start; gap: 13px; padding: 15px; margin: 8px 0; border: 1px solid var(--line); border-radius: 15px; }
+.notification-card.unread { background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.notice-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: color-mix(in srgb, #85bc82 22%, transparent); color: var(--ink); }
+.notice-copy { display: grid; gap: 5px; line-height: 1.5; min-width: 0; }
+.notice-copy strong { color: var(--ink); font-size: 13px; }
+.notice-copy span { font-size: 13px; }
+.notice-copy small { color: var(--muted); }
+.notice-unread { width: 8px; height: 8px; margin-top: 6px; border-radius: 50%; background: #72ae70; }
+.notification-empty { display: grid; justify-items: center; gap: 10px; padding: 46px 16px; color: var(--muted); text-align: center; }
+.detail-block { margin-top: 20px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; }
+.detail-block p { margin: 8px 0 0; line-height: 1.65; }
+.detail-facts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 12px; }
+.detail-facts > div { display: grid; gap: 7px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; overflow-wrap: anywhere; }
+.detail-facts span { color: var(--muted); font-size: 12px; }
+.detail-facts strong { font-size: 13px; }
+.detail-location { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 14px; }
+.followup-actions { display: grid; gap: 14px; }
+.followup-actions h3, .followup-form { margin: 0; }
+.followup-form { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; }
+.followup-form label { margin: 0; }
+.report-list { display: grid; gap: 12px; }
+.report-row, .report-content { min-width: 0; }
+.report-title strong { overflow-wrap: anywhere; }
+@media (max-width: 480px) { .detail-facts { grid-template-columns: 1fr; } .detail-location { align-items: flex-start; flex-direction: column; } .notification-card { padding: 12px; } }

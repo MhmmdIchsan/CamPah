@@ -122,6 +122,7 @@ function App() {
 
   const token = session?.access_token;
   const isAdmin = session?.user?.role === "admin";
+  const isOfficer = session?.user?.role === "petugas";
   const logout = useCallback(() => {
     localStorage.removeItem("campah-session");
     setSession(null);
@@ -244,7 +245,7 @@ function App() {
     refresh,
   ]);
   useEffect(() => {
-    if (!token || !isAdmin || view !== "users") return;
+    if (!token || !isAdmin || (view !== "users" && !detail)) return;
     const controller = new AbortController();
     request("/users", { token, signal: controller.signal })
       .then(setUsers)
@@ -252,7 +253,7 @@ function App() {
         if (!controller.signal.aborted) setError(e.message);
       });
     return () => controller.abort();
-  }, [token, isAdmin, view, refresh]);
+  }, [token, isAdmin, view, refresh, detail]);
 
   useEffect(() => {
     if (!token || view !== "dashboard") return;
@@ -332,14 +333,14 @@ function App() {
           >
             <ClipboardList size={19} aria-hidden="true" /> <span>Laporan</span>
           </button>
-          <button
+          {!isOfficer && <button
             aria-label="Buat laporan"
             aria-current={view === "new" ? "page" : undefined}
             className={view === "new" ? "active" : ""}
             onClick={() => switchView("new")}
           >
             <Camera size={19} aria-hidden="true" /> <span>Buat laporan</span>
-          </button>
+          </button>}
           {isAdmin && (
             <button
               aria-label="Pengguna"
@@ -365,7 +366,7 @@ function App() {
           </div>
           <div>
             <strong>{session.user.name}</strong>
-            <small>{isAdmin ? "Administrator" : "Pengguna"}</small>
+            <small>{isAdmin ? "Administrator" : isOfficer ? "Petugas" : "Pengguna"}</small>
           </div>
         </div>
       </aside>
@@ -373,7 +374,7 @@ function App() {
         <header className="topbar">
           <div>
             <span className="eyebrow">
-              RUANG KERJA / {isAdmin ? "ADMIN" : "PENGGUNA"}
+              RUANG KERJA / {isAdmin ? "ADMIN" : isOfficer ? "PETUGAS" : "PENGGUNA"}
             </span>
             <h1>
               {view === "dashboard"
@@ -419,6 +420,7 @@ function App() {
             stats={stats}
             name={session.user.name}
             isAdmin={isAdmin}
+            isOfficer={isOfficer}
             recentReports={recentReports}
             recentError={recentError}
             imageSource={imageSource}
@@ -442,9 +444,9 @@ function App() {
                 <h2>Daftar laporan</h2>
                 <p>{reports.total} laporan ditemukan</p>
               </div>
-              <button className="primary" onClick={() => switchView("new")}>
+              {!isOfficer && <button className="primary" onClick={() => switchView("new")}>
                 <Plus size={17} aria-hidden="true" /> Buat laporan
-              </button>
+              </button>}
             </div>
             <div className="filters">
               <Search className="search-icon" size={18} aria-hidden="true" />
@@ -576,7 +578,7 @@ function App() {
                       <button onClick={() => setDetail(report)}>
                         Lihat detail
                       </button>
-                      {(isAdmin || report.status === "Pending") && (
+                      {(isAdmin || (!isOfficer && report.status === "Pending")) && (
                         <>
                           <button
                             disabled={busy}
@@ -744,6 +746,8 @@ function App() {
             report={detail}
             token={token}
             isAdmin={isAdmin}
+            isOfficer={isOfficer}
+            users={users}
             imageSource={imageSource}
             onClose={() => setDetail(null)}
             onUpdated={() => setRefresh((n) => n + 1)}
@@ -828,13 +832,13 @@ function App() {
         {showNotices && (
           <div className="modal-backdrop">
             <section
-              className="modal report-detail"
+              className="modal notifications-panel"
               role="dialog"
               aria-modal="true"
               aria-label="Notifikasi"
             >
               <div className="section-head">
-                <h2>Notifikasi</h2>
+                <div><span className="eyebrow">KABAR TERBARU</span><h2>Notifikasi</h2><p>Pembaruan laporan dan penugasanmu.</p></div>
                 <button
                   className="icon-button"
                   aria-label="Tutup notifikasi"
@@ -843,12 +847,18 @@ function App() {
                   <X size={18} />
                 </button>
               </div>
+              {notices.some((n) => !n.is_read) && <button className="text-button notifications-read-all" onClick={async () => {
+                try {
+                  await request('/notifications/read-all', { token, method: 'PATCH' });
+                  setNotices((items) => items.map((item) => ({ ...item, is_read: true })));
+                } catch (e) { setError(e.message); }
+              }}>Tandai semua sudah dibaca</button>}
               {notices.length === 0 ? (
-                <p>Belum ada notifikasi.</p>
+                <div className="notification-empty"><Bell size={28} /><strong>Belum ada notifikasi</strong><span>Pembaruan laporan akan muncul di sini.</span></div>
               ) : (
                 notices.map((n) => (
                   <button
-                    className="notice-item"
+                    className={`notice-item notification-card ${n.is_read ? '' : 'unread'}`}
                     key={n.id}
                     onClick={async () => {
                       try {
@@ -875,8 +885,9 @@ function App() {
                       }
                     }}
                   >
-                    <strong>{n.is_read ? "Dibaca" : "Baru"}</strong>
-                    <span>{n.message}</span>
+                    <span className="notice-icon"><Bell size={18} /></span>
+                    <span className="notice-copy"><strong>{n.is_read ? "Pembaruan laporan" : "Pembaruan baru"}</strong><span>{n.message}</span><small>{new Date(n.created_at).toLocaleString("id-ID")}</small></span>
+                    {!n.is_read && <span className="notice-unread" aria-label="Belum dibaca" />}
                   </button>
                 ))
               )}
@@ -892,6 +903,8 @@ function ReportDetail({
   report: initial,
   token,
   isAdmin,
+  isOfficer,
+  users,
   imageSource,
   onClose,
   onUpdated,
@@ -1003,29 +1016,9 @@ function ReportDetail({
       setBusy(false);
     }
   }
-  async function reviewCategory(e) {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    setBusy(true);
-    setError("");
-    try {
-      setReport(
-        await request(`/reports/${report.id}/category-review`, {
-          token,
-          method: "PATCH",
-          body: { category: form.get("category"), note: form.get("note") },
-        }),
-      );
-      onUpdated();
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setBusy(false);
-    }
-  }
   async function assignReport(e) {
     e.preventDefault();
-    const name = new FormData(e.currentTarget).get("assigned_name");
+    const id = new FormData(e.currentTarget).get("assigned_user_id");
     setBusy(true);
     setError("");
     try {
@@ -1033,7 +1026,7 @@ function ReportDetail({
         await request(`/reports/${report.id}/assignment`, {
           token,
           method: "PATCH",
-          body: { assigned_name: name },
+          body: { assigned_user_id: id ? Number(id) : null },
         }),
       );
       onUpdated();
@@ -1074,8 +1067,11 @@ function ReportDetail({
             {isAdmin ? ` · ${report.owner_name} (#${report.user_id})` : ""}
           </small>
         </div>
-        <p className="detail-description">{report.description}</p>
-        <p>Petugas / tim: {report.assigned_name || "Belum ditentukan"}</p>
+        <section className="detail-block"><span className="eyebrow">DESKRIPSI LAPORAN</span><p className="detail-description">{report.description}</p></section>
+        <div className="detail-facts">
+          <div><span>Petugas</span><strong>{report.assigned_name || "Belum ditentukan"}</strong></div>
+          <div><span>Identifikasi AI</span><strong>{report.ai_category || "Belum terdeteksi"}{report.ai_confidence != null ? ` · ${Math.round(report.ai_confidence * 100)}%` : ""}</strong></div>
+        </div>
         {report.completion_image_url && (
           <div>
             <h3>Bukti penyelesaian</h3>
@@ -1086,26 +1082,9 @@ function ReportDetail({
             />
           </div>
         )}
-        <p>
-          Lokasi: {report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}
-          <br />
-          AI: {report.ai_category || "Belum terdeteksi"}
-          {report.ai_confidence != null
-            ? ` (${Math.round(report.ai_confidence * 100)}%)`
-            : ""}
-        </p>
-        {report.corrected_category && (
-          <p>
-            Kategori hasil tinjauan:{" "}
-            <strong>{report.corrected_category}</strong>
-            <br />
-            Catatan: {report.category_note}
-          </p>
-        )}
-        <p className="hint">
-          Hasil AI perlu diperiksa; confidence bukan jaminan ketepatan dan foto
-          di luar tiga kategori tetap dapat diberi label.
-        </p>
+        <section className="detail-block detail-location">
+          <div><span className="eyebrow">LOKASI TEMUAN</span><p>{report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}</p></div>
+        </section>
         {error && (
           <div className="alert" role="alert">
             {error}
@@ -1119,10 +1098,10 @@ function ReportDetail({
             </button>
           </div>
         )}
-        {isAdmin && (
+        {(isAdmin || isOfficer) && (
           <div className="followup-actions">
             <h3>Tindak lanjut</h3>
-            <details>
+            {isAdmin && <details>
               <summary>Kemungkinan laporan serupa</summary>
               <p>
                 Berjarak hingga 100 meter dan dibuat dalam selisih 7 hari.
@@ -1155,53 +1134,22 @@ function ReportDetail({
                   </button>
                 ))
               )}
-            </details>
-            <form className="followup-form" onSubmit={assignReport}>
+            </details>}
+            {isAdmin && <form className="followup-form" onSubmit={assignReport}>
               <label>
-                Petugas atau tim
-                <input
-                  name="assigned_name"
-                  defaultValue={report.assigned_name || ""}
-                  maxLength="120"
-                  placeholder="Nama petugas atau tim"
-                />
+                Tugaskan ke petugas
+                <select name="assigned_user_id" defaultValue={report.assigned_user_id || ""} key={report.assigned_user_id || "none"}>
+                  <option value="">Belum ditugaskan</option>
+                  {users.filter((user) => user.role === "petugas" && user.is_active).map((user) => (
+                    <option key={user.id} value={user.id}>{user.name} · {user.email}</option>
+                  ))}
+                </select>
               </label>
               <button className="primary" disabled={busy}>
                 Simpan penugasan
               </button>
-            </form>
-            <details>
-              <summary>Tinjau kategori AI</summary>
-              <form onSubmit={reviewCategory} className="followup-form">
-                <label>
-                  Kategori hasil tinjauan
-                  <select
-                    name="category"
-                    defaultValue={report.corrected_category || ""}
-                    required
-                  >
-                    <option value="">Pilih kategori</option>
-                    <option>Organic Waste</option>
-                    <option>Plastic Waste</option>
-                    <option>Paper Waste</option>
-                  </select>
-                </label>
-                <label>
-                  Alasan peninjauan
-                  <textarea
-                    name="note"
-                    minLength="3"
-                    maxLength="1000"
-                    required
-                    defaultValue={report.category_note || ""}
-                  />
-                </label>
-                <button className="primary" disabled={busy}>
-                  Simpan tinjauan
-                </button>
-              </form>
-            </details>
-            {report.status === "Completed" && !report.completion_image_url && (
+            </form>}
+            {isAdmin && report.status === "Completed" && !report.completion_image_url && (
               <form onSubmit={uploadEvidence} className="followup-form">
                 <label>
                   Foto bukti penyelesaian
@@ -1232,7 +1180,7 @@ function ReportDetail({
                   {label}
                 </button>
               ))}
-              <button
+              {isAdmin && <button
                 type="button"
                 className="text-button"
                 onClick={() => {
@@ -1242,7 +1190,7 @@ function ReportDetail({
                 }}
               >
                 Koreksi status
-              </button>
+              </button>}
             </div>
             {(action || correction) && (
               <form onSubmit={submit} className="followup-form">
@@ -1734,6 +1682,7 @@ function Users({ users, currentUserId, busy, onCreate, onUpdate }) {
           Role
           <select name="role">
             <option value="user">User</option>
+            <option value="petugas">Petugas</option>
             <option value="admin">Admin</option>
           </select>
         </label>
@@ -1757,6 +1706,7 @@ function Users({ users, currentUserId, busy, onCreate, onUpdate }) {
               onChange={(e) => onUpdate(user.id, { role: e.target.value })}
             >
               <option value="user">User</option>
+              <option value="petugas">Petugas</option>
               <option value="admin">Admin</option>
             </select>
             <button disabled={busy} onClick={() => setEditingUser(user)}>
