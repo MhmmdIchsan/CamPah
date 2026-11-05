@@ -45,7 +45,7 @@ APK debug menggunakan `http://10.0.2.2:8000` untuk API pada host emulator. APK y
 
 1. Akun Cloudinary dan Render belum disiapkan, sehingga demo web/API publik serta persistensi foto pada layanan nyata belum diverifikasi. Konfigurasi dan panduan deployment sudah tersedia.
 2. Kamera, galeri, GPS, dan API pada perangkat Android nyata belum diuji. Build dan widget test tidak menggantikan pengujian ini.
-3. Video dengan penjelasan kandidat maksimal 10 menit belum direkam; skenario tersedia di `docs/DEMO_SCRIPT.md`.
+3. Video dengan penjelasan kandidat maksimal 10 menit perlu disertakan dalam pengumpulan.
 4. URL demo, URL API, tautan distribusi APK publik, serta video perlu dilengkapi sebelum pengumpulan akhir.
 
 Tanggal/jam deadline resmi tetap perlu dicocokkan dengan email asli. Target internal perencanaan adalah 5 November 2026 pukul 23.59 WIB.

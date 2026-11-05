@@ -17,7 +17,7 @@ CamPah membantu pengguna melaporkan sampah dengan foto dan lokasi, memantau pena
 - [Android: instalasi, pengujian, dan APK](mobile/README.md)
 - [Pengaturan emulator Android](docs/EMULATOR.md)
 - [Dataset dan atribusi](ml/DATASET.md), [hasil evaluasi](ml/artifacts/metrics.json), [confusion matrix](ml/artifacts/confusion_matrix.png)
-- [Skenario video demo](docs/DEMO_SCRIPT.md) dan [progres implementasi](docs/PROGRESS.md)
+- [Progres implementasi](docs/PROGRESS.md)
 
 ## Menjalankan API dan database
 
