@@ -216,18 +216,15 @@ export default function Landing({ onLogin, onRegister, themeToggle }) {
                 <b>Mudah dipantau</b>
               </div>
             </div>
-            <span className="lp-visual-caption">
-              ILUSTRASI PENGGUNAAN / CAMPAH
-            </span>
           </div>
         </section>
         <div className="lp-ribbon">
           <span>FOTO TEMUANMU</span>
-          <span>✳</span>
+          <span aria-hidden="true" className="lp-ribbon-separator" />
           <span>TANDAI LOKASI</span>
-          <span>✳</span>
+          <span aria-hidden="true" className="lp-ribbon-separator" />
           <span>PANTAU PROGRESNYA</span>
-          <span>✳</span>
+          <span aria-hidden="true" className="lp-ribbon-separator" />
           <span>JAGA LINGKUNGAN</span>
         </div>
         <section className="lp-process lp-section" id="cara-kerja">

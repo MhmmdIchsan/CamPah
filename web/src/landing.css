@@ -1007,3 +1007,11 @@
   padding: 8px 0;
   cursor: pointer;
 }
+.lp-ribbon-separator {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .6;
+}
